@@ -77,6 +77,17 @@
             this.panel10 = new System.Windows.Forms.Panel();
             this.confExit = new System.Windows.Forms.Label();
             this.exit = new System.Windows.Forms.Button();
+            this.cancel1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.return1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.cut1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copy1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.enter1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.delete1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.select1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.language1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.rusLan1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.enLan1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.kazLan1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -122,6 +133,7 @@
             this.open1,
             this.save1,
             this.saveHow1,
+            this.language1,
             this.quit1});
             this.file1.Name = "file1";
             this.file1.Size = new System.Drawing.Size(66, 27);
@@ -130,39 +142,47 @@
             // create1
             // 
             this.create1.Name = "create1";
-            this.create1.Size = new System.Drawing.Size(216, 30);
+            this.create1.Size = new System.Drawing.Size(247, 30);
             this.create1.Text = "Создать";
             this.create1.Click += new System.EventHandler(this.create1_Click);
             // 
             // open1
             // 
             this.open1.Name = "open1";
-            this.open1.Size = new System.Drawing.Size(216, 30);
+            this.open1.Size = new System.Drawing.Size(247, 30);
             this.open1.Text = "Открыть";
             this.open1.Click += new System.EventHandler(this.open1_Click);
             // 
             // save1
             // 
             this.save1.Name = "save1";
-            this.save1.Size = new System.Drawing.Size(216, 30);
+            this.save1.Size = new System.Drawing.Size(247, 30);
             this.save1.Text = "Сохранить";
             // 
             // saveHow1
             // 
             this.saveHow1.Name = "saveHow1";
-            this.saveHow1.Size = new System.Drawing.Size(216, 30);
+            this.saveHow1.Size = new System.Drawing.Size(247, 30);
             this.saveHow1.Text = "Сохранить как";
             this.saveHow1.Click += new System.EventHandler(this.saveHow1_Click);
             // 
             // quit1
             // 
             this.quit1.Name = "quit1";
-            this.quit1.Size = new System.Drawing.Size(216, 30);
+            this.quit1.Size = new System.Drawing.Size(247, 30);
             this.quit1.Text = "Выход";
             this.quit1.Click += new System.EventHandler(this.quit1_Click);
             // 
             // correction1
             // 
+            this.correction1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cancel1,
+            this.return1,
+            this.cut1,
+            this.copy1,
+            this.enter1,
+            this.delete1,
+            this.select1});
             this.correction1.Name = "correction1";
             this.correction1.Size = new System.Drawing.Size(83, 27);
             this.correction1.Text = "Правка";
@@ -514,6 +534,79 @@
             this.exit.UseVisualStyleBackColor = false;
             this.exit.Click += new System.EventHandler(this.exit_Click);
             // 
+            // cancel1
+            // 
+            this.cancel1.Name = "cancel1";
+            this.cancel1.Size = new System.Drawing.Size(247, 30);
+            this.cancel1.Text = "Отмена";
+            // 
+            // return1
+            // 
+            this.return1.Name = "return1";
+            this.return1.Size = new System.Drawing.Size(247, 30);
+            this.return1.Text = "Возврат";
+            // 
+            // cut1
+            // 
+            this.cut1.Name = "cut1";
+            this.cut1.Size = new System.Drawing.Size(247, 30);
+            this.cut1.Text = "Вырезание";
+            // 
+            // copy1
+            // 
+            this.copy1.Name = "copy1";
+            this.copy1.Size = new System.Drawing.Size(247, 30);
+            this.copy1.Text = "Копирование";
+            // 
+            // enter1
+            // 
+            this.enter1.Name = "enter1";
+            this.enter1.Size = new System.Drawing.Size(247, 30);
+            this.enter1.Text = "Вставка";
+            // 
+            // delete1
+            // 
+            this.delete1.Name = "delete1";
+            this.delete1.Size = new System.Drawing.Size(247, 30);
+            this.delete1.Text = "Удаление";
+            // 
+            // select1
+            // 
+            this.select1.Name = "select1";
+            this.select1.Size = new System.Drawing.Size(247, 30);
+            this.select1.Text = "Выделить всё";
+            // 
+            // language1
+            // 
+            this.language1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rusLan1,
+            this.enLan1,
+            this.kazLan1});
+            this.language1.Name = "language1";
+            this.language1.Size = new System.Drawing.Size(247, 30);
+            this.language1.Text = "Язык";
+            // 
+            // rusLan1
+            // 
+            this.rusLan1.Name = "rusLan1";
+            this.rusLan1.Size = new System.Drawing.Size(247, 30);
+            this.rusLan1.Text = "Русский";
+            this.rusLan1.Click += new System.EventHandler(this.rusLan1_Click);
+            // 
+            // enLan1
+            // 
+            this.enLan1.Name = "enLan1";
+            this.enLan1.Size = new System.Drawing.Size(247, 30);
+            this.enLan1.Text = "Английский";
+            this.enLan1.Click += new System.EventHandler(this.enLan1_Click);
+            // 
+            // kazLan1
+            // 
+            this.kazLan1.Name = "kazLan1";
+            this.kazLan1.Size = new System.Drawing.Size(247, 30);
+            this.kazLan1.Text = "Казахский";
+            this.kazLan1.Click += new System.EventHandler(this.kazLan1_Click);
+            // 
             // Compiler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -532,6 +625,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Compiler";
             this.Text = "Compiler";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compiler_FormClosing);
             this.SizeChanged += new System.EventHandler(this.Compiler_SizeChanged);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -603,6 +697,17 @@
         private System.Windows.Forms.Panel panel13;
         private System.Windows.Forms.Label number;
         private System.Windows.Forms.RichTextBox numberBox;
+        private System.Windows.Forms.ToolStripMenuItem cancel1;
+        private System.Windows.Forms.ToolStripMenuItem return1;
+        private System.Windows.Forms.ToolStripMenuItem cut1;
+        private System.Windows.Forms.ToolStripMenuItem copy1;
+        private System.Windows.Forms.ToolStripMenuItem enter1;
+        private System.Windows.Forms.ToolStripMenuItem delete1;
+        private System.Windows.Forms.ToolStripMenuItem select1;
+        private System.Windows.Forms.ToolStripMenuItem language1;
+        private System.Windows.Forms.ToolStripMenuItem rusLan1;
+        private System.Windows.Forms.ToolStripMenuItem enLan1;
+        private System.Windows.Forms.ToolStripMenuItem kazLan1;
     }
 }
 

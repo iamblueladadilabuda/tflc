@@ -22,6 +22,7 @@ namespace tflc_1
         {
             InitializeComponent();
             Update_Panels_Sizes();
+            Change_Language(1);
             panel7.Visible = false;
             numberBox.SelectionAlignment = HorizontalAlignment.Center;
         }
@@ -182,6 +183,78 @@ namespace tflc_1
         private void quit1_Click(object sender, EventArgs e)
         {
             panel7.Visible = true;
+        }
+
+        public string[] Read_Language(string filename) => File.ReadAllLines(filename);
+
+        private void Change_Language(int choice)
+        {
+            bool[] visible = new bool[3] { true, true, true };
+            switch (choice)
+            {
+                case 1:
+                    visible[0] = false;
+                    Language_Visible(visible);
+                    Translate(Read_Language("txt/ru.txt")); 
+                    break;
+                case 2:
+                    visible[1] = false;
+                    Language_Visible(visible);
+                    Translate(Read_Language("txt/en.txt")); 
+                    break;
+                case 3:
+                    visible[2] = false;
+                    Language_Visible(visible);
+                    Translate(Read_Language("txt/kaz.txt")); 
+                    break;
+            }
+        }
+
+        private void Language_Visible(bool[] visible)
+        {
+            rusLan1.Visible = visible[0];
+            enLan1.Visible = visible[1];
+            kazLan1.Visible = visible[2];
+        }
+
+        private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
+
+        private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
+
+        private void kazLan1_Click(object sender, EventArgs e) => Change_Language(3);
+
+        private void Translate(string[] language)
+        {
+            file1.Text = language[0];
+            correction1.Text = language[1];
+            text1.Text = language[2];
+            start1.Text = language[3];
+            help1.Text = language[4];
+            create1.Text = language[5];
+            open1.Text = language[6];
+            save1.Text = language[7];
+            saveHow1.Text = language[8];
+            language1.Text = language[9];
+            quit1.Text = language[10];
+            cancel1.Text = language[11];
+            return1.Text = language[12];
+            cut1.Text = language[13];
+            copy1.Text = language[14];
+            enter1.Text = language[15];
+            delete1.Text = language[16];
+            select1.Text = language[17];
+            rusLan1.Text = language[18];
+            enLan1.Text = language[19];
+            kazLan1.Text = language[20];
+            confExit.Text = language[21];
+            confirmation.Text = language[22];
+            yes.Text = language[23];
+            no.Text = language[24];
+        }
+
+        private void Compiler_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
         }
     }
 }
