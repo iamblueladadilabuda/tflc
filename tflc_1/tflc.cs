@@ -23,6 +23,7 @@ namespace tflc_1
             InitializeComponent();
             Update_Panels_Sizes();
             panel7.Visible = false;
+            numberBox.SelectionAlignment = HorizontalAlignment.Center;
         }
 
         private void Compiler_SizeChanged(object sender, EventArgs e)
@@ -40,6 +41,7 @@ namespace tflc_1
             panel3.Height = height / 2;
             panel5.Height = height / 2;
             panel4.Height = panel1.ClientSize.Height - height - 70;
+            panel13.Width = 65;
 
             panel7.Width = panel3.Width / 2 + panel3.Width / 4;
             panel7.Height = height / 3;
@@ -144,6 +146,13 @@ namespace tflc_1
             Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
         }
 
+        private void richTextBox_VScroll(object sender, EventArgs e)
+        {
+            int i = richTextBox.GetLineFromCharIndex(richTextBox.GetCharIndexFromPosition(new Point(1, 1)));
+            numberBox.SelectionStart = numberBox.GetFirstCharIndexFromLine(i);
+            numberBox.ScrollToCaret();
+        }
+
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
             int count_line = richTextBox.Lines.Length + 1;
@@ -151,15 +160,7 @@ namespace tflc_1
             {
                 while (count_line != num_line)
                 {
-                    if (num_line < 10)
-                    {
-                        number.Text += " " + num_line.ToString() + "\n";
-                    }
-                    else
-                    {
-                        number.Text += num_line.ToString() + "\n";
-
-                    }
+                    numberBox.Text += num_line.ToString() + "\n";
                     num_line++;
                 }
             }
@@ -169,20 +170,12 @@ namespace tflc_1
                 {
                     if (num_line == 2) break;
                     num_line--;
-                    number.Text = "";
+                    numberBox.Text = "";
                     for (int i = 1; i < num_line; i++)
                     {
-                        if (i < 10)
-                        {
-                            number.Text += " " + i.ToString() + "\n";
-                        }
-                        else
-                        {
-                            number.Text += i.ToString() + "\n";
-
-                        }
+                        numberBox.Text += i.ToString() + "\n";
                     }
-                }   
+                }
             }
         }
 

@@ -60,6 +60,7 @@
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel13 = new System.Windows.Forms.Panel();
+            this.numberBox = new System.Windows.Forms.RichTextBox();
             this.number = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -295,11 +296,12 @@
             // richTextBox
             // 
             this.richTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox.Location = new System.Drawing.Point(30, 0);
+            this.richTextBox.Location = new System.Drawing.Point(101, 0);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(690, 176);
+            this.richTextBox.Size = new System.Drawing.Size(619, 176);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
+            this.richTextBox.VScroll += new System.EventHandler(this.richTextBox_VScroll);
             this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
             // 
             // panel1
@@ -340,12 +342,24 @@
             // 
             // panel13
             // 
+            this.panel13.Controls.Add(this.numberBox);
             this.panel13.Controls.Add(this.number);
             this.panel13.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel13.Location = new System.Drawing.Point(0, 0);
             this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(30, 176);
+            this.panel13.Size = new System.Drawing.Size(101, 176);
             this.panel13.TabIndex = 3;
+            // 
+            // numberBox
+            // 
+            this.numberBox.BackColor = System.Drawing.SystemColors.Control;
+            this.numberBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numberBox.Location = new System.Drawing.Point(0, 0);
+            this.numberBox.Name = "numberBox";
+            this.numberBox.ReadOnly = true;
+            this.numberBox.Size = new System.Drawing.Size(101, 176);
+            this.numberBox.TabIndex = 1;
+            this.numberBox.Text = "";
             // 
             // number
             // 
@@ -588,6 +602,7 @@
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.Panel panel13;
         private System.Windows.Forms.Label number;
+        private System.Windows.Forms.RichTextBox numberBox;
     }
 }
 
