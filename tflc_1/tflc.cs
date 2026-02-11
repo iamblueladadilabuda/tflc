@@ -17,12 +17,14 @@ namespace tflc_1
     public partial class Compiler : Form
     {
         int width, height, num_line = 1;
+        FileFunctions file_functions = new FileFunctions();
 
         public Compiler()
         {
             InitializeComponent();
             Update_Panels_Sizes();
             Change_Language(1);
+            Clean();
             panel7.Visible = false;
             numberBox.SelectionAlignment = HorizontalAlignment.Center;
         }
@@ -79,51 +81,32 @@ namespace tflc_1
 
         private void create1_Click(object sender, EventArgs e)
         {
-            
+            file_functions.Create(menuStrip3);
         }
 
-        private void Open()
+        private void create2_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                string[] file_line = File.ReadAllLines(openFileDialog.FileName);
-
-                string text = "";
-                foreach (string line in file_line)
-                {
-                    text += line;
-                }
-
-                richTextBox.Text = text;
-            }
-        }
-
-        private void Save()
-        {
-            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                File.WriteAllText(openFileDialog.FileName, richTextBox.Text);
-            }
+            file_functions.Create(menuStrip3);
         }
 
         private void open1_Click(object sender, EventArgs e)
         {
-            Open();
+            file_functions.Open(this, openFileDialog, richTextBox);
         }
 
         private void open2_Click(object sender, EventArgs e)
         {
-            Open();
+            file_functions.Open(this, openFileDialog, richTextBox);
         }
 
         private void saveHow1_Click(object sender, EventArgs e)
         {
-            Save();
+            file_functions.Save(this, openFileDialog, richTextBox);
         }
 
         private void save2_Click(object sender, EventArgs e)
         {
-            Save();
+            file_functions.Save(this, openFileDialog, richTextBox);
         }
 
         private void exit_Click(object sender, EventArgs e)
@@ -138,7 +121,7 @@ namespace tflc_1
 
         private void yes_Click(object sender, EventArgs e)
         {
-            Save();
+            file_functions.Save(this, openFileDialog, richTextBox);
             Close();
         }
 
@@ -243,18 +226,52 @@ namespace tflc_1
             enter1.Text = language[15];
             delete1.Text = language[16];
             select1.Text = language[17];
-            rusLan1.Text = language[18];
-            enLan1.Text = language[19];
-            kazLan1.Text = language[20];
-            confExit.Text = language[21];
-            confirmation.Text = language[22];
-            yes.Text = language[23];
-            no.Text = language[24];
+            settingTask1.Text = language[18];
+            grammar1.Text = language[19];
+            grammerClassification1.Text = language[20];
+            methodAnalyze1.Text = language[21];
+            example1.Text = language[22];
+            literature1.Text = language[23];
+            code1.Text = language[24];
+            rusLan1.Text = language[25];
+            enLan1.Text = language[26];
+            kazLan1.Text = language[27];
+            confExit.Text = language[28];
+            confirmation.Text = language[29];
+            yes.Text = language[30];
+            no.Text = language[31];
         }
 
         private void Compiler_FormClosing(object sender, FormClosingEventArgs e)
         {
-            
+            string delete_lines = "";
+            foreach (ToolStripMenuItem item in menuStrip3.Items)
+            {
+                if (item.Text.Contains("Untitled-"))
+                {
+                    string filename = "files/" + item.Text + ".txt";
+                    if (File.Exists(filename))
+                    {
+                        delete_lines += filename + "\n";
+                    }
+                }
+            }
+            File.WriteAllText("files/delete.txt", delete_lines);
+        }
+
+        private void Clean()
+        {
+            if (File.Exists("files/delete.txt"))
+            {
+                string[] delete = File.ReadAllLines("files/delete.txt");
+                foreach (string line in delete)
+                {
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        File.Delete(line);
+                    }
+                }
+            }
         }
     }
 }
