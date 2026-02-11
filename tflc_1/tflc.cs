@@ -18,6 +18,7 @@ namespace tflc_1
     {
         int width, height, num_line = 1;
         FileFunctions file_functions = new FileFunctions();
+        string tool_name = "";
 
         public Compiler()
         {
@@ -81,32 +82,32 @@ namespace tflc_1
 
         private void create1_Click(object sender, EventArgs e)
         {
-            file_functions.Create(menuStrip3);
+            tool_name = file_functions.Create(menuStrip3);
         }
 
         private void create2_Click(object sender, EventArgs e)
         {
-            file_functions.Create(menuStrip3);
+            tool_name = file_functions.Create(menuStrip3);
         }
 
         private void open1_Click(object sender, EventArgs e)
         {
-            file_functions.Open(this, openFileDialog, richTextBox);
+            file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
         }
 
         private void open2_Click(object sender, EventArgs e)
         {
-            file_functions.Open(this, openFileDialog, richTextBox);
+            file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
         }
 
         private void saveHow1_Click(object sender, EventArgs e)
         {
-            file_functions.Save(this, openFileDialog, richTextBox);
+            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
         }
 
         private void save2_Click(object sender, EventArgs e)
         {
-            file_functions.Save(this, openFileDialog, richTextBox);
+            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
         }
 
         private void exit_Click(object sender, EventArgs e)
@@ -121,7 +122,7 @@ namespace tflc_1
 
         private void yes_Click(object sender, EventArgs e)
         {
-            file_functions.Save(this, openFileDialog, richTextBox);
+            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
             Close();
         }
 
@@ -240,6 +241,14 @@ namespace tflc_1
             confirmation.Text = language[29];
             yes.Text = language[30];
             no.Text = language[31];
+        }
+
+        private void menuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem is ToolStripMenuItem clickedItem)
+            {
+                tool_name = clickedItem.Text;
+            }
         }
 
         private void Compiler_FormClosing(object sender, FormClosingEventArgs e)

@@ -5,57 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace tflc_1
 {
-    internal class FileFunctions
+    internal class FileFunctions : ToolStripFunctions
     {
-        private (string, string) New_ToolStrip(MenuStrip menuStrip)
+        public string Create(MenuStrip menuStrip)
         {
-            int new_number = 1;
-
-            foreach (ToolStripMenuItem item in menuStrip.Items)
-            {
-                int number = Convert.ToInt32(item.Text.Split('-')[1]);
-                if (number != new_number)
-                {
-                    new_number = number;
-                    break;
-                }
-                else
-                {
-                    new_number++;
-                }  
-            }
-
-            string filename = "Untitled-" + new_number.ToString();
-            string name = "toolStrip_" + new_number.ToString();
-
-            return (filename, name);
-        }
-
-        private string Create_ToolStrip(MenuStrip menuStrip)
-        {
-            ToolStripMenuItem tool_strip = new ToolStripMenuItem();
             (string filename, string name) = New_ToolStrip(menuStrip);
-            tool_strip.Text = filename;
-            tool_strip.Name = name;
-            menuStrip.Items.Add(tool_strip);
+            Create_ToolStrip(menuStrip, filename, name);
+            File.Open("files/" + filename + ".txt", FileMode.Create);
             return filename;
         }
 
-        private void Create_File(string filename)
-        {
-            File.Open("files/" + filename + ".txt", FileMode.Create);
-        }
-
-        public void Create(MenuStrip menuStrip)
-        {
-            string filename = Create_ToolStrip(menuStrip);
-            Create_File(filename);
-        }
-
-        public void Open(Form form, OpenFileDialog openFileDialog, RichTextBox richTextBox)
+        public void Open(Form form, OpenFileDialog openFileDialog, RichTextBox richTextBox, 
+            MenuStrip menuStrip)
         {
             if (openFileDialog.ShowDialog(form) == DialogResult.OK)
             {
@@ -68,15 +33,32 @@ namespace tflc_1
                 }
 
                 richTextBox.Text = text;
+
+                string filename = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
+                if (!Find_File_In_ToolStrip(menuStrip, filename))
+                {
+                    Create_ToolStrip(menuStrip, filename, "file");
+                } 
             }
         }
 
-        public void Save(Form form, OpenFileDialog openFileDialog, RichTextBox richTextBox)
+        public void Save(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox)
         {
-            if (openFileDialog.ShowDialog(form) == DialogResult.OK)
+
+        }
+
+        public void Save_How(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox,
+            MenuStrip menuStrip, string filename)
+        {
+            saveFileDialog.FileName = filename;
+
+            if (saveFileDialog.ShowDialog(form) == DialogResult.OK)
             {
-                File.WriteAllText(openFileDialog.FileName, richTextBox.Text);
+                File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
             }
+
+            string new_filename = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+            Change_Name_ToolStrip(menuStrip, filename, new_filename);
         }
     }
 }

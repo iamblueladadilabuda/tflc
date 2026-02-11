@@ -51,6 +51,13 @@
             this.delete1 = new System.Windows.Forms.ToolStripMenuItem();
             this.select1 = new System.Windows.Forms.ToolStripMenuItem();
             this.text1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingTask1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.grammar1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.grammerClassification1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.methodAnalyze1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.example1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.literature1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.code1 = new System.Windows.Forms.ToolStripMenuItem();
             this.start1 = new System.Windows.Forms.ToolStripMenuItem();
             this.help1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
@@ -88,13 +95,7 @@
             this.panel10 = new System.Windows.Forms.Panel();
             this.confExit = new System.Windows.Forms.Label();
             this.exit = new System.Windows.Forms.Button();
-            this.settingTask1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.grammar1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.grammerClassification1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.methodAnalyze1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.example1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.literature1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.code1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -123,7 +124,7 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 31);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -149,27 +150,27 @@
             // create1
             // 
             this.create1.Name = "create1";
-            this.create1.Size = new System.Drawing.Size(247, 30);
+            this.create1.Size = new System.Drawing.Size(216, 30);
             this.create1.Text = "Создать";
             this.create1.Click += new System.EventHandler(this.create1_Click);
             // 
             // open1
             // 
             this.open1.Name = "open1";
-            this.open1.Size = new System.Drawing.Size(247, 30);
+            this.open1.Size = new System.Drawing.Size(216, 30);
             this.open1.Text = "Открыть";
             this.open1.Click += new System.EventHandler(this.open1_Click);
             // 
             // save1
             // 
             this.save1.Name = "save1";
-            this.save1.Size = new System.Drawing.Size(247, 30);
+            this.save1.Size = new System.Drawing.Size(216, 30);
             this.save1.Text = "Сохранить";
             // 
             // saveHow1
             // 
             this.saveHow1.Name = "saveHow1";
-            this.saveHow1.Size = new System.Drawing.Size(247, 30);
+            this.saveHow1.Size = new System.Drawing.Size(216, 30);
             this.saveHow1.Text = "Сохранить как";
             this.saveHow1.Click += new System.EventHandler(this.saveHow1_Click);
             // 
@@ -180,7 +181,7 @@
             this.enLan1,
             this.kazLan1});
             this.language1.Name = "language1";
-            this.language1.Size = new System.Drawing.Size(247, 30);
+            this.language1.Size = new System.Drawing.Size(216, 30);
             this.language1.Text = "Язык";
             // 
             // rusLan1
@@ -207,7 +208,7 @@
             // quit1
             // 
             this.quit1.Name = "quit1";
-            this.quit1.Size = new System.Drawing.Size(247, 30);
+            this.quit1.Size = new System.Drawing.Size(216, 30);
             this.quit1.Text = "Выход";
             this.quit1.Click += new System.EventHandler(this.quit1_Click);
             // 
@@ -228,43 +229,43 @@
             // cancel1
             // 
             this.cancel1.Name = "cancel1";
-            this.cancel1.Size = new System.Drawing.Size(247, 30);
+            this.cancel1.Size = new System.Drawing.Size(209, 30);
             this.cancel1.Text = "Отмена";
             // 
             // return1
             // 
             this.return1.Name = "return1";
-            this.return1.Size = new System.Drawing.Size(247, 30);
+            this.return1.Size = new System.Drawing.Size(209, 30);
             this.return1.Text = "Возврат";
             // 
             // cut1
             // 
             this.cut1.Name = "cut1";
-            this.cut1.Size = new System.Drawing.Size(247, 30);
+            this.cut1.Size = new System.Drawing.Size(209, 30);
             this.cut1.Text = "Вырезание";
             // 
             // copy1
             // 
             this.copy1.Name = "copy1";
-            this.copy1.Size = new System.Drawing.Size(247, 30);
+            this.copy1.Size = new System.Drawing.Size(209, 30);
             this.copy1.Text = "Копирование";
             // 
             // enter1
             // 
             this.enter1.Name = "enter1";
-            this.enter1.Size = new System.Drawing.Size(247, 30);
+            this.enter1.Size = new System.Drawing.Size(209, 30);
             this.enter1.Text = "Вставка";
             // 
             // delete1
             // 
             this.delete1.Name = "delete1";
-            this.delete1.Size = new System.Drawing.Size(247, 30);
+            this.delete1.Size = new System.Drawing.Size(209, 30);
             this.delete1.Text = "Удаление";
             // 
             // select1
             // 
             this.select1.Name = "select1";
-            this.select1.Size = new System.Drawing.Size(247, 30);
+            this.select1.Size = new System.Drawing.Size(209, 30);
             this.select1.Text = "Выделить всё";
             // 
             // text1
@@ -280,6 +281,48 @@
             this.text1.Name = "text1";
             this.text1.Size = new System.Drawing.Size(67, 27);
             this.text1.Text = "Текст";
+            // 
+            // settingTask1
+            // 
+            this.settingTask1.Name = "settingTask1";
+            this.settingTask1.Size = new System.Drawing.Size(323, 30);
+            this.settingTask1.Text = "Постановка задачи";
+            // 
+            // grammar1
+            // 
+            this.grammar1.Name = "grammar1";
+            this.grammar1.Size = new System.Drawing.Size(323, 30);
+            this.grammar1.Text = "Грамматика";
+            // 
+            // grammerClassification1
+            // 
+            this.grammerClassification1.Name = "grammerClassification1";
+            this.grammerClassification1.Size = new System.Drawing.Size(323, 30);
+            this.grammerClassification1.Text = "Классификация грамматики";
+            // 
+            // methodAnalyze1
+            // 
+            this.methodAnalyze1.Name = "methodAnalyze1";
+            this.methodAnalyze1.Size = new System.Drawing.Size(323, 30);
+            this.methodAnalyze1.Text = "Метод анализа";
+            // 
+            // example1
+            // 
+            this.example1.Name = "example1";
+            this.example1.Size = new System.Drawing.Size(323, 30);
+            this.example1.Text = "Тестовый пример";
+            // 
+            // literature1
+            // 
+            this.literature1.Name = "literature1";
+            this.literature1.Size = new System.Drawing.Size(323, 30);
+            this.literature1.Text = "Список литературы";
+            // 
+            // code1
+            // 
+            this.code1.Name = "code1";
+            this.code1.Size = new System.Drawing.Size(323, 30);
+            this.code1.Text = "Исходный код программы";
             // 
             // start1
             // 
@@ -310,9 +353,9 @@
             this.copy2,
             this.cut2,
             this.enter2});
-            this.menuStrip2.Location = new System.Drawing.Point(0, 31);
+            this.menuStrip2.Location = new System.Drawing.Point(0, 33);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(800, 38);
+            this.menuStrip2.Size = new System.Drawing.Size(800, 40);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -416,35 +459,37 @@
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 69);
+            this.panel1.Location = new System.Drawing.Point(0, 73);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(40, 381);
+            this.panel1.Size = new System.Drawing.Size(40, 377);
             this.panel1.TabIndex = 3;
             // 
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 69);
+            this.panel2.Location = new System.Drawing.Point(760, 73);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 381);
+            this.panel2.Size = new System.Drawing.Size(40, 377);
             this.panel2.TabIndex = 4;
             // 
             // menuStrip3
             // 
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
-            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
+            this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(720, 24);
+            this.menuStrip3.Size = new System.Drawing.Size(720, 32);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
+            this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.richTextBox);
             this.panel3.Controls.Add(this.panel13);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(40, 93);
+            this.panel3.Location = new System.Drawing.Point(40, 105);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(720, 176);
             this.panel3.TabIndex = 6;
@@ -623,48 +668,6 @@
             this.exit.UseVisualStyleBackColor = false;
             this.exit.Click += new System.EventHandler(this.exit_Click);
             // 
-            // settingTask1
-            // 
-            this.settingTask1.Name = "settingTask1";
-            this.settingTask1.Size = new System.Drawing.Size(323, 30);
-            this.settingTask1.Text = "Постановка задачи";
-            // 
-            // grammar1
-            // 
-            this.grammar1.Name = "grammar1";
-            this.grammar1.Size = new System.Drawing.Size(323, 30);
-            this.grammar1.Text = "Грамматика";
-            // 
-            // grammerClassification1
-            // 
-            this.grammerClassification1.Name = "grammerClassification1";
-            this.grammerClassification1.Size = new System.Drawing.Size(323, 30);
-            this.grammerClassification1.Text = "Классификация грамматики";
-            // 
-            // methodAnalyze1
-            // 
-            this.methodAnalyze1.Name = "methodAnalyze1";
-            this.methodAnalyze1.Size = new System.Drawing.Size(323, 30);
-            this.methodAnalyze1.Text = "Метод анализа";
-            // 
-            // example1
-            // 
-            this.example1.Name = "example1";
-            this.example1.Size = new System.Drawing.Size(323, 30);
-            this.example1.Text = "Тестовый пример";
-            // 
-            // literature1
-            // 
-            this.literature1.Name = "literature1";
-            this.literature1.Size = new System.Drawing.Size(323, 30);
-            this.literature1.Text = "Список литературы";
-            // 
-            // code1
-            // 
-            this.code1.Name = "code1";
-            this.code1.Size = new System.Drawing.Size(323, 30);
-            this.code1.Text = "Исходный код программы";
-            // 
             // Compiler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -773,6 +776,7 @@
         private System.Windows.Forms.ToolStripMenuItem example1;
         private System.Windows.Forms.ToolStripMenuItem literature1;
         private System.Windows.Forms.ToolStripMenuItem code1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
 
