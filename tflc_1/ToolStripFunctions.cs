@@ -9,7 +9,7 @@ namespace tflc_1
 {
     internal class ToolStripFunctions
     {
-        protected void Create_ToolStrip(MenuStrip menuStrip, string filename, string name)
+        public void Create_ToolStrip(MenuStrip menuStrip, string filename, string name)
         {
             ToolStripMenuItem tool_strip = new ToolStripMenuItem();
             tool_strip.Text = filename;
@@ -19,26 +19,20 @@ namespace tflc_1
 
         protected (string, string) New_ToolStrip(MenuStrip menuStrip)
         {
+            List<int> numbers = new List<int>();
             int new_number = 1;
 
             foreach (ToolStripMenuItem item in menuStrip.Items)
             {
-                if (item.Text.IndexOf('-') == -1)
-                {
-                    new_number++;
-                    continue;
-                }
+                if (!item.Text.StartsWith("Untitled-")) continue;
+                numbers.Add(Convert.ToInt32(item.Text.Split('-')[1]));               
+            }
 
-                int number = Convert.ToInt32(item.Text.Split('-')[1]);
-                if (number != new_number)
-                {
-                    new_number = number;
-                    break;
-                }
-                else
-                {
-                    new_number++;
-                }
+            numbers.Sort();
+            foreach (int number in numbers)
+            {
+                if (number != new_number) break;
+                new_number++;
             }
 
             string filename = "Untitled-" + new_number.ToString();

@@ -18,7 +18,9 @@ namespace tflc_1
     {
         int width, height, num_line = 1;
         FileFunctions file_functions = new FileFunctions();
-        string tool_name = "";
+        ToolStripFunctions tool_functions = new ToolStripFunctions();
+        List<(string, string)> files = new List<(string, string)>();
+        string tool_name = "", path = "";
 
         public Compiler()
         {
@@ -26,6 +28,7 @@ namespace tflc_1
             Update_Panels_Sizes();
             Change_Language(1);
             Clean();
+            Open();
             panel7.Visible = false;
             numberBox.SelectionAlignment = HorizontalAlignment.Center;
         }
@@ -82,32 +85,65 @@ namespace tflc_1
 
         private void create1_Click(object sender, EventArgs e)
         {
-            tool_name = file_functions.Create(menuStrip3);
+            (tool_name, path) = file_functions.Create(menuStrip3);
+            files.Add((tool_name, path));
         }
 
         private void create2_Click(object sender, EventArgs e)
         {
-            tool_name = file_functions.Create(menuStrip3);
+            (tool_name, path) = file_functions.Create(menuStrip3);
+            files.Add((tool_name, path));
         }
 
         private void open1_Click(object sender, EventArgs e)
         {
-            file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
+            (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
+            files.Add((tool_name, path));
         }
 
         private void open2_Click(object sender, EventArgs e)
         {
-            file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
+            (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
+            files.Add((tool_name, path));
+        }
+
+        private void save1_Click(object sender, EventArgs e)
+        {
+            for (int index = 0; index < files.Count; index++)
+            {
+                if (files.ElementAt(index).Item1 == tool_name)
+                {
+                    path = files.ElementAt(index).Item2;
+                    break;
+                }
+            }
+            file_functions.Save(richTextBox, path);
         }
 
         private void saveHow1_Click(object sender, EventArgs e)
         {
-            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
+            int prev = files.IndexOf((tool_name, path));
+            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
+            files.RemoveAt(prev);
+            files.Add((tool_name, path));
         }
 
         private void save2_Click(object sender, EventArgs e)
         {
-            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
+            int prev = files.IndexOf((tool_name, path));
+            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
+            files.RemoveAt(prev);
+            files.Add((tool_name, path));
+        }
+
+        private void help1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
+        }
+
+        private void quit1_Click(object sender, EventArgs e)
+        {
+            panel7.Visible = true;
         }
 
         private void exit_Click(object sender, EventArgs e)
@@ -126,9 +162,12 @@ namespace tflc_1
             Close();
         }
 
-        private void help1_Click(object sender, EventArgs e)
+        private void menuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
+            if (e.ClickedItem is ToolStripMenuItem clickedItem)
+            {
+                tool_name = clickedItem.Text;
+            }
         }
 
         private void richTextBox_VScroll(object sender, EventArgs e)
@@ -164,12 +203,75 @@ namespace tflc_1
             }
         }
 
-        private void quit1_Click(object sender, EventArgs e)
+        private void Compiler_FormClosing(object sender, FormClosingEventArgs e)
         {
-            panel7.Visible = true;
+            string delete_lines = "";
+            string open_lines = "";
+            foreach (ToolStripMenuItem item in menuStrip3.Items)
+            {
+                if (item.Text.StartsWith("Untitled-"))
+                {
+                    string filename = "files/" + item.Text + ".txt";
+                    if (File.Exists(filename))
+                    {
+                        if (string.IsNullOrEmpty(File.ReadAllText(filename)))
+                        {
+                            delete_lines += filename + "\n";
+                        }
+                        else
+                        {
+                            open_lines += filename + "\n";
+                        }
+                    }
+                }
+            }
+            File.WriteAllText("files/delete.txt", delete_lines);
+            File.WriteAllText("files/open.txt", open_lines);
         }
 
-        public string[] Read_Language(string filename) => File.ReadAllLines(filename);
+        private void Clean()
+        {
+            if (File.Exists("files/delete.txt"))
+            {
+                string[] delete = File.ReadAllLines("files/delete.txt");
+                foreach (string line in delete)
+                {
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        File.Delete(line);
+                    }
+                }
+            }
+        }
+
+        private void Open()
+        {
+            if (File.Exists("files/open.txt"))
+            {
+                string[] open = File.ReadAllLines("files/open.txt");
+                foreach (string filename in open)
+                {
+                    if (!string.IsNullOrEmpty(filename))
+                    {
+                        string[] file_line = File.ReadAllLines(filename);
+
+                        string text = "";
+                        foreach (string line in file_line)
+                        {
+                            text += line;
+                        }
+
+                        richTextBox.Text = text;
+
+                        path = filename;
+                        tool_name = filename.Split('/')[1].Split('.')[0];
+                        tool_functions.Create_ToolStrip(menuStrip3, tool_name, "file");
+                    }
+                }
+            }
+        }
+
+        private string[] Read_Language(string filename) => File.ReadAllLines(filename);
 
         private void Change_Language(int choice)
         {
@@ -179,17 +281,17 @@ namespace tflc_1
                 case 1:
                     visible[0] = false;
                     Language_Visible(visible);
-                    Translate(Read_Language("txt/ru.txt")); 
+                    Translate(Read_Language("txt/ru.txt"));
                     break;
                 case 2:
                     visible[1] = false;
                     Language_Visible(visible);
-                    Translate(Read_Language("txt/en.txt")); 
+                    Translate(Read_Language("txt/en.txt"));
                     break;
                 case 3:
                     visible[2] = false;
                     Language_Visible(visible);
-                    Translate(Read_Language("txt/kaz.txt")); 
+                    Translate(Read_Language("txt/kaz.txt"));
                     break;
             }
         }
@@ -241,46 +343,6 @@ namespace tflc_1
             confirmation.Text = language[29];
             yes.Text = language[30];
             no.Text = language[31];
-        }
-
-        private void menuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            if (e.ClickedItem is ToolStripMenuItem clickedItem)
-            {
-                tool_name = clickedItem.Text;
-            }
-        }
-
-        private void Compiler_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            string delete_lines = "";
-            foreach (ToolStripMenuItem item in menuStrip3.Items)
-            {
-                if (item.Text.Contains("Untitled-"))
-                {
-                    string filename = "files/" + item.Text + ".txt";
-                    if (File.Exists(filename))
-                    {
-                        delete_lines += filename + "\n";
-                    }
-                }
-            }
-            File.WriteAllText("files/delete.txt", delete_lines);
-        }
-
-        private void Clean()
-        {
-            if (File.Exists("files/delete.txt"))
-            {
-                string[] delete = File.ReadAllLines("files/delete.txt");
-                foreach (string line in delete)
-                {
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        File.Delete(line);
-                    }
-                }
-            }
         }
     }
 }

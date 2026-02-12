@@ -11,17 +11,19 @@ namespace tflc_1
 {
     internal class FileFunctions : ToolStripFunctions
     {
-        public string Create(MenuStrip menuStrip)
+        public (string, string) Create(MenuStrip menuStrip)
         {
             (string filename, string name) = New_ToolStrip(menuStrip);
             Create_ToolStrip(menuStrip, filename, name);
-            File.Open("files/" + filename + ".txt", FileMode.Create);
-            return filename;
+            string path = "files/" + filename + ".txt";
+            File.Create(path).Close();
+            return (filename, path);
         }
 
-        public void Open(Form form, OpenFileDialog openFileDialog, RichTextBox richTextBox, 
+        public (string, string) Open(Form form, OpenFileDialog openFileDialog, RichTextBox richTextBox, 
             MenuStrip menuStrip)
         {
+            string filename = "";
             if (openFileDialog.ShowDialog(form) == DialogResult.OK)
             {
                 string[] file_line = File.ReadAllLines(openFileDialog.FileName);
@@ -34,20 +36,21 @@ namespace tflc_1
 
                 richTextBox.Text = text;
 
-                string filename = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
+                filename = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
                 if (!Find_File_In_ToolStrip(menuStrip, filename))
                 {
                     Create_ToolStrip(menuStrip, filename, "file");
-                } 
+                }
             }
+            return (filename, openFileDialog.FileName);
         }
 
-        public void Save(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox)
+        public void Save(RichTextBox richTextBox, string filename)
         {
-
+            File.WriteAllText(filename, richTextBox.Text);
         }
 
-        public void Save_How(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox,
+        public (string, string) Save_How(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox,
             MenuStrip menuStrip, string filename)
         {
             saveFileDialog.FileName = filename;
@@ -59,6 +62,8 @@ namespace tflc_1
 
             string new_filename = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
             Change_Name_ToolStrip(menuStrip, filename, new_filename);
+
+            return (new_filename, saveFileDialog.FileName);
         }
     }
 }
