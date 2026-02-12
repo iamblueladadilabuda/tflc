@@ -19,7 +19,7 @@ namespace tflc_1
         int width, height, num_line = 1;
         FileFunctions file_functions = new FileFunctions();
         ToolStripFunctions tool_functions = new ToolStripFunctions();
-        List<(string, string)> files = new List<(string, string)>();
+        List<(string, string, string)> files = new List<(string, string, string)>();
         string tool_name = "", path = "";
 
         public Compiler()
@@ -86,54 +86,51 @@ namespace tflc_1
         private void create1_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Create(menuStrip3);
-            files.Add((tool_name, path));
+            richTextBox.Text = null;
+            files.Add((tool_name, path, richTextBox.Text));
         }
 
         private void create2_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Create(menuStrip3);
-            files.Add((tool_name, path));
+            richTextBox.Text = null;
+            files.Add((tool_name, path, richTextBox.Text));
         }
 
         private void open1_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
-            files.Add((tool_name, path));
+            files.Add((tool_name, path, richTextBox.Text));
         }
 
         private void open2_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
-            files.Add((tool_name, path));
+            files.Add((tool_name, path, richTextBox.Text));
         }
 
         private void save1_Click(object sender, EventArgs e)
         {
-            for (int index = 0; index < files.Count; index++)
-            {
-                if (files.ElementAt(index).Item1 == tool_name)
-                {
-                    path = files.ElementAt(index).Item2;
-                    break;
-                }
-            }
+            string _;
+            (path, _) = Find_File();
+            if (path == null) MessageBox.Show("Error: file path is null!");
             file_functions.Save(richTextBox, path);
         }
 
         private void saveHow1_Click(object sender, EventArgs e)
         {
-            int prev = files.IndexOf((tool_name, path));
+            int prev = files.IndexOf((tool_name, path, richTextBox.Text));
             (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
             files.RemoveAt(prev);
-            files.Add((tool_name, path));
+            files.Add((tool_name, path, richTextBox.Text));
         }
 
         private void save2_Click(object sender, EventArgs e)
         {
-            int prev = files.IndexOf((tool_name, path));
+            int prev = files.IndexOf((tool_name, path, richTextBox.Text));
             (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
             files.RemoveAt(prev);
-            files.Add((tool_name, path));
+            files.Add((tool_name, path, richTextBox.Text));
         }
 
         private void help1_Click(object sender, EventArgs e)
@@ -162,11 +159,28 @@ namespace tflc_1
             Close();
         }
 
+        private (string, string) Find_File()
+        {
+            for (int index = 0; index < files.Count; index++)
+            {
+                if (files.ElementAt(index).Item1 == tool_name)
+                {
+                    path = files.ElementAt(index).Item2;
+                    string text = files.ElementAt(index).Item3;
+                    return (path, text);
+                }
+            }
+            return (null, null);
+        }
+
         private void menuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem is ToolStripMenuItem clickedItem)
             {
                 tool_name = clickedItem.Text;
+                string text;
+                (path, text) = Find_File();
+                richTextBox.Text = text;
             }
         }
 
@@ -253,19 +267,12 @@ namespace tflc_1
                 {
                     if (!string.IsNullOrEmpty(filename))
                     {
-                        string[] file_line = File.ReadAllLines(filename);
-
-                        string text = "";
-                        foreach (string line in file_line)
-                        {
-                            text += line;
-                        }
-
+                        string text = File.ReadAllText(filename);
                         richTextBox.Text = text;
-
                         path = filename;
                         tool_name = filename.Split('/')[1].Split('.')[0];
                         tool_functions.Create_ToolStrip(menuStrip3, tool_name, "file");
+                        files.Add((tool_name, path, text));
                     }
                 }
             }

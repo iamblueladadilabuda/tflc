@@ -150,28 +150,28 @@
             // create1
             // 
             this.create1.Name = "create1";
-            this.create1.Size = new System.Drawing.Size(247, 30);
+            this.create1.Size = new System.Drawing.Size(216, 30);
             this.create1.Text = "Создать";
             this.create1.Click += new System.EventHandler(this.create1_Click);
             // 
             // open1
             // 
             this.open1.Name = "open1";
-            this.open1.Size = new System.Drawing.Size(247, 30);
+            this.open1.Size = new System.Drawing.Size(216, 30);
             this.open1.Text = "Открыть";
             this.open1.Click += new System.EventHandler(this.open1_Click);
             // 
             // save1
             // 
             this.save1.Name = "save1";
-            this.save1.Size = new System.Drawing.Size(247, 30);
+            this.save1.Size = new System.Drawing.Size(216, 30);
             this.save1.Text = "Сохранить";
             this.save1.Click += new System.EventHandler(this.save1_Click);
             // 
             // saveHow1
             // 
             this.saveHow1.Name = "saveHow1";
-            this.saveHow1.Size = new System.Drawing.Size(247, 30);
+            this.saveHow1.Size = new System.Drawing.Size(216, 30);
             this.saveHow1.Text = "Сохранить как";
             this.saveHow1.Click += new System.EventHandler(this.saveHow1_Click);
             // 
@@ -182,7 +182,7 @@
             this.enLan1,
             this.kazLan1});
             this.language1.Name = "language1";
-            this.language1.Size = new System.Drawing.Size(247, 30);
+            this.language1.Size = new System.Drawing.Size(216, 30);
             this.language1.Text = "Язык";
             // 
             // rusLan1
@@ -209,7 +209,7 @@
             // quit1
             // 
             this.quit1.Name = "quit1";
-            this.quit1.Size = new System.Drawing.Size(247, 30);
+            this.quit1.Size = new System.Drawing.Size(216, 30);
             this.quit1.Text = "Выход";
             this.quit1.Click += new System.EventHandler(this.quit1_Click);
             // 
