@@ -232,42 +232,49 @@
             this.cancel1.Name = "cancel1";
             this.cancel1.Size = new System.Drawing.Size(209, 30);
             this.cancel1.Text = "Отмена";
+            this.cancel1.Click += new System.EventHandler(this.cancel1_Click);
             // 
             // return1
             // 
             this.return1.Name = "return1";
-            this.return1.Size = new System.Drawing.Size(209, 30);
+            this.return1.Size = new System.Drawing.Size(247, 30);
             this.return1.Text = "Возврат";
+            this.return1.Click += new System.EventHandler(this.return1_Click);
             // 
             // cut1
             // 
             this.cut1.Name = "cut1";
             this.cut1.Size = new System.Drawing.Size(209, 30);
             this.cut1.Text = "Вырезание";
+            this.cut1.Click += new System.EventHandler(this.cut1_Click);
             // 
             // copy1
             // 
             this.copy1.Name = "copy1";
             this.copy1.Size = new System.Drawing.Size(209, 30);
             this.copy1.Text = "Копирование";
+            this.copy1.Click += new System.EventHandler(this.copy1_Click);
             // 
             // enter1
             // 
             this.enter1.Name = "enter1";
             this.enter1.Size = new System.Drawing.Size(209, 30);
             this.enter1.Text = "Вставка";
+            this.enter1.Click += new System.EventHandler(this.enter1_Click);
             // 
             // delete1
             // 
             this.delete1.Name = "delete1";
-            this.delete1.Size = new System.Drawing.Size(209, 30);
+            this.delete1.Size = new System.Drawing.Size(247, 30);
             this.delete1.Text = "Удаление";
+            this.delete1.Click += new System.EventHandler(this.delete1_Click);
             // 
             // select1
             // 
             this.select1.Name = "select1";
-            this.select1.Size = new System.Drawing.Size(209, 30);
+            this.select1.Size = new System.Drawing.Size(247, 30);
             this.select1.Text = "Выделить всё";
+            this.select1.Click += new System.EventHandler(this.select1_Click);
             // 
             // text1
             // 
@@ -413,6 +420,7 @@
             this.left2.Name = "left2";
             this.left2.Size = new System.Drawing.Size(46, 34);
             this.left2.Text = " ";
+            this.left2.Click += new System.EventHandler(this.left2_Click);
             // 
             // rigth2
             // 
@@ -421,6 +429,7 @@
             this.rigth2.Name = "rigth2";
             this.rigth2.Size = new System.Drawing.Size(46, 34);
             this.rigth2.Text = " ";
+            this.rigth2.Click += new System.EventHandler(this.rigth2_Click);
             // 
             // copy2
             // 
@@ -429,6 +438,7 @@
             this.copy2.Name = "copy2";
             this.copy2.Size = new System.Drawing.Size(46, 34);
             this.copy2.Text = " ";
+            this.copy2.Click += new System.EventHandler(this.copy2_Click);
             // 
             // cut2
             // 
@@ -437,6 +447,7 @@
             this.cut2.Name = "cut2";
             this.cut2.Size = new System.Drawing.Size(46, 34);
             this.cut2.Text = " ";
+            this.cut2.Click += new System.EventHandler(this.cut2_Click);
             // 
             // enter2
             // 
@@ -445,6 +456,7 @@
             this.enter2.Name = "enter2";
             this.enter2.Size = new System.Drawing.Size(46, 34);
             this.enter2.Text = " ";
+            this.enter2.Click += new System.EventHandler(this.enter2_Click);
             // 
             // richTextBox
             // 
@@ -462,7 +474,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 69);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(40, 381);
+            this.panel1.Size = new System.Drawing.Size(40, 440);
             this.panel1.TabIndex = 3;
             // 
             // panel2
@@ -470,7 +482,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(760, 69);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 381);
+            this.panel2.Size = new System.Drawing.Size(40, 440);
             this.panel2.TabIndex = 4;
             // 
             // menuStrip3
@@ -480,7 +492,7 @@
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip3.Location = new System.Drawing.Point(40, 69);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(720, 30);
+            this.menuStrip3.Size = new System.Drawing.Size(720, 4);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -490,7 +502,7 @@
             this.panel3.Controls.Add(this.richTextBox);
             this.panel3.Controls.Add(this.panel13);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(40, 99);
+            this.panel3.Location = new System.Drawing.Point(40, 73);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(720, 176);
             this.panel3.TabIndex = 6;
@@ -527,7 +539,7 @@
             // panel4
             // 
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(40, 410);
+            this.panel4.Location = new System.Drawing.Point(40, 469);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(720, 40);
             this.panel4.TabIndex = 7;
@@ -537,7 +549,7 @@
             this.panel5.BackColor = System.Drawing.Color.White;
             this.panel5.Controls.Add(this.textCompiler);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(40, 310);
+            this.panel5.Location = new System.Drawing.Point(40, 369);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(720, 100);
             this.panel5.TabIndex = 8;
@@ -554,7 +566,7 @@
             // panel6
             // 
             this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel6.Location = new System.Drawing.Point(40, 270);
+            this.panel6.Location = new System.Drawing.Point(40, 329);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(720, 40);
             this.panel6.TabIndex = 9;
@@ -567,6 +579,7 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(346, 195);
             this.panel7.TabIndex = 3;
+            this.panel7.VisibleChanged += new System.EventHandler(this.Panel7_VisibleChanged);
             // 
             // panel8
             // 
@@ -575,7 +588,7 @@
             this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel8.Location = new System.Drawing.Point(0, 24);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(346, 168);
+            this.panel8.Size = new System.Drawing.Size(346, 156);
             this.panel8.TabIndex = 0;
             // 
             // panel9
@@ -585,7 +598,7 @@
             this.panel9.Controls.Add(this.no);
             this.panel9.Controls.Add(this.panel11);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel9.Location = new System.Drawing.Point(0, 106);
+            this.panel9.Location = new System.Drawing.Point(0, 94);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(346, 62);
             this.panel9.TabIndex = 3;
@@ -673,7 +686,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 509);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.panel5);
@@ -686,6 +699,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Compiler";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Compiler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compiler_FormClosing);
             this.SizeChanged += new System.EventHandler(this.Compiler_SizeChanged);

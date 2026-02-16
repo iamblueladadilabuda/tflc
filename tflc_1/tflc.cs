@@ -16,22 +16,33 @@ namespace tflc_1
 {
     public partial class Compiler : Form
     {
-        int width, height, num_line = 1;
-        FileFunctions file_functions = new FileFunctions();
-        ToolStripFunctions tool_functions = new ToolStripFunctions();
-        List<(string, string, string)> files = new List<(string, string, string)>();
-        string tool_name = "", path = "";
+        private FileFunctions file_functions = new FileFunctions();
+        private ToolStripFunctions tool_functions = new ToolStripFunctions();
+        private NumberingLines numbering = new NumberingLines();
+        private OpenApp open = new OpenApp();
+        TextFunctions text_functions = new TextFunctions();
+
+        private const int HISTORY_SIZE = 10;
+
+        private List<(string, string, string, string[], int)> files = new List<(string, string, string, string[], int)>();
+        private int width, height;
+        private string tool_name = "", path = "", buffer = "";
+        private bool closing = false;
+        private string[] history = new string[HISTORY_SIZE];
+        int idx = 1;
 
         public Compiler()
         {
             InitializeComponent();
             Update_Panels_Sizes();
             Change_Language(1);
-            Clean();
-            Open();
+            open.Clean();
+            (tool_name, path, history) = open.Open(menuStrip3, richTextBox, files);
+            numbering.Numbering_Lines(richTextBox, numberBox);
             panel7.Visible = false;
             numberBox.SelectionAlignment = HorizontalAlignment.Center;
         }
+
 
         private void Compiler_SizeChanged(object sender, EventArgs e)
         {
@@ -83,60 +94,73 @@ namespace tflc_1
             }
         }
 
+
         private void create1_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Create(menuStrip3);
             richTextBox.Text = null;
-            files.Add((tool_name, path, richTextBox.Text));
+            history = new string[history.Length];
+            history[0] = "";
+            files.Add((tool_name, path, richTextBox.Text, history, 1));
         }
 
         private void create2_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Create(menuStrip3);
             richTextBox.Text = null;
-            files.Add((tool_name, path, richTextBox.Text));
+            history = new string[history.Length];
+            history[0] = "";
+            files.Add((tool_name, path, richTextBox.Text, history, 1));
         }
 
         private void open1_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
-            files.Add((tool_name, path, richTextBox.Text));
+            history = new string[history.Length];
+            history[0] = richTextBox.Text;
+            files.Add((tool_name, path, richTextBox.Text, history, 1));
         }
 
         private void open2_Click(object sender, EventArgs e)
         {
             (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
-            files.Add((tool_name, path, richTextBox.Text));
+            history = new string[history.Length];
+            history[0] = richTextBox.Text;
+            files.Add((tool_name, path, richTextBox.Text, history, 1));
         }
 
         private void save1_Click(object sender, EventArgs e)
         {
             string _;
-            (path, _) = Find_File();
+            int index = file_functions.Find_File(files, tool_name);
+            if (index == -1) return;
+
+            (path, _, history, idx) = tool_functions.Click_Strip(index, path, files);
             if (path == null) MessageBox.Show("Error: file path is null!");
             file_functions.Save(richTextBox, path);
         }
 
         private void saveHow1_Click(object sender, EventArgs e)
         {
-            int prev = files.IndexOf((tool_name, path, richTextBox.Text));
+            int prev = files.IndexOf((tool_name, path, richTextBox.Text, history, idx));
             (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
             files.RemoveAt(prev);
-            files.Add((tool_name, path, richTextBox.Text));
+            files.Add((tool_name, path, richTextBox.Text, history, idx));
         }
 
         private void save2_Click(object sender, EventArgs e)
         {
-            int prev = files.IndexOf((tool_name, path, richTextBox.Text));
+            int prev = files.IndexOf((tool_name, path, richTextBox.Text, history, idx));
             (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
             files.RemoveAt(prev);
-            files.Add((tool_name, path, richTextBox.Text));
+            files.Add((tool_name, path, richTextBox.Text, history, idx));
         }
 
         private void help1_Click(object sender, EventArgs e)
         {
             Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
         }
+
 
         private void quit1_Click(object sender, EventArgs e)
         {
@@ -159,126 +183,143 @@ namespace tflc_1
             Close();
         }
 
-        private (string, string) Find_File()
-        {
-            for (int index = 0; index < files.Count; index++)
-            {
-                if (files.ElementAt(index).Item1 == tool_name)
-                {
-                    path = files.ElementAt(index).Item2;
-                    string text = files.ElementAt(index).Item3;
-                    return (path, text);
-                }
-            }
-            return (null, null);
-        }
 
         private void menuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem is ToolStripMenuItem clickedItem)
             {
+                int index = file_functions.Find_File(files, tool_name);
+                if (index == -1) return;
+                files.RemoveAt(index);
+                files.Add((tool_name, path, richTextBox.Text, history, idx));
+
                 tool_name = clickedItem.Text;
+
                 string text;
-                (path, text) = Find_File();
+                history = new string[history.Length];
+                index = file_functions.Find_File(files, tool_name);
+                if (index == -1) return;
+                (path, text, history, idx) = tool_functions.Click_Strip(index, path, files);
                 richTextBox.Text = text;
             }
         }
 
         private void richTextBox_VScroll(object sender, EventArgs e)
         {
-            int i = richTextBox.GetLineFromCharIndex(richTextBox.GetCharIndexFromPosition(new Point(1, 1)));
-            numberBox.SelectionStart = numberBox.GetFirstCharIndexFromLine(i);
-            numberBox.ScrollToCaret();
+            numbering.Scroll(richTextBox, numberBox);
         }
 
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
-            int count_line = richTextBox.Lines.Length + 1;
-            if (count_line > num_line)
+            numbering.Numbering_Lines(richTextBox, numberBox);
+            if (richTextBox.Text == history[idx - 1]) return;
+            idx = text_functions.Add_History(history, richTextBox.Text, idx);
+        }
+
+
+        private void Change_Buffer(int func)
+        {
+            string buf = "";
+            switch (func)
             {
-                while (count_line != num_line)
-                {
-                    numberBox.Text += num_line.ToString() + "\n";
-                    num_line++;
-                }
+                case 1:
+                    buf = text_functions.Copy(richTextBox);
+                    break;
+                case 2:
+                    buf = text_functions.Cut(richTextBox);
+                    break;
             }
-            else if (count_line < num_line)
+            if (buf != null) buffer = buf;
+        }
+
+        private void cancel1_Click(object sender, EventArgs e)
+        {
+            idx = text_functions.Cancel(richTextBox, history, idx);
+        }
+
+        private void left2_Click(object sender, EventArgs e)
+        {
+            idx = text_functions.Cancel(richTextBox, history, idx);
+        }
+
+        private void return1_Click(object sender, EventArgs e)
+        {
+            idx = text_functions.Repeat(richTextBox, history, idx);
+        }
+
+        private void rigth2_Click(object sender, EventArgs e)
+        {
+            idx = text_functions.Repeat(richTextBox, history, idx);
+        }
+
+        private void copy1_Click(object sender, EventArgs e)
+        {
+            Change_Buffer(1);
+        }
+
+        private void copy2_Click(object sender, EventArgs e)
+        {
+            Change_Buffer(1);
+        }
+
+        private void cut1_Click(object sender, EventArgs e)
+        {
+            Change_Buffer(2);
+        }
+
+        private void cut2_Click(object sender, EventArgs e)
+        {
+            Change_Buffer(2);
+        }
+
+        private void enter1_Click(object sender, EventArgs e)
+        {
+            text_functions.Paste(richTextBox, buffer);
+        }
+
+        private void enter2_Click(object sender, EventArgs e)
+        {
+            text_functions.Paste(richTextBox, buffer);
+        }
+
+        private void delete1_Click(object sender, EventArgs e)
+        {
+            text_functions.Delete(richTextBox);
+        }
+
+        private void select1_Click(object sender, EventArgs e)
+        {
+            text_functions.Select_All(richTextBox);
+        }
+
+
+        private void Panel7_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!panel7.Visible && closing)
             {
-                while (count_line != num_line)
-                {
-                    if (num_line == 2) break;
-                    num_line--;
-                    numberBox.Text = "";
-                    for (int i = 1; i < num_line; i++)
-                    {
-                        numberBox.Text += i.ToString() + "\n";
-                    }
-                }
+                panel7.VisibleChanged -= Panel7_VisibleChanged;
+                Close();
             }
         }
 
         private void Compiler_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string delete_lines = "";
-            string open_lines = "";
-            foreach (ToolStripMenuItem item in menuStrip3.Items)
-            {
-                if (item.Text.StartsWith("Untitled-"))
-                {
-                    string filename = "files/" + item.Text + ".txt";
-                    if (File.Exists(filename))
-                    {
-                        if (string.IsNullOrEmpty(File.ReadAllText(filename)))
-                        {
-                            delete_lines += filename + "\n";
-                        }
-                        else
-                        {
-                            open_lines += filename + "\n";
-                        }
-                    }
-                }
-            }
-            File.WriteAllText("files/delete.txt", delete_lines);
-            File.WriteAllText("files/open.txt", open_lines);
-        }
+            open.Close(menuStrip3);
 
-        private void Clean()
-        {
-            if (File.Exists("files/delete.txt"))
+            if (!closing)
             {
-                string[] delete = File.ReadAllLines("files/delete.txt");
-                foreach (string line in delete)
-                {
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        File.Delete(line);
-                    }
-                }
+                e.Cancel = true;
+
+                panel7.Visible = true;
+                closing = true;
+
+                panel7.VisibleChanged += Panel7_VisibleChanged;
             }
         }
 
-        private void Open()
-        {
-            if (File.Exists("files/open.txt"))
-            {
-                string[] open = File.ReadAllLines("files/open.txt");
-                foreach (string filename in open)
-                {
-                    if (!string.IsNullOrEmpty(filename))
-                    {
-                        string text = File.ReadAllText(filename);
-                        richTextBox.Text = text;
-                        path = filename;
-                        tool_name = filename.Split('/')[1].Split('.')[0];
-                        tool_functions.Create_ToolStrip(menuStrip3, tool_name, "file");
-                        files.Add((tool_name, path, text));
-                    }
-                }
-            }
-        }
-
-        private string[] Read_Language(string filename) => File.ReadAllLines(filename);
+        private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
+        private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
+        private void kazLan1_Click(object sender, EventArgs e) => Change_Language(3);
 
         private void Change_Language(int choice)
         {
@@ -288,17 +329,17 @@ namespace tflc_1
                 case 1:
                     visible[0] = false;
                     Language_Visible(visible);
-                    Translate(Read_Language("txt/ru.txt"));
+                    Translate(File.ReadAllLines("txt/ru.txt"));
                     break;
                 case 2:
                     visible[1] = false;
                     Language_Visible(visible);
-                    Translate(Read_Language("txt/en.txt"));
+                    Translate(File.ReadAllLines("txt/en.txt"));
                     break;
                 case 3:
                     visible[2] = false;
                     Language_Visible(visible);
-                    Translate(Read_Language("txt/kaz.txt"));
+                    Translate(File.ReadAllLines("txt/kaz.txt"));
                     break;
             }
         }
@@ -309,12 +350,6 @@ namespace tflc_1
             enLan1.Visible = visible[1];
             kazLan1.Visible = visible[2];
         }
-
-        private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
-
-        private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
-
-        private void kazLan1_Click(object sender, EventArgs e) => Change_Language(3);
 
         private void Translate(string[] language)
         {

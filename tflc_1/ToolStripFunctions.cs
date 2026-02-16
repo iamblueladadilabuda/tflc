@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,16 @@ namespace tflc_1
 {
     internal class ToolStripFunctions
     {
+        public (string, string, string[], int) Click_Strip(int index, string path, 
+            List<(string, string, string, string[], int)> files)
+        {
+            path = files.ElementAt(index).Item2;
+            string text = files.ElementAt(index).Item3;
+            string[] history = files.ElementAt(index).Item4;
+            int idx = files.ElementAt(index).Item5;
+            return (path, text, history, idx);
+        }
+
         public void Create_ToolStrip(MenuStrip menuStrip, string filename, string name)
         {
             ToolStripMenuItem tool_strip = new ToolStripMenuItem();

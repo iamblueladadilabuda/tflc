@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileFunctions.cs" />
+    <Compile Include="NumberingLines.cs" />
+    <Compile Include="OpenApp.cs" />
+    <Compile Include="TextFunctions.cs" />
     <Compile Include="tflc.cs">
       <SubType>Form</SubType>
     </Compile>

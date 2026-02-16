@@ -15,7 +15,7 @@ namespace tflc_1
         {
             (string filename, string name) = New_ToolStrip(menuStrip);
             Create_ToolStrip(menuStrip, filename, name);
-            string path = "files/" + filename + ".txt";
+            string path = "cache/" + filename + ".txt";
             File.Create(path).Close();
             return (filename, path);
         }
@@ -64,6 +64,18 @@ namespace tflc_1
             Change_Name_ToolStrip(menuStrip, filename, new_filename);
 
             return (new_filename, saveFileDialog.FileName);
+        }
+
+        public int Find_File(List<(string, string, string, string[], int)> files, string tool_name)
+        {
+            for (int index = 0; index < files.Count; index++)
+            {
+                if (files.ElementAt(index).Item1 == tool_name)
+                {
+                    return index;
+                }
+            }
+            return -1;
         }
     }
 }
