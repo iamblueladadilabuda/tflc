@@ -10,6 +10,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace tflc_1
@@ -24,7 +25,7 @@ namespace tflc_1
 
         private const int HISTORY_SIZE = 10;
 
-        private List<(string, string, string, string[], int)> files = new List<(string, string, string, string[], int)>();
+        private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
         private int width, height;
         private string tool_name = "", path = "", buffer = "";
         private bool closing = false;
@@ -95,71 +96,22 @@ namespace tflc_1
         }
 
 
-        private void create1_Click(object sender, EventArgs e)
-        {
-            (tool_name, path) = file_functions.Create(menuStrip3);
-            richTextBox.Text = null;
-            history = new string[history.Length];
-            history[0] = "";
-            files.Add((tool_name, path, richTextBox.Text, history, 1));
-        }
-
-        private void create2_Click(object sender, EventArgs e)
-        {
-            (tool_name, path) = file_functions.Create(menuStrip3);
-            richTextBox.Text = null;
-            history = new string[history.Length];
-            history[0] = "";
-            files.Add((tool_name, path, richTextBox.Text, history, 1));
-        }
-
-        private void open1_Click(object sender, EventArgs e)
-        {
-            (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
-            history = new string[history.Length];
-            history[0] = richTextBox.Text;
-            files.Add((tool_name, path, richTextBox.Text, history, 1));
-        }
-
-        private void open2_Click(object sender, EventArgs e)
-        {
-            (tool_name, path) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3);
-            history = new string[history.Length];
-            history[0] = richTextBox.Text;
-            files.Add((tool_name, path, richTextBox.Text, history, 1));
-        }
-
-        private void save1_Click(object sender, EventArgs e)
-        {
-            string _;
-            int index = file_functions.Find_File(files, tool_name);
-            if (index == -1) return;
-
-            (path, _, history, idx) = tool_functions.Click_Strip(index, path, files);
-            if (path == null) MessageBox.Show("Error: file path is null!");
-            file_functions.Save(richTextBox, path);
-        }
-
-        private void saveHow1_Click(object sender, EventArgs e)
-        {
-            int prev = files.IndexOf((tool_name, path, richTextBox.Text, history, idx));
-            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
-            files.RemoveAt(prev);
-            files.Add((tool_name, path, richTextBox.Text, history, idx));
-        }
-
-        private void save2_Click(object sender, EventArgs e)
-        {
-            int prev = files.IndexOf((tool_name, path, richTextBox.Text, history, idx));
-            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
-            files.RemoveAt(prev);
-            files.Add((tool_name, path, richTextBox.Text, history, idx));
-        }
-
-        private void help1_Click(object sender, EventArgs e)
-        {
+        private void create1_Click(object sender, EventArgs e) => 
+            (tool_name, path, history) = file_functions.Create(menuStrip3, richTextBox, tool_name, files, idx);
+        private void create2_Click(object sender, EventArgs e) =>
+            (tool_name, path, history) = file_functions.Create(menuStrip3, richTextBox, tool_name, files, idx);
+        private void open1_Click(object sender, EventArgs e) => 
+            (tool_name, path, history, richTextBox.Text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, files, idx);
+        private void open2_Click(object sender, EventArgs e) =>
+            (tool_name, path, history, richTextBox.Text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, files, idx);
+        private void save1_Click(object sender, EventArgs e) =>
+            path = file_functions.Save(richTextBox, tool_name, path, files);
+        private void saveHow1_Click(object sender, EventArgs e) =>
+            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
+        private void save2_Click(object sender, EventArgs e) =>
+            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
+        private void help1_Click(object sender, EventArgs e) =>
             Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
-        }
 
 
         private void quit1_Click(object sender, EventArgs e)
@@ -179,7 +131,7 @@ namespace tflc_1
 
         private void yes_Click(object sender, EventArgs e)
         {
-            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name);
+            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
             Close();
         }
 
@@ -188,16 +140,13 @@ namespace tflc_1
         {
             if (e.ClickedItem is ToolStripMenuItem clickedItem)
             {
-                int index = file_functions.Find_File(files, tool_name);
-                if (index == -1) return;
-                files.RemoveAt(index);
-                files.Add((tool_name, path, richTextBox.Text, history, idx));
+                tool_functions.Close_Strip(tool_name, richTextBox.Text, history, idx, files);
 
                 tool_name = clickedItem.Text;
 
                 string text;
                 history = new string[history.Length];
-                index = file_functions.Find_File(files, tool_name);
+                int index = file_functions.Find_File(files, tool_name);
                 if (index == -1) return;
                 (path, text, history, idx) = tool_functions.Click_Strip(index, path, files);
                 richTextBox.Text = text;

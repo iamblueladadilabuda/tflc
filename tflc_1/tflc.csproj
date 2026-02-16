@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileFunctions.cs" />
+    <Compile Include="Header.cs" />
     <Compile Include="NumberingLines.cs" />
     <Compile Include="OpenApp.cs" />
     <Compile Include="TextFunctions.cs" />

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace tflc_1
 {
@@ -51,8 +52,8 @@ namespace tflc_1
             }
         }
 
-        public (string, string, string[]) Open(MenuStrip menuStrip, RichTextBox richTextBox, 
-            List<(string, string, string, string[], int)> files)
+        public (string, string, string[]) Open(MenuStrip menuStrip, RichTextBox richTextBox,
+            List<(string[], string[], int)> files)
         {
             string tool_name = "", path = "";
             string[] history_def = new string[10];
@@ -68,11 +69,14 @@ namespace tflc_1
                         string text = File.ReadAllText(filename);
                         tool_name = filename.Split('/')[1].Split('.')[0];
                         path = filename;
-                        richTextBox.Text = text;
+
                         string[] history = new string[10];
                         history[0] = text;
                         history_def = history;
-                        files.Add((tool_name, path, text, history, 1));
+
+                        richTextBox.Text = text;
+                        string[] file = new string[] { tool_name, path, text };
+                        files.Add((file, history, 1));
                         Create_ToolStrip(menuStrip, tool_name, "file");
                     }
                 }

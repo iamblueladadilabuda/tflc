@@ -10,14 +10,26 @@ namespace tflc_1
 {
     internal class ToolStripFunctions
     {
-        public (string, string, string[], int) Click_Strip(int index, string path, 
-            List<(string, string, string, string[], int)> files)
+        public (string, string, string[], int) Click_Strip(int index, string path,
+            List<(string[], string[], int)> files)
         {
-            path = files.ElementAt(index).Item2;
-            string text = files.ElementAt(index).Item3;
-            string[] history = files.ElementAt(index).Item4;
-            int idx = files.ElementAt(index).Item5;
+            path = files.ElementAt(index).Item1[1];
+            string text = files.ElementAt(index).Item1[2];
+            string[] history = files.ElementAt(index).Item2;
+            int idx = files.ElementAt(index).Item3;
             return (path, text, history, idx);
+        }
+
+        public void Close_Strip(string tool_name, string text, string[] history, int idx,
+            List<(string[], string[], int)> files)
+        {
+            FileFunctions file_functions = new FileFunctions();
+            int index = file_functions.Find_File(files, tool_name);
+            if (index == -1) return;
+            string path = files.ElementAt(index).Item1[2];
+            files.RemoveAt(index);
+            string[] file = { tool_name, path, text };
+            files.Add((file, history, idx));
         }
 
         public void Create_ToolStrip(MenuStrip menuStrip, string filename, string name)
