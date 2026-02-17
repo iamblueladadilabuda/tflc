@@ -75,7 +75,7 @@ namespace tflc_1
                         history_def = history;
 
                         richTextBox.Text = text;
-                        string[] file = new string[] { tool_name, path, text };
+                        string[] file = new string[] { tool_name, path, text, "" };
                         files.Add((file, history, 1));
                         Create_ToolStrip(menuStrip, tool_name, "file");
                     }

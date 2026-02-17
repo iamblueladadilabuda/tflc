@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,14 +22,14 @@ namespace tflc_1
         private ToolStripFunctions tool_functions = new ToolStripFunctions();
         private NumberingLines numbering = new NumberingLines();
         private OpenApp open = new OpenApp();
-        TextFunctions text_functions = new TextFunctions();
+        private TextFunctions text_functions = new TextFunctions();
 
         private const int HISTORY_SIZE = 10;
 
         private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
         private int width, height;
-        private string tool_name = "", path = "", buffer = "";
-        private bool closing = false;
+        private string tool_name = "", path = "", buffer = "", save_text = "";
+        private bool closing = false, close_all = false;
         private string[] history = new string[HISTORY_SIZE];
         int idx = 1;
 
@@ -42,6 +43,9 @@ namespace tflc_1
             numbering.Numbering_Lines(richTextBox, numberBox);
             panel7.Visible = false;
             numberBox.SelectionAlignment = HorizontalAlignment.Center;
+
+            KeyPreview = true;
+            KeyDown += new KeyEventHandler(Compiler_KeyDown);
         }
 
 
@@ -97,59 +101,93 @@ namespace tflc_1
 
 
         private void create1_Click(object sender, EventArgs e) => 
-            (tool_name, path, history) = file_functions.Create(menuStrip3, richTextBox, tool_name, files, idx);
+            (tool_name, path, history, save_text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
         private void create2_Click(object sender, EventArgs e) =>
-            (tool_name, path, history) = file_functions.Create(menuStrip3, richTextBox, tool_name, files, idx);
+            (tool_name, path, history, save_text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
         private void open1_Click(object sender, EventArgs e) => 
-            (tool_name, path, history, richTextBox.Text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, files, idx);
+            (tool_name, path, history, richTextBox.Text, save_text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, save_text, files, idx);
         private void open2_Click(object sender, EventArgs e) =>
-            (tool_name, path, history, richTextBox.Text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, files, idx);
+            (tool_name, path, history, richTextBox.Text, save_text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, save_text, files, idx);
         private void save1_Click(object sender, EventArgs e) =>
             path = file_functions.Save(richTextBox, tool_name, path, files);
         private void saveHow1_Click(object sender, EventArgs e) =>
-            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
+            (tool_name, path, save_text) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
         private void save2_Click(object sender, EventArgs e) =>
-            (tool_name, path) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
+            (tool_name, path, save_text) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
         private void help1_Click(object sender, EventArgs e) =>
             Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
 
 
         private void quit1_Click(object sender, EventArgs e)
         {
-            panel7.Visible = true;
+            if (tool_functions.Count_ToolStrip(menuStrip3) == 0) Close();
+
+            if (tool_functions.ToolStrip_For_Close(tool_name, files) > -1)
+            {
+                panel7.Visible = true;
+            }
+            else
+            {
+                Close();
+            }
         }
 
         private void exit_Click(object sender, EventArgs e)
         {
+            closing = false;
             panel7.Visible = false;
         }
 
         private void no_Click(object sender, EventArgs e)
         {
-            Close();
+            if (close_all)
+            {
+                Close();
+            }
+            else
+            {
+                tool_functions.Delete_ToolStrip(menuStrip3, tool_name, files);
+                panel7.Visible = false;
+                if (files.Count == 0)
+                {
+                    richTextBox.Text = null;
+                    return;
+                }
+                tool_name = files.ElementAt(files.Count - 1).Item1[0];
+                (path, history, idx, richTextBox.Text) = tool_functions.Click_Strip(tool_name, path, files);
+            }   
         }
 
         private void yes_Click(object sender, EventArgs e)
         {
-            file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
-            Close();
+            if (close_all)
+            {
+                tool_functions.Close_All_ToolStrip(menuStrip3, this, saveFileDialog, richTextBox, files);
+                Close();
+            }
+            else
+            {
+                tool_functions.Close_ToolStrip(menuStrip3, tool_name, this, saveFileDialog, richTextBox, files);
+                panel7.Visible = false;
+                if (files.Count == 0)
+                {
+                    richTextBox.Text = null;
+                    return;
+                }
+                tool_name = files.ElementAt(files.Count - 1).Item1[0];
+                (path, history, idx, richTextBox.Text) = tool_functions.Click_Strip(tool_name, path, files);
+            }
         }
 
 
         private void menuStrip3_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem is ToolStripMenuItem clickedItem)
+            if (e.ClickedItem is ToolStripMenuItem clicked_item)
             {
-                tool_functions.Close_Strip(tool_name, richTextBox.Text, history, idx, files);
-
-                tool_name = clickedItem.Text;
-
-                string text;
-                history = new string[history.Length];
-                int index = file_functions.Find_File(files, tool_name);
-                if (index == -1) return;
-                (path, text, history, idx) = tool_functions.Click_Strip(index, path, files);
-                richTextBox.Text = text;
+                tool_functions.Roll_Strip(tool_name, richTextBox.Text, save_text, history, idx, files);
+                tool_name = clicked_item.Text;
+                (path, history, idx, richTextBox.Text) = tool_functions.Click_Strip(tool_name, path, files);
+                richTextBox.Select(richTextBox.Text.Length, 0);
             }
         }
 
@@ -163,6 +201,11 @@ namespace tflc_1
             numbering.Numbering_Lines(richTextBox, numberBox);
             if (richTextBox.Text == history[idx - 1]) return;
             idx = text_functions.Add_History(history, richTextBox.Text, idx);
+            richTextBox.Select(richTextBox.Text.Length, 0);
+            if (menuStrip3.Items.Count == 0 && !string.IsNullOrEmpty(richTextBox.Text))
+            {
+                (tool_name, path, history, save_text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+            }
         }
 
 
@@ -244,7 +287,7 @@ namespace tflc_1
 
         private void Panel7_VisibleChanged(object sender, EventArgs e)
         {
-            if (!panel7.Visible && closing)
+            if (!panel7.Visible&& closing)
             {
                 panel7.VisibleChanged -= Panel7_VisibleChanged;
                 Close();
@@ -259,9 +302,21 @@ namespace tflc_1
             {
                 e.Cancel = true;
 
-                panel7.Visible = true;
+                panel7.Visible = false;
                 closing = true;
 
+                if (tool_functions.Count_ToolStrip(menuStrip3) == 0) Close();
+
+                foreach (ToolStripMenuItem item in menuStrip3.Items)
+                {
+                    int index = tool_functions.ToolStrip_For_Close(item.Text, files);
+                    if (index != -1)
+                    {
+                        panel7.Visible = true;
+                    }
+                }
+
+                close_all = true;
                 panel7.VisibleChanged += Panel7_VisibleChanged;
             }
         }
@@ -269,6 +324,23 @@ namespace tflc_1
         private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
         private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
         private void kazLan1_Click(object sender, EventArgs e) => Change_Language(3);
+
+        private void Compiler_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                close_all = false;
+                if (tool_functions.ToolStrip_For_Close(tool_name, files) >= 0)
+                {
+                    panel7.Visible = true;
+                }
+                else if (tool_functions.ToolStrip_For_Close(tool_name, files) == -1)
+                {
+                    tool_functions.Delete_ToolStrip(menuStrip3, tool_name, files);
+                    richTextBox.Text = null;
+                }
+            }
+        }
 
         private void Change_Language(int choice)
         {

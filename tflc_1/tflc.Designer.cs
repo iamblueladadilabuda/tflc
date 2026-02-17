@@ -124,7 +124,7 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 31);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -237,7 +237,7 @@
             // return1
             // 
             this.return1.Name = "return1";
-            this.return1.Size = new System.Drawing.Size(247, 30);
+            this.return1.Size = new System.Drawing.Size(209, 30);
             this.return1.Text = "Возврат";
             this.return1.Click += new System.EventHandler(this.return1_Click);
             // 
@@ -265,14 +265,14 @@
             // delete1
             // 
             this.delete1.Name = "delete1";
-            this.delete1.Size = new System.Drawing.Size(247, 30);
+            this.delete1.Size = new System.Drawing.Size(209, 30);
             this.delete1.Text = "Удаление";
             this.delete1.Click += new System.EventHandler(this.delete1_Click);
             // 
             // select1
             // 
             this.select1.Name = "select1";
-            this.select1.Size = new System.Drawing.Size(247, 30);
+            this.select1.Size = new System.Drawing.Size(209, 30);
             this.select1.Text = "Выделить всё";
             this.select1.Click += new System.EventHandler(this.select1_Click);
             // 
@@ -361,9 +361,9 @@
             this.copy2,
             this.cut2,
             this.enter2});
-            this.menuStrip2.Location = new System.Drawing.Point(0, 31);
+            this.menuStrip2.Location = new System.Drawing.Point(0, 33);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(800, 38);
+            this.menuStrip2.Size = new System.Drawing.Size(800, 40);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -472,17 +472,17 @@
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 69);
+            this.panel1.Location = new System.Drawing.Point(0, 73);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(40, 440);
+            this.panel1.Size = new System.Drawing.Size(40, 436);
             this.panel1.TabIndex = 3;
             // 
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 69);
+            this.panel2.Location = new System.Drawing.Point(760, 73);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 440);
+            this.panel2.Size = new System.Drawing.Size(40, 436);
             this.panel2.TabIndex = 4;
             // 
             // menuStrip3
@@ -490,9 +490,9 @@
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
+            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(720, 4);
+            this.menuStrip3.Size = new System.Drawing.Size(720, 6);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -502,7 +502,7 @@
             this.panel3.Controls.Add(this.richTextBox);
             this.panel3.Controls.Add(this.panel13);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(40, 73);
+            this.panel3.Location = new System.Drawing.Point(40, 79);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(720, 176);
             this.panel3.TabIndex = 6;
@@ -703,6 +703,7 @@
             this.Text = "Compiler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compiler_FormClosing);
             this.SizeChanged += new System.EventHandler(this.Compiler_SizeChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Compiler_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.menuStrip2.ResumeLayout(false);

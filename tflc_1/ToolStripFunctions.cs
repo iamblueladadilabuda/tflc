@@ -2,33 +2,50 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.WebRequestMethods;
 
 namespace tflc_1
 {
     internal class ToolStripFunctions
     {
-        public (string, string, string[], int) Click_Strip(int index, string path,
-            List<(string[], string[], int)> files)
+        public int Count_ToolStrip(MenuStrip menuStrip)
         {
-            path = files.ElementAt(index).Item1[1];
-            string text = files.ElementAt(index).Item1[2];
-            string[] history = files.ElementAt(index).Item2;
-            int idx = files.ElementAt(index).Item3;
-            return (path, text, history, idx);
+            int count = 0;
+            foreach (ToolStripMenuItem item in menuStrip.Items)
+            {
+                count++;
+            }
+            return count;
         }
 
-        public void Close_Strip(string tool_name, string text, string[] history, int idx,
+        public (string, string[], int, string) Click_Strip(string tool_name, string path,
             List<(string[], string[], int)> files)
         {
             FileFunctions file_functions = new FileFunctions();
             int index = file_functions.Find_File(files, tool_name);
+            if (index == -1) return (null, null, -1, null);
+
+            path = files.ElementAt(index).Item1[1];
+            string text = files.ElementAt(index).Item1[2];
+            string[] history = files.ElementAt(index).Item2;
+            int idx = files.ElementAt(index).Item3;
+            return (path, history, idx, text);
+        }
+
+        public void Roll_Strip(string tool_name, string text, string save, string[] history, 
+            int idx, List<(string[], string[], int)> files)
+        {
+            FileFunctions file_functions = new FileFunctions();
+            int index = file_functions.Find_File(files, tool_name);
             if (index == -1) return;
-            string path = files.ElementAt(index).Item1[2];
+
+            string path = files.ElementAt(index).Item1[1];
             files.RemoveAt(index);
-            string[] file = { tool_name, path, text };
+            string[] file = { tool_name, path, text, save };
             files.Add((file, history, idx));
         }
 
@@ -38,6 +55,71 @@ namespace tflc_1
             tool_strip.Text = filename;
             tool_strip.Name = name;
             menuStrip.Items.Add(tool_strip);
+        }
+
+        public void Delete_ToolStrip(MenuStrip menuStrip, string tool_name,
+            List<(string[], string[], int)> files)
+        {
+            FileFunctions file_functions = new FileFunctions();
+            foreach (ToolStripMenuItem item in menuStrip.Items)
+            {
+                if (item.Text == tool_name)
+                {
+                    int index = file_functions.Find_File(files, tool_name);
+                    if (index == -1) return;
+                    files.RemoveAt(index);
+                    menuStrip.Items.Remove(item);
+                    break;
+                }
+            }
+        }
+
+        public int ToolStrip_For_Close(string tool_name, List<(string[], string[], int)> files)
+        {
+            if (tool_name == "") return -2;
+            FileFunctions file_functions = new FileFunctions();
+            int index = file_functions.Find_File(files, tool_name);
+            if (index == -1) return -2;
+
+            if (string.IsNullOrEmpty(files.ElementAt(index).Item1[3]))
+            {
+                return index;
+            }
+
+            return -1;
+        }
+
+        public void Close_ToolStrip(MenuStrip menuStrip, string tool_name, Form form, 
+            SaveFileDialog saveFileDialog, RichTextBox richTextBox, 
+            List<(string[], string[], int)> files)
+        {
+            FileFunctions file_functions = new FileFunctions();
+            string filename, b, c;
+            (filename, b, c) = file_functions.Save_How(form, saveFileDialog, richTextBox, menuStrip, tool_name, files);
+            if (filename != null || b != null || c != null)
+            {
+                Delete_ToolStrip(menuStrip, filename, files);
+            }
+        }
+
+        public void Close_All_ToolStrip(MenuStrip menuStrip, Form form,
+            SaveFileDialog saveFileDialog, RichTextBox richTextBox,
+            List<(string[], string[], int)> files)
+        {
+            FileFunctions file_functions = new FileFunctions();
+
+            List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
+            foreach (ToolStripMenuItem item in menuStrip.Items)
+            {
+                items.Add(item);
+            }
+
+            foreach (ToolStripMenuItem item in items)
+            {
+                int index = ToolStrip_For_Close(item.Text, files);
+                if (index == -1) continue;
+                Close_ToolStrip(menuStrip, item.Text, form, saveFileDialog, richTextBox, files);
+            }
         }
 
         protected (string, string) New_ToolStrip(MenuStrip menuStrip)

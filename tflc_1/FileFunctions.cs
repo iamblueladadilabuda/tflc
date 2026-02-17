@@ -15,40 +15,35 @@ namespace tflc_1
     {
         private const int HISTORY_SIZE = 10;
 
-        public (string, string, string[]) Create(MenuStrip menuStrip, RichTextBox richTextBox,
-            string tool_name, List<(string[], string[], int)> files, int idx)
+        public (string, string, string[], string) Create(MenuStrip menuStrip, RichTextBox richTextBox,
+            string tool_name, string save_text, List<(string[], string[], int)> files, int idx)
         {
             (string filename, string name) = New_ToolStrip(menuStrip);
             Create_ToolStrip(menuStrip, filename, name);
             string path = "cache/" + filename + ".txt";
             File.Create(path).Close();
 
-            Save_List_Files(tool_name, richTextBox.Text, idx, files);
+            Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
 
             richTextBox.Text = null;
             string[] history = new string[HISTORY_SIZE];
             history[0] = "";
-            string[] file = { filename, path, richTextBox.Text };
+            string[] file = { filename, path, richTextBox.Text, null };
             files.Add((file, history, 1));
 
-            return (filename, path, history);
+            return (filename, path, history, "");
         }
 
-        public (string, string, string[], string) Open(Form form, OpenFileDialog openFileDialog, 
-            RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, 
+        public (string, string, string[], string, string) Open(Form form, OpenFileDialog openFileDialog, 
+            RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text, 
             List<(string[], string[], int)> files, int idx)
         {
-            Save_List_Files(tool_name, richTextBox.Text, idx, files);
+            Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
 
             string filename = "", text = "";
             if (openFileDialog.ShowDialog(form) == DialogResult.OK)
             {
-                string[] file_line = File.ReadAllLines(openFileDialog.FileName);
-
-                foreach (string line in file_line)
-                {
-                    text += line;
-                }
+                text = File.ReadAllText(openFileDialog.FileName);
 
                 filename = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
                 if (!Find_File_In_ToolStrip(menuStrip, filename))
@@ -59,10 +54,11 @@ namespace tflc_1
 
             string[] history = new string[HISTORY_SIZE];
             history[0] = text;
-            string[] file = { filename, openFileDialog.FileName, text };
+            save_text = text;
+            string[] file = { filename, openFileDialog.FileName, text, save_text };
             files.Add((file, history, 1));
 
-            return (filename, openFileDialog.FileName, history, text);
+            return (filename, openFileDialog.FileName, history, text, save_text);
         }
 
         public string Save(RichTextBox richTextBox, string tool_name, string filename, 
@@ -71,20 +67,24 @@ namespace tflc_1
             ToolStripFunctions tool_functions = new ToolStripFunctions();
             string text; string[] his = new string[HISTORY_SIZE]; int idx;
 
-            int index = Find_File(files, tool_name);
-            if (index == -1) return null;
-
-            (filename, text, his, idx) = tool_functions.Click_Strip(index, filename, files);
+            (filename, his, idx, text) = tool_functions.Click_Strip(tool_name, filename, files);
             if (filename == null) MessageBox.Show("Error: file path is null!");
 
             File.WriteAllText(filename, richTextBox.Text);
             return filename;
         }
 
-        public (string, string) Save_How(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox,
+        public (string, string, string) Save_How(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox,
             MenuStrip menuStrip, string filename, List<(string[], string[], int)> files)
         {
             int prev = Find_File(files, filename);
+            if (prev == -1)
+            {
+                MessageBox.Show("Nothing to save");
+                return (null, null, null);
+            }
+            string[] history = files.ElementAt(prev).Item2;
+            int idx = files.ElementAt(prev).Item3;
             saveFileDialog.FileName = filename;
 
             if (saveFileDialog.ShowDialog(form) == DialogResult.OK)
@@ -95,13 +95,12 @@ namespace tflc_1
             string new_filename = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
             Change_Name_ToolStrip(menuStrip, filename, new_filename);
 
-            string[] history = files.ElementAt(prev).Item2;
-            int idx = files.ElementAt(prev).Item3;
+            string save_text = richTextBox.Text;
             files.RemoveAt(prev);
-            string[] file = { filename, saveFileDialog.FileName, richTextBox.Text };
+            string[] file = { new_filename, saveFileDialog.FileName, save_text, save_text };
             files.Add((file, history, idx));
 
-            return (new_filename, saveFileDialog.FileName);
+            return (new_filename, saveFileDialog.FileName, save_text);
         }
 
         public int Find_File(List<(string[], string[], int)> files, string tool_name)
@@ -116,13 +115,13 @@ namespace tflc_1
             return -1;
         }
 
-        private void Save_List_Files(string tool_name, string text, int idx,
+        private void Save_List_Files(string tool_name, string text, string save_text, int idx,
             List<(string[], string[], int)> files)
         {
             int index = Find_File(files, tool_name);
             if (index == -1) return;
             string[] old_history = files.ElementAt(index).Item2;
-            Close_Strip(tool_name, text, old_history, idx, files);
+            Roll_Strip(tool_name, text, save_text, old_history, idx, files);
         }
     }
 }

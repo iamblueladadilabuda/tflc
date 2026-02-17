@@ -43,7 +43,7 @@ namespace tflc_1
             else
             {
                 if (!string.IsNullOrEmpty(text)) history[index] = text;
-                if (history[idx] != null) idx += 1;
+                if (history[idx] != null && idx < HISTORY_SIZE - 1) idx += 1;
             }
 
             return idx;
