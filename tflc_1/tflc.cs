@@ -146,6 +146,14 @@ namespace tflc_1
             }
             else
             {
+                if (tool_name.StartsWith("Untitled-"))
+                {
+                    string filename = "cache/" + tool_name + ".txt";
+                    if (File.Exists(filename))
+                    {
+                        File.AppendAllText("cache/delete.txt", filename + "\n");
+                    }
+                }
                 tool_functions.Delete_ToolStrip(menuStrip3, tool_name, files);
                 panel7.Visible = false;
                 if (files.Count == 0)
@@ -339,7 +347,11 @@ namespace tflc_1
                     tool_functions.Delete_ToolStrip(menuStrip3, tool_name, files);
                     richTextBox.Text = null;
                 }
-            }
+                return;
+            } 
+
+            KeyboardShortcuts keyboard = new KeyboardShortcuts();
+            (buffer, idx) = keyboard.Keyboard_Shortcusts(e, richTextBox, history, idx, buffer);
         }
 
         private void Change_Language(int choice)

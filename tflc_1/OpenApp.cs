@@ -33,7 +33,7 @@ namespace tflc_1
                     }
                 }
             }
-            File.WriteAllText("cache/delete.txt", delete_lines);
+            File.AppendAllText("cache/delete.txt", delete_lines);
             File.WriteAllText("cache/open.txt", open_lines);
         }
 
@@ -49,6 +49,7 @@ namespace tflc_1
                         File.Delete(line);
                     }
                 }
+                File.WriteAllText("cache/delete.txt", null);
             }
         }
 
