@@ -13,7 +13,7 @@ namespace tflc_1
 {
     internal class FileFunctions : ToolStripFunctions
     {
-        private const int HISTORY_SIZE = 10;
+        private readonly ListFileFunctions ls_file = new ListFileFunctions();
 
         public (string, string, string[], string) Create(MenuStrip menuStrip, RichTextBox richTextBox,
             string tool_name, string save_text, List<(string[], string[], int)> files, int idx)
@@ -23,13 +23,11 @@ namespace tflc_1
             string path = "cache/" + filename + ".txt";
             File.Create(path).Close();
 
-            Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
+            ls_file.Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
 
             richTextBox.Text = null;
-            string[] history = new string[HISTORY_SIZE];
-            history[0] = "";
             string[] file = { filename, path, richTextBox.Text, null };
-            files.Add((file, history, 1));
+            string[] history = ls_file.Add_List_Files(files, "", file);
 
             return (filename, path, history, "");
         }
@@ -38,7 +36,7 @@ namespace tflc_1
             RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text, 
             List<(string[], string[], int)> files, int idx)
         {
-            Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
+            ls_file.Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
 
             string filename = "", text = "";
             if (openFileDialog.ShowDialog(form) == DialogResult.OK)
@@ -52,11 +50,9 @@ namespace tflc_1
                 }
             }
 
-            string[] history = new string[HISTORY_SIZE];
-            history[0] = text;
             save_text = text;
             string[] file = { filename, openFileDialog.FileName, text, save_text };
-            files.Add((file, history, 1));
+            string[] history = ls_file.Add_List_Files(files, text, file);
 
             return (filename, openFileDialog.FileName, history, text, save_text);
         }
@@ -65,7 +61,7 @@ namespace tflc_1
             List<(string[], string[], int)> files)
         {
             ToolStripFunctions tool_functions = new ToolStripFunctions();
-            string text; string[] his = new string[HISTORY_SIZE]; int idx;
+            string text; string[] his; int idx;
 
             (filename, his, idx, text) = tool_functions.Click_Strip(tool_name, filename, files);
             if (filename == null) MessageBox.Show("Error: file path is null!");
@@ -77,12 +73,13 @@ namespace tflc_1
         public (string, string, string) Save_How(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox,
             MenuStrip menuStrip, string filename, List<(string[], string[], int)> files)
         {
-            int prev = Find_File(files, filename);
+            int prev = ls_file.Find_File(files, filename);
             if (prev == -1)
             {
                 MessageBox.Show("Nothing to save");
                 return (null, null, null);
             }
+
             string[] history = files.ElementAt(prev).Item2;
             int idx = files.ElementAt(prev).Item3;
             saveFileDialog.FileName = filename;
@@ -101,27 +98,6 @@ namespace tflc_1
             files.Add((file, history, idx));
 
             return (new_filename, saveFileDialog.FileName, save_text);
-        }
-
-        public int Find_File(List<(string[], string[], int)> files, string tool_name)
-        {
-            for (int index = 0; index < files.Count; index++)
-            {
-                if (files.ElementAt(index).Item1[0] == tool_name)
-                {
-                    return index;
-                }
-            }
-            return -1;
-        }
-
-        private void Save_List_Files(string tool_name, string text, string save_text, int idx,
-            List<(string[], string[], int)> files)
-        {
-            int index = Find_File(files, tool_name);
-            if (index == -1) return;
-            string[] old_history = files.ElementAt(index).Item2;
-            Roll_Strip(tool_name, text, save_text, old_history, idx, files);
         }
     }
 }

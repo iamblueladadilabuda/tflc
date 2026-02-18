@@ -10,7 +10,7 @@ using static System.Net.WebRequestMethods;
 
 namespace tflc_1
 {
-    internal class ToolStripFunctions
+    internal class ToolStripFunctions : ListFileFunctions
     {
         public int Count_ToolStrip(MenuStrip menuStrip)
         {

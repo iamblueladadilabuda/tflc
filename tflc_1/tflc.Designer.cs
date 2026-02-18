@@ -100,7 +100,7 @@
             this.menuStrip2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel13.SuspendLayout();
-            this.panel5.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -124,7 +124,7 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 31);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -361,9 +361,9 @@
             this.copy2,
             this.cut2,
             this.enter2});
-            this.menuStrip2.Location = new System.Drawing.Point(0, 33);
+            this.menuStrip2.Location = new System.Drawing.Point(0, 31);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(800, 40);
+            this.menuStrip2.Size = new System.Drawing.Size(800, 38);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -465,6 +465,7 @@
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.Size = new System.Drawing.Size(619, 176);
             this.richTextBox.TabIndex = 2;
+            this.richTextBox.TabStop = false;
             this.richTextBox.Text = "";
             this.richTextBox.VScroll += new System.EventHandler(this.richTextBox_VScroll);
             this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
@@ -472,17 +473,17 @@
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 73);
+            this.panel1.Location = new System.Drawing.Point(0, 69);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(40, 436);
+            this.panel1.Size = new System.Drawing.Size(40, 440);
             this.panel1.TabIndex = 3;
             // 
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 73);
+            this.panel2.Location = new System.Drawing.Point(760, 69);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 436);
+            this.panel2.Size = new System.Drawing.Size(40, 440);
             this.panel2.TabIndex = 4;
             // 
             // menuStrip3
@@ -490,9 +491,9 @@
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
+            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(720, 6);
+            this.menuStrip3.Size = new System.Drawing.Size(720, 4);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -502,7 +503,7 @@
             this.panel3.Controls.Add(this.richTextBox);
             this.panel3.Controls.Add(this.panel13);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(40, 79);
+            this.panel3.Location = new System.Drawing.Point(40, 73);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(720, 176);
             this.panel3.TabIndex = 6;
@@ -538,6 +539,7 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.textCompiler);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel4.Location = new System.Drawing.Point(40, 469);
             this.panel4.Name = "panel4";
@@ -547,7 +549,6 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
-            this.panel5.Controls.Add(this.textCompiler);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel5.Location = new System.Drawing.Point(40, 369);
             this.panel5.Name = "panel5";
@@ -557,7 +558,7 @@
             // textCompiler
             // 
             this.textCompiler.AutoSize = true;
-            this.textCompiler.Location = new System.Drawing.Point(6, 3);
+            this.textCompiler.Location = new System.Drawing.Point(3, 15);
             this.textCompiler.Name = "textCompiler";
             this.textCompiler.Size = new System.Drawing.Size(44, 16);
             this.textCompiler.TabIndex = 0;
@@ -711,8 +712,8 @@
             this.panel3.ResumeLayout(false);
             this.panel13.ResumeLayout(false);
             this.panel13.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
