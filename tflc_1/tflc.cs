@@ -27,28 +27,49 @@ namespace tflc_1
         private readonly OpenApp open = new OpenApp();
         private readonly TextFunctions text_functions = new TextFunctions();
         private readonly SyntaxHighlighting syntax_highlighting = new SyntaxHighlighting();
+        private readonly FontFunctions font_functions = new FontFunctions();
+        private readonly TableFunctions table_functions = new TableFunctions();
+        private readonly ListFileFunctions ls_functions = new ListFileFunctions();
 
         private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
         private string tool_name = "", path = "", buffer = "", save_text = "";
         private bool closing = false, close_all = false, new_tool = true;
         private string[] history = new string[HISTORY_SIZE];
-        private int width, height, idx = 1; 
+        DataGridView table = new DataGridView();
+        private int width, height, idx = 1;
 
         public Compiler()
         {
             InitializeComponent();
+
+            panel7.Visible = false;
             Update_Panels_Sizes();
             Change_Language(1);
+            font_functions.Initialize_FontSizes(fontSizes1);
+
             open.Clean();
             (tool_name, path, history) = open.Open(menuStrip3, richTextBox, files);
             numbering.Numbering_Lines(richTextBox, numberBox);
-            panel7.Visible = false;
-            numberBox.SelectionAlignment = HorizontalAlignment.Center;
+            numberBox.SelectionAlignment = HorizontalAlignment.Center;   
+
+            table = table_functions.Initialize_Table();
+            panel5.Controls.Add(table);
 
             syntax_highlighting.Syntax_Color();
 
             KeyPreview = true;
             KeyDown += new KeyEventHandler(Compiler_KeyDown);
+
+            fontSizes1.SelectedIndexChanged += FontSizes1_SelectedIndexChanged;
+
+            DragEnter += Compiler_DragEnter;
+            DragDrop += Compiler_DragDrop;
+
+            richTextBox.AllowDrop = true;
+            richTextBox.DragEnter += Compiler_DragEnter;
+            richTextBox.DragDrop += Compiler_DragDrop;
+
+            condition.Text = "Successful application opening!";
         }
 
 
@@ -103,20 +124,40 @@ namespace tflc_1
         }
 
 
+        private void Compiler_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+            else e.Effect = DragDropEffects.None;
+        }
+
+        private void Compiler_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] drag_files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (drag_files.Length > 0)
+            {
+                foreach (string drag_path in drag_files)
+                {
+                    path = drag_path;
+                    (tool_name, history, richTextBox.Text, save_text, condition.Text) = file_functions.Open_Drop_File(path, richTextBox, menuStrip3, tool_name, save_text, files, idx);
+                }
+            }
+        }
+
         private void create1_Click(object sender, EventArgs e) => 
-            (tool_name, path, history, save_text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+            (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
         private void create2_Click(object sender, EventArgs e) =>
-            (tool_name, path, history, save_text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+            (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
         private void open1_Click(object sender, EventArgs e) => 
-            (tool_name, path, history, richTextBox.Text, save_text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, save_text, files, idx);
+            (tool_name, path, history, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
         private void open2_Click(object sender, EventArgs e) =>
-            (tool_name, path, history, richTextBox.Text, save_text) = file_functions.Open(this, openFileDialog, richTextBox, menuStrip3, tool_name, save_text, files, idx);
+            (tool_name, path, history, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
         private void save1_Click(object sender, EventArgs e) =>
-            path = file_functions.Save(richTextBox, tool_name, path, files);
+            (path, condition.Text) = file_functions.Save(richTextBox, tool_name, path, files);
         private void saveHow1_Click(object sender, EventArgs e) =>
-            (tool_name, path, save_text) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
+            (tool_name, path, save_text, condition.Text) = file_functions.Save_How(this, richTextBox, menuStrip3, tool_name, files);
         private void save2_Click(object sender, EventArgs e) =>
-            (tool_name, path, save_text) = file_functions.Save_How(this, saveFileDialog, richTextBox, menuStrip3, tool_name, files);
+            (tool_name, path, save_text, condition.Text) = file_functions.Save_How(this, richTextBox, menuStrip3, tool_name, files);
         private void help1_Click(object sender, EventArgs e) =>
             Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
 
@@ -206,12 +247,12 @@ namespace tflc_1
         {
             if (close_all)
             {
-                tool_functions.Close_All_ToolStrip(menuStrip3, this, saveFileDialog, richTextBox, files);
+                tool_functions.Close_All_ToolStrip(menuStrip3, this, saveFileDialog, richTextBox, condition, files);
                 Close();
             }
             else
             {
-                tool_functions.Close_ToolStrip(menuStrip3, tool_name, this, saveFileDialog, richTextBox, files);
+                tool_functions.Close_ToolStrip(menuStrip3, tool_name, this, saveFileDialog, richTextBox, condition, files);
                 panel7.Visible = false;
                 if (files.Count == 0)
                 {
@@ -246,12 +287,20 @@ namespace tflc_1
 
             if (richTextBox.Text == history[idx - 1]) return;
             idx = text_functions.Add_History(history, richTextBox.Text, idx);
+            save_text = "";
+            files.ElementAt(ls_functions.Find_File(files, tool_name)).Item1[3] = save_text;
 
             if (menuStrip3.Items.Count == 0 && !string.IsNullOrEmpty(richTextBox.Text))
-                (tool_name, path, history, save_text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+                (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
             
             syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
             new_tool = false;
+
+            // Проверка работоспосбности добавления ошибок в таблицу
+            /*if (richTextBox.Text.Contains("error"))
+            {
+                table_functions.Add_Row_Table(richTextBox, table, path, "ERROR");
+            }*/
         }
 
 
@@ -313,6 +362,9 @@ namespace tflc_1
             }
         }
 
+
+        private void FontSizes1_SelectedIndexChanged(object sender, EventArgs e) =>
+            condition.Text = font_functions.Selected_Item_FontSizes(fontSizes1, richTextBox, numberBox);
         private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
         private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
         private void kazLan1_Click(object sender, EventArgs e) => Change_Language(3);
@@ -338,6 +390,7 @@ namespace tflc_1
                     Translate(File.ReadAllLines(path_language + "kaz.txt"));
                     break;
             }
+            condition.Text = "Successful change language!";
         }
 
         private void Language_Visible(bool[] visible)
@@ -358,7 +411,7 @@ namespace tflc_1
             open1.Text = language[6];
             save1.Text = language[7];
             saveHow1.Text = language[8];
-            language1.Text = language[9];
+            settings1.Text = language[9];
             quit1.Text = language[10];
             cancel1.Text = language[11];
             return1.Text = language[12];
@@ -374,13 +427,15 @@ namespace tflc_1
             example1.Text = language[22];
             literature1.Text = language[23];
             code1.Text = language[24];
-            rusLan1.Text = language[25];
-            enLan1.Text = language[26];
-            kazLan1.Text = language[27];
-            confExit.Text = language[28];
-            confirmation.Text = language[29];
-            yes.Text = language[30];
-            no.Text = language[31];
+            language1.Text = language[25];
+            font1.Text = language[26];
+            rusLan1.Text = language[27];
+            enLan1.Text = language[28];
+            kazLan1.Text = language[29];
+            confExit.Text = language[30];
+            confirmation.Text = language[31];
+            yes.Text = language[32];
+            no.Text = language[33];
         }
     }
 }

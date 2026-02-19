@@ -15,8 +15,9 @@ namespace tflc_1
     {
         private readonly ListFileFunctions ls_file = new ListFileFunctions();
 
-        public (string, string, string[], string) Create(MenuStrip menuStrip, RichTextBox richTextBox,
-            string tool_name, string save_text, List<(string[], string[], int)> files, int idx)
+        public (string, string, string[], string, string) Create(MenuStrip menuStrip, 
+            RichTextBox richTextBox, string tool_name, string save_text, 
+            List<(string[], string[], int)> files, int idx)
         {
             (string filename, string name) = New_ToolStrip(menuStrip);
             Create_ToolStrip(menuStrip, filename, name);
@@ -29,16 +30,39 @@ namespace tflc_1
             string[] file = { filename, path, richTextBox.Text, null };
             string[] history = ls_file.Add_List_Files(files, "", file);
 
-            return (filename, path, history, "");
+            return (filename, path, history, "", "Successful file creation!");
         }
 
-        public (string, string, string[], string, string) Open(Form form, OpenFileDialog openFileDialog, 
+        public (string, string[], string, string, string) Open_Drop_File(string path,
+            RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text,
+            List<(string[], string[], int)> files, int idx)
+        {
+            ls_file.Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
+
+            string filename = "", text = "";
+            text = File.ReadAllText(path);
+
+            filename = Path.GetFileNameWithoutExtension(path);
+            if (!Find_File_In_ToolStrip(menuStrip, filename))
+            {
+                Create_ToolStrip(menuStrip, filename, "file");
+            }
+
+            save_text = text;
+            string[] file = { filename, path, text, save_text };
+            string[] history = ls_file.Add_List_Files(files, text, file);
+
+            return (filename, history, text, save_text, "Successful file opening!");
+        }
+
+        public (string, string, string[], string, string, string) Open(Form form, 
             RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text, 
             List<(string[], string[], int)> files, int idx)
         {
             ls_file.Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
 
             string filename = "", text = "";
+            OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog(form) == DialogResult.OK)
             {
                 text = File.ReadAllText(openFileDialog.FileName);
@@ -54,10 +78,10 @@ namespace tflc_1
             string[] file = { filename, openFileDialog.FileName, text, save_text };
             string[] history = ls_file.Add_List_Files(files, text, file);
 
-            return (filename, openFileDialog.FileName, history, text, save_text);
+            return (filename, openFileDialog.FileName, history, text, save_text, "Successful file opening!");
         }
 
-        public string Save(RichTextBox richTextBox, string tool_name, string filename, 
+        public (string, string) Save(RichTextBox richTextBox, string tool_name, string filename, 
             List<(string[], string[], int)> files)
         {
             ToolStripFunctions tool_functions = new ToolStripFunctions();
@@ -67,19 +91,21 @@ namespace tflc_1
             if (filename == null) MessageBox.Show("Error: file path is null!");
 
             File.WriteAllText(filename, richTextBox.Text);
-            return filename;
+            return (filename, "Successful file saving!");
         }
 
-        public (string, string, string) Save_How(Form form, SaveFileDialog saveFileDialog, RichTextBox richTextBox,
-            MenuStrip menuStrip, string filename, List<(string[], string[], int)> files)
+        public (string, string, string, string) Save_How(Form form, 
+            RichTextBox richTextBox, MenuStrip menuStrip, string filename, 
+            List<(string[], string[], int)> files)
         {
             int prev = ls_file.Find_File(files, filename);
             if (prev == -1)
             {
                 MessageBox.Show("Nothing to save");
-                return (null, null, null);
+                return (null, null, null, null);
             }
 
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
             string[] history = files.ElementAt(prev).Item2;
             int idx = files.ElementAt(prev).Item3;
             saveFileDialog.FileName = filename;
@@ -97,7 +123,7 @@ namespace tflc_1
             string[] file = { new_filename, saveFileDialog.FileName, save_text, save_text };
             files.Add((file, history, idx));
 
-            return (new_filename, saveFileDialog.FileName, save_text);
+            return (new_filename, saveFileDialog.FileName, save_text, "Successful file saving how!");
         }
     }
 }

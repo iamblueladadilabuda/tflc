@@ -60,12 +60,11 @@ namespace tflc_1
         public void Delete_ToolStrip(MenuStrip menuStrip, string tool_name,
             List<(string[], string[], int)> files)
         {
-            FileFunctions file_functions = new FileFunctions();
             foreach (ToolStripMenuItem item in menuStrip.Items)
             {
                 if (item.Text == tool_name)
                 {
-                    int index = file_functions.Find_File(files, tool_name);
+                    int index = Find_File(files, tool_name);
                     if (index == -1) return;
                     files.RemoveAt(index);
                     menuStrip.Items.Remove(item);
@@ -77,8 +76,7 @@ namespace tflc_1
         public int ToolStrip_For_Close(string tool_name, List<(string[], string[], int)> files)
         {
             if (tool_name == "") return -2;
-            FileFunctions file_functions = new FileFunctions();
-            int index = file_functions.Find_File(files, tool_name);
+            int index = Find_File(files, tool_name);
             if (index == -1) return -2;
 
             if (string.IsNullOrEmpty(files.ElementAt(index).Item1[3]))
@@ -90,12 +88,12 @@ namespace tflc_1
         }
 
         public void Close_ToolStrip(MenuStrip menuStrip, string tool_name, Form form, 
-            SaveFileDialog saveFileDialog, RichTextBox richTextBox, 
+            SaveFileDialog saveFileDialog, RichTextBox richTextBox, Label condition,
             List<(string[], string[], int)> files)
         {
             FileFunctions file_functions = new FileFunctions();
             string filename, b, c;
-            (filename, b, c) = file_functions.Save_How(form, saveFileDialog, richTextBox, menuStrip, tool_name, files);
+            (filename, b, c, condition.Text) = file_functions.Save_How(form, richTextBox, menuStrip, tool_name, files);
             if (filename != null || b != null || c != null)
             {
                 Delete_ToolStrip(menuStrip, filename, files);
@@ -103,11 +101,9 @@ namespace tflc_1
         }
 
         public void Close_All_ToolStrip(MenuStrip menuStrip, Form form,
-            SaveFileDialog saveFileDialog, RichTextBox richTextBox,
+            SaveFileDialog saveFileDialog, RichTextBox richTextBox, Label condition,
             List<(string[], string[], int)> files)
         {
-            FileFunctions file_functions = new FileFunctions();
-
             List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
             foreach (ToolStripMenuItem item in menuStrip.Items)
             {
@@ -118,7 +114,7 @@ namespace tflc_1
             {
                 int index = ToolStrip_For_Close(item.Text, files);
                 if (index == -1) continue;
-                Close_ToolStrip(menuStrip, item.Text, form, saveFileDialog, richTextBox, files);
+                Close_ToolStrip(menuStrip, item.Text, form, saveFileDialog, richTextBox, condition, files);
             }
         }
 

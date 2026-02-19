@@ -37,10 +37,7 @@
             this.open1 = new System.Windows.Forms.ToolStripMenuItem();
             this.save1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveHow1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.language1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.rusLan1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.enLan1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.kazLan1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.settings1 = new System.Windows.Forms.ToolStripMenuItem();
             this.quit1 = new System.Windows.Forms.ToolStripMenuItem();
             this.correction1 = new System.Windows.Forms.ToolStripMenuItem();
             this.cancel1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,8 +78,8 @@
             this.numberBox = new System.Windows.Forms.RichTextBox();
             this.number = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.condition = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.textCompiler = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
@@ -96,6 +93,12 @@
             this.confExit = new System.Windows.Forms.Label();
             this.exit = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.language1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.rusLan1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.enLan1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.kazLan1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.font1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.fontSizes1 = new System.Windows.Forms.ToolStripComboBox();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -124,7 +127,7 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 31);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -141,7 +144,7 @@
             this.open1,
             this.save1,
             this.saveHow1,
-            this.language1,
+            this.settings1,
             this.quit1});
             this.file1.Name = "file1";
             this.file1.Size = new System.Drawing.Size(66, 27);
@@ -150,66 +153,44 @@
             // create1
             // 
             this.create1.Name = "create1";
-            this.create1.Size = new System.Drawing.Size(216, 30);
+            this.create1.Size = new System.Drawing.Size(247, 30);
             this.create1.Text = "Создать";
             this.create1.Click += new System.EventHandler(this.create1_Click);
             // 
             // open1
             // 
             this.open1.Name = "open1";
-            this.open1.Size = new System.Drawing.Size(216, 30);
+            this.open1.Size = new System.Drawing.Size(247, 30);
             this.open1.Text = "Открыть";
             this.open1.Click += new System.EventHandler(this.open1_Click);
             // 
             // save1
             // 
             this.save1.Name = "save1";
-            this.save1.Size = new System.Drawing.Size(216, 30);
+            this.save1.Size = new System.Drawing.Size(247, 30);
             this.save1.Text = "Сохранить";
             this.save1.Click += new System.EventHandler(this.save1_Click);
             // 
             // saveHow1
             // 
             this.saveHow1.Name = "saveHow1";
-            this.saveHow1.Size = new System.Drawing.Size(216, 30);
+            this.saveHow1.Size = new System.Drawing.Size(247, 30);
             this.saveHow1.Text = "Сохранить как";
             this.saveHow1.Click += new System.EventHandler(this.saveHow1_Click);
             // 
-            // language1
+            // settings1
             // 
-            this.language1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.rusLan1,
-            this.enLan1,
-            this.kazLan1});
-            this.language1.Name = "language1";
-            this.language1.Size = new System.Drawing.Size(216, 30);
-            this.language1.Text = "Язык";
-            // 
-            // rusLan1
-            // 
-            this.rusLan1.Name = "rusLan1";
-            this.rusLan1.Size = new System.Drawing.Size(195, 30);
-            this.rusLan1.Text = "Русский";
-            this.rusLan1.Click += new System.EventHandler(this.rusLan1_Click);
-            // 
-            // enLan1
-            // 
-            this.enLan1.Name = "enLan1";
-            this.enLan1.Size = new System.Drawing.Size(195, 30);
-            this.enLan1.Text = "Английский";
-            this.enLan1.Click += new System.EventHandler(this.enLan1_Click);
-            // 
-            // kazLan1
-            // 
-            this.kazLan1.Name = "kazLan1";
-            this.kazLan1.Size = new System.Drawing.Size(195, 30);
-            this.kazLan1.Text = "Казахский";
-            this.kazLan1.Click += new System.EventHandler(this.kazLan1_Click);
+            this.settings1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.language1,
+            this.font1});
+            this.settings1.Name = "settings1";
+            this.settings1.Size = new System.Drawing.Size(247, 30);
+            this.settings1.Text = "Настройки";
             // 
             // quit1
             // 
             this.quit1.Name = "quit1";
-            this.quit1.Size = new System.Drawing.Size(216, 30);
+            this.quit1.Size = new System.Drawing.Size(247, 30);
             this.quit1.Text = "Выход";
             this.quit1.Click += new System.EventHandler(this.quit1_Click);
             // 
@@ -230,49 +211,49 @@
             // cancel1
             // 
             this.cancel1.Name = "cancel1";
-            this.cancel1.Size = new System.Drawing.Size(209, 30);
+            this.cancel1.Size = new System.Drawing.Size(247, 30);
             this.cancel1.Text = "Отмена";
             this.cancel1.Click += new System.EventHandler(this.cancel1_Click);
             // 
             // return1
             // 
             this.return1.Name = "return1";
-            this.return1.Size = new System.Drawing.Size(209, 30);
+            this.return1.Size = new System.Drawing.Size(247, 30);
             this.return1.Text = "Возврат";
             this.return1.Click += new System.EventHandler(this.return1_Click);
             // 
             // cut1
             // 
             this.cut1.Name = "cut1";
-            this.cut1.Size = new System.Drawing.Size(209, 30);
+            this.cut1.Size = new System.Drawing.Size(247, 30);
             this.cut1.Text = "Вырезание";
             this.cut1.Click += new System.EventHandler(this.cut1_Click);
             // 
             // copy1
             // 
             this.copy1.Name = "copy1";
-            this.copy1.Size = new System.Drawing.Size(209, 30);
+            this.copy1.Size = new System.Drawing.Size(247, 30);
             this.copy1.Text = "Копирование";
             this.copy1.Click += new System.EventHandler(this.copy1_Click);
             // 
             // enter1
             // 
             this.enter1.Name = "enter1";
-            this.enter1.Size = new System.Drawing.Size(209, 30);
+            this.enter1.Size = new System.Drawing.Size(247, 30);
             this.enter1.Text = "Вставка";
             this.enter1.Click += new System.EventHandler(this.enter1_Click);
             // 
             // delete1
             // 
             this.delete1.Name = "delete1";
-            this.delete1.Size = new System.Drawing.Size(209, 30);
+            this.delete1.Size = new System.Drawing.Size(247, 30);
             this.delete1.Text = "Удаление";
             this.delete1.Click += new System.EventHandler(this.delete1_Click);
             // 
             // select1
             // 
             this.select1.Name = "select1";
-            this.select1.Size = new System.Drawing.Size(209, 30);
+            this.select1.Size = new System.Drawing.Size(247, 30);
             this.select1.Text = "Выделить всё";
             this.select1.Click += new System.EventHandler(this.select1_Click);
             // 
@@ -361,9 +342,9 @@
             this.copy2,
             this.cut2,
             this.enter2});
-            this.menuStrip2.Location = new System.Drawing.Point(0, 31);
+            this.menuStrip2.Location = new System.Drawing.Point(0, 33);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(800, 38);
+            this.menuStrip2.Size = new System.Drawing.Size(800, 40);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -473,17 +454,17 @@
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 69);
+            this.panel1.Location = new System.Drawing.Point(0, 73);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(40, 440);
+            this.panel1.Size = new System.Drawing.Size(40, 436);
             this.panel1.TabIndex = 3;
             // 
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 69);
+            this.panel2.Location = new System.Drawing.Point(760, 73);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 440);
+            this.panel2.Size = new System.Drawing.Size(40, 436);
             this.panel2.TabIndex = 4;
             // 
             // menuStrip3
@@ -491,9 +472,9 @@
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
+            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(720, 4);
+            this.menuStrip3.Size = new System.Drawing.Size(720, 6);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -503,7 +484,7 @@
             this.panel3.Controls.Add(this.richTextBox);
             this.panel3.Controls.Add(this.panel13);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(40, 73);
+            this.panel3.Location = new System.Drawing.Point(40, 79);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(720, 176);
             this.panel3.TabIndex = 6;
@@ -539,12 +520,21 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.textCompiler);
+            this.panel4.Controls.Add(this.condition);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel4.Location = new System.Drawing.Point(40, 469);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(720, 40);
             this.panel4.TabIndex = 7;
+            // 
+            // condition
+            // 
+            this.condition.AutoSize = true;
+            this.condition.Location = new System.Drawing.Point(3, 15);
+            this.condition.Name = "condition";
+            this.condition.Size = new System.Drawing.Size(44, 16);
+            this.condition.TabIndex = 0;
+            this.condition.Text = "label1";
             // 
             // panel5
             // 
@@ -554,15 +544,6 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(720, 100);
             this.panel5.TabIndex = 8;
-            // 
-            // textCompiler
-            // 
-            this.textCompiler.AutoSize = true;
-            this.textCompiler.Location = new System.Drawing.Point(3, 15);
-            this.textCompiler.Name = "textCompiler";
-            this.textCompiler.Size = new System.Drawing.Size(44, 16);
-            this.textCompiler.TabIndex = 0;
-            this.textCompiler.Text = "label1";
             // 
             // panel6
             // 
@@ -683,8 +664,53 @@
             this.exit.UseVisualStyleBackColor = false;
             this.exit.Click += new System.EventHandler(this.exit_Click);
             // 
+            // language1
+            // 
+            this.language1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rusLan1,
+            this.enLan1,
+            this.kazLan1});
+            this.language1.Name = "language1";
+            this.language1.Size = new System.Drawing.Size(247, 30);
+            this.language1.Text = "Язык";
+            // 
+            // rusLan1
+            // 
+            this.rusLan1.Name = "rusLan1";
+            this.rusLan1.Size = new System.Drawing.Size(247, 30);
+            this.rusLan1.Text = "Русский";
+            this.rusLan1.Click += new System.EventHandler(this.rusLan1_Click);
+            // 
+            // enLan1
+            // 
+            this.enLan1.Name = "enLan1";
+            this.enLan1.Size = new System.Drawing.Size(247, 30);
+            this.enLan1.Text = "Английский";
+            this.enLan1.Click += new System.EventHandler(this.enLan1_Click);
+            // 
+            // kazLan1
+            // 
+            this.kazLan1.Name = "kazLan1";
+            this.kazLan1.Size = new System.Drawing.Size(247, 30);
+            this.kazLan1.Text = "Казахский";
+            this.kazLan1.Click += new System.EventHandler(this.kazLan1_Click);
+            // 
+            // font1
+            // 
+            this.font1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fontSizes1});
+            this.font1.Name = "font1";
+            this.font1.Size = new System.Drawing.Size(247, 30);
+            this.font1.Text = "Размер шрифта";
+            // 
+            // fontSizes1
+            // 
+            this.fontSizes1.Name = "fontSizes1";
+            this.fontSizes1.Size = new System.Drawing.Size(121, 31);
+            // 
             // Compiler
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 509);
@@ -704,6 +730,8 @@
             this.Text = "Compiler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compiler_FormClosing);
             this.SizeChanged += new System.EventHandler(this.Compiler_SizeChanged);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Compiler_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Compiler_DragEnter);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Compiler_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -754,7 +782,7 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Label textCompiler;
+        private System.Windows.Forms.Label condition;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.ToolStripMenuItem create1;
         private System.Windows.Forms.ToolStripMenuItem open1;
@@ -782,10 +810,7 @@
         private System.Windows.Forms.ToolStripMenuItem enter1;
         private System.Windows.Forms.ToolStripMenuItem delete1;
         private System.Windows.Forms.ToolStripMenuItem select1;
-        private System.Windows.Forms.ToolStripMenuItem language1;
-        private System.Windows.Forms.ToolStripMenuItem rusLan1;
-        private System.Windows.Forms.ToolStripMenuItem enLan1;
-        private System.Windows.Forms.ToolStripMenuItem kazLan1;
+        private System.Windows.Forms.ToolStripMenuItem settings1;
         private System.Windows.Forms.ToolStripMenuItem settingTask1;
         private System.Windows.Forms.ToolStripMenuItem grammar1;
         private System.Windows.Forms.ToolStripMenuItem grammerClassification1;
@@ -794,6 +819,12 @@
         private System.Windows.Forms.ToolStripMenuItem literature1;
         private System.Windows.Forms.ToolStripMenuItem code1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem language1;
+        private System.Windows.Forms.ToolStripMenuItem rusLan1;
+        private System.Windows.Forms.ToolStripMenuItem enLan1;
+        private System.Windows.Forms.ToolStripMenuItem kazLan1;
+        private System.Windows.Forms.ToolStripMenuItem font1;
+        private System.Windows.Forms.ToolStripComboBox fontSizes1;
     }
 }
 

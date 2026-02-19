@@ -47,11 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileFunctions.cs" />
+    <Compile Include="FontFunctions.cs" />
     <Compile Include="KeyboardShortcuts.cs" />
     <Compile Include="ListFileFunctions.cs" />
     <Compile Include="NumberingLines.cs" />
     <Compile Include="OpenApp.cs" />
     <Compile Include="SyntaxHighlighting.cs" />
+    <Compile Include="TableFunctions.cs" />
     <Compile Include="TextFunctions.cs" />
     <Compile Include="tflc.cs">
       <SubType>Form</SubType>
