@@ -52,6 +52,7 @@
     <Compile Include="ListFileFunctions.cs" />
     <Compile Include="NumberingLines.cs" />
     <Compile Include="OpenApp.cs" />
+    <Compile Include="SplitContainerFunctions.cs" />
     <Compile Include="SyntaxHighlighting.cs" />
     <Compile Include="TableFunctions.cs" />
     <Compile Include="TextFunctions.cs" />

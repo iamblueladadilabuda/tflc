@@ -73,6 +73,10 @@ namespace tflc_1
 
             while ((index = richTextBox.Text.IndexOf(word, start, StringComparison.Ordinal)) != -1)
             {
+                if (word.IndexOf('(') != -1 || word.IndexOf(';') != -1)
+                {
+                    word = word.Substring(0, word.Length - 2);
+                }
                 richTextBox.Select(index, word.Length);
                 richTextBox.SelectionColor = color;
                 is_updating = 1;

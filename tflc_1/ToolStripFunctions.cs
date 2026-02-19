@@ -88,8 +88,7 @@ namespace tflc_1
         }
 
         public void Close_ToolStrip(MenuStrip menuStrip, string tool_name, Form form, 
-            SaveFileDialog saveFileDialog, RichTextBox richTextBox, Label condition,
-            List<(string[], string[], int)> files)
+            RichTextBox richTextBox, Label condition, List<(string[], string[], int)> files)
         {
             FileFunctions file_functions = new FileFunctions();
             string filename, b, c;
@@ -100,9 +99,8 @@ namespace tflc_1
             }
         }
 
-        public void Close_All_ToolStrip(MenuStrip menuStrip, Form form,
-            SaveFileDialog saveFileDialog, RichTextBox richTextBox, Label condition,
-            List<(string[], string[], int)> files)
+        public void Close_All_ToolStrip(MenuStrip menuStrip, Form form, RichTextBox richTextBox, 
+            Label condition, List<(string[], string[], int)> files)
         {
             List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
             foreach (ToolStripMenuItem item in menuStrip.Items)
@@ -114,7 +112,7 @@ namespace tflc_1
             {
                 int index = ToolStrip_For_Close(item.Text, files);
                 if (index == -1) continue;
-                Close_ToolStrip(menuStrip, item.Text, form, saveFileDialog, richTextBox, condition, files);
+                Close_ToolStrip(menuStrip, item.Text, form, richTextBox, condition, files);
             }
         }
 

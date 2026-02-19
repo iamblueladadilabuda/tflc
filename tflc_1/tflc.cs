@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace tflc_1
 {
@@ -21,36 +22,46 @@ namespace tflc_1
         private const string path_language = "txt/language/";
         private const int HISTORY_SIZE = 10;
 
-        private readonly FileFunctions file_functions = new FileFunctions();
+        private readonly SyntaxHighlighting syntax_highlighting = new SyntaxHighlighting();
         private readonly ToolStripFunctions tool_functions = new ToolStripFunctions();
+        private readonly ListFileFunctions ls_functions = new ListFileFunctions();
+        private readonly TableFunctions table_functions = new TableFunctions();
+        private readonly TextFunctions text_functions = new TextFunctions();
+        private readonly FontFunctions font_functions = new FontFunctions();
+        private readonly FileFunctions file_functions = new FileFunctions();
         private readonly NumberingLines numbering = new NumberingLines();
         private readonly OpenApp open = new OpenApp();
-        private readonly TextFunctions text_functions = new TextFunctions();
-        private readonly SyntaxHighlighting syntax_highlighting = new SyntaxHighlighting();
-        private readonly FontFunctions font_functions = new FontFunctions();
-        private readonly TableFunctions table_functions = new TableFunctions();
-        private readonly ListFileFunctions ls_functions = new ListFileFunctions();
 
         private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
+        private bool closing = false, close_all = false, new_tool = true, not_open = true;
         private string tool_name = "", path = "", buffer = "", save_text = "";
-        private bool closing = false, close_all = false, new_tool = true;
         private string[] history = new string[HISTORY_SIZE];
         DataGridView table = new DataGridView();
+        private SplitContainer splitContainer;
         private int width, height, idx = 1;
+        
 
         public Compiler()
         {
             InitializeComponent();
 
             panel7.Visible = false;
+            SplitContainerFunctions split = new SplitContainerFunctions();
+            splitContainer = split.Create_SplitContainer(panel6, panel3, panel5);
             Update_Panels_Sizes();
+
             Change_Language(1);
             font_functions.Initialize_FontSizes(fontSizes1);
 
+            numberBox.SelectionAlignment = HorizontalAlignment.Center;
             open.Clean();
             (tool_name, path, history) = open.Open(menuStrip3, richTextBox, files);
             numbering.Numbering_Lines(richTextBox, numberBox);
-            numberBox.SelectionAlignment = HorizontalAlignment.Center;   
+
+            if (menuStrip3.Items.Count == 0)
+            {
+                (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+            }
 
             table = table_functions.Initialize_Table();
             panel5.Controls.Add(table);
@@ -69,9 +80,11 @@ namespace tflc_1
             richTextBox.DragEnter += Compiler_DragEnter;
             richTextBox.DragDrop += Compiler_DragDrop;
 
+            
+
             condition.Text = "Successful application opening!";
         }
-
+        
 
         private void Compiler_SizeChanged(object sender, EventArgs e)
         {
@@ -84,13 +97,19 @@ namespace tflc_1
         private void Update_Panels_Sizes()
         {
             width = ClientSize.Width;
-            height = panel1.ClientSize.Height - 100;
-            panel3.Height = height / 2;
-            panel5.Height = height / 2;
-            panel4.Height = panel1.ClientSize.Height - height - 70;
+            height = panel1.ClientSize.Height - 50;
+
+            if (splitContainer != null)
+            {
+                splitContainer.Size = new Size(width, height);
+            }
+
+            richTextBox.Width = panel3.Width - panel13.Width;
+
+            panel4.Height = panel1.ClientSize.Height - height - 15;
             panel13.Width = 65;
 
-            panel7.Width = panel3.Width / 2 + panel3.Width / 4;
+            panel7.Width = width / 2 + width / 4;
             panel7.Height = height / 3;
             panel7.Location = new Point((ClientSize.Width / 2 - panel7.Width / 2), ClientSize.Height / 3);
             panel8.Height = panel7.Height - 20;
@@ -139,7 +158,7 @@ namespace tflc_1
                 foreach (string drag_path in drag_files)
                 {
                     path = drag_path;
-                    (tool_name, history, richTextBox.Text, save_text, condition.Text) = file_functions.Open_Drop_File(path, richTextBox, menuStrip3, tool_name, save_text, files, idx);
+                    (tool_name, history, not_open, richTextBox.Text, save_text, condition.Text) = file_functions.Open_Drop_File(path, richTextBox, menuStrip3, tool_name, save_text, files, idx);
                 }
             }
         }
@@ -149,9 +168,9 @@ namespace tflc_1
         private void create2_Click(object sender, EventArgs e) =>
             (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
         private void open1_Click(object sender, EventArgs e) => 
-            (tool_name, path, history, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
+            (tool_name, path, history, not_open, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
         private void open2_Click(object sender, EventArgs e) =>
-            (tool_name, path, history, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
+            (tool_name, path, history, not_open, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
         private void save1_Click(object sender, EventArgs e) =>
             (path, condition.Text) = file_functions.Save(richTextBox, tool_name, path, files);
         private void saveHow1_Click(object sender, EventArgs e) =>
@@ -222,16 +241,7 @@ namespace tflc_1
         private void no_Click(object sender, EventArgs e)
         {
             if (close_all) Close();
-            
-            if (tool_name.StartsWith("Untitled-"))
-            {
-                string filename = "cache/" + tool_name + ".txt";
-                if (File.Exists(filename))
-                {
-                    File.AppendAllText("cache/delete.txt", filename + "\n");
-                }
-            }
-                
+
             tool_functions.Delete_ToolStrip(menuStrip3, tool_name, files);
             panel7.Visible = false;
             if (files.Count == 0)
@@ -247,12 +257,12 @@ namespace tflc_1
         {
             if (close_all)
             {
-                tool_functions.Close_All_ToolStrip(menuStrip3, this, saveFileDialog, richTextBox, condition, files);
+                tool_functions.Close_All_ToolStrip(menuStrip3, this, richTextBox, condition, files);
                 Close();
             }
             else
             {
-                tool_functions.Close_ToolStrip(menuStrip3, tool_name, this, saveFileDialog, richTextBox, condition, files);
+                tool_functions.Close_ToolStrip(menuStrip3, tool_name, this, richTextBox, condition, files);
                 panel7.Visible = false;
                 if (files.Count == 0)
                 {
@@ -285,13 +295,20 @@ namespace tflc_1
         {
             numbering.Numbering_Lines(richTextBox, numberBox);
 
-            if (richTextBox.Text == history[idx - 1]) return;
             idx = text_functions.Add_History(history, richTextBox.Text, idx);
-            save_text = "";
-            files.ElementAt(ls_functions.Find_File(files, tool_name)).Item1[3] = save_text;
 
-            if (menuStrip3.Items.Count == 0 && !string.IsNullOrEmpty(richTextBox.Text))
+            if (menuStrip3.Items.Count == 0)
+            {
                 (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+            }
+
+            int index = ls_functions.Find_File(files, tool_name);
+            if (index != -1 && not_open)
+            {
+                save_text = "";
+                files.ElementAt(index).Item1[3] = save_text;
+            }
+            else not_open = true;
             
             syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
             new_tool = false;
@@ -328,7 +345,7 @@ namespace tflc_1
 
         private void Panel7_VisibleChanged(object sender, EventArgs e)
         {
-            if (!panel7.Visible&& closing)
+            if (!panel7.Visible && closing)
             {
                 panel7.VisibleChanged -= Panel7_VisibleChanged;
                 Close();
@@ -354,6 +371,7 @@ namespace tflc_1
                     if (index != -1)
                     {
                         panel7.Visible = true;
+                        break;
                     }
                 }
 

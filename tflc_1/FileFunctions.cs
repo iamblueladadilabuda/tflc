@@ -33,7 +33,7 @@ namespace tflc_1
             return (filename, path, history, "", "Successful file creation!");
         }
 
-        public (string, string[], string, string, string) Open_Drop_File(string path,
+        public (string, string[], bool, string, string, string) Open_Drop_File(string path,
             RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text,
             List<(string[], string[], int)> files, int idx)
         {
@@ -52,10 +52,10 @@ namespace tflc_1
             string[] file = { filename, path, text, save_text };
             string[] history = ls_file.Add_List_Files(files, text, file);
 
-            return (filename, history, text, save_text, "Successful file opening!");
+            return (filename, history, false, text, save_text, "Successful file opening!");
         }
 
-        public (string, string, string[], string, string, string) Open(Form form, 
+        public (string, string, string[], bool, string, string, string) Open(Form form, 
             RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text, 
             List<(string[], string[], int)> files, int idx)
         {
@@ -78,7 +78,7 @@ namespace tflc_1
             string[] file = { filename, openFileDialog.FileName, text, save_text };
             string[] history = ls_file.Add_List_Files(files, text, file);
 
-            return (filename, openFileDialog.FileName, history, text, save_text, "Successful file opening!");
+            return (filename, openFileDialog.FileName, history, false, text, save_text, "Successful file opening!");
         }
 
         public (string, string) Save(RichTextBox richTextBox, string tool_name, string filename, 
