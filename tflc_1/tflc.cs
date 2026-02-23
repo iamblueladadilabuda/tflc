@@ -61,6 +61,7 @@ namespace tflc_1
             if (menuStrip3.Items.Count == 0)
             {
                 (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+                menuStrip3.Items[0].BackColor = Color.CornflowerBlue;
             }
 
             table = table_functions.Initialize_Table();
@@ -79,8 +80,6 @@ namespace tflc_1
             richTextBox.AllowDrop = true;
             richTextBox.DragEnter += Compiler_DragEnter;
             richTextBox.DragDrop += Compiler_DragDrop;
-
-            
 
             condition.Text = "Successful application opening!";
         }
@@ -230,6 +229,7 @@ namespace tflc_1
             if (tool_functions.Count_ToolStrip(menuStrip3) == 0) Close();
             if (tool_functions.ToolStrip_For_Close(tool_name, files) <= -1) Close();
             panel7.Visible = true;
+            closing = false;
         }
 
         private void exit_Click(object sender, EventArgs e)
@@ -281,7 +281,15 @@ namespace tflc_1
             {
                 new_tool = true;
                 tool_functions.Roll_Strip(tool_name, richTextBox.Text, save_text, history, idx, files);
+                
+                foreach (ToolStripMenuItem item in menuStrip3.Items)
+                {
+                    item.BackColor = SystemColors.Control;
+                }
+
                 tool_name = clicked_item.Text;
+                clicked_item.BackColor = Color.CornflowerBlue;
+
                 (path, history, idx, richTextBox.Text) = tool_functions.Click_Strip(tool_name, path, files);
                 richTextBox.Select(richTextBox.Text.Length, 0);
                 syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);

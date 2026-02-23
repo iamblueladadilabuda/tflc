@@ -118,7 +118,7 @@ namespace tflc_1
 
         public void Select_All(RichTextBox richTextBox)
         {
-            richTextBox.SelectionLength = richTextBox.Text.Length;
+            richTextBox.SelectAll();
         }
     }
 }

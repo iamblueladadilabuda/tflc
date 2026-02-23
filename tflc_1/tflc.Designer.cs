@@ -129,7 +129,7 @@
             // toolStripMenuItem12
             // 
             this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-            this.toolStripMenuItem12.Size = new System.Drawing.Size(31, 29);
+            this.toolStripMenuItem12.Size = new System.Drawing.Size(31, 27);
             this.toolStripMenuItem12.Text = " ";
             // 
             // file1
@@ -142,7 +142,7 @@
             this.settings1,
             this.quit1});
             this.file1.Name = "file1";
-            this.file1.Size = new System.Drawing.Size(66, 29);
+            this.file1.Size = new System.Drawing.Size(66, 27);
             this.file1.Text = "Файл";
             // 
             // create1
@@ -244,7 +244,7 @@
             this.delete1,
             this.select1});
             this.correction1.Name = "correction1";
-            this.correction1.Size = new System.Drawing.Size(83, 29);
+            this.correction1.Size = new System.Drawing.Size(83, 27);
             this.correction1.Text = "Правка";
             // 
             // cancel1
@@ -307,7 +307,7 @@
             this.literature1,
             this.code1});
             this.text1.Name = "text1";
-            this.text1.Size = new System.Drawing.Size(67, 29);
+            this.text1.Size = new System.Drawing.Size(67, 27);
             this.text1.Text = "Текст";
             // 
             // settingTask1
@@ -355,13 +355,13 @@
             // start1
             // 
             this.start1.Name = "start1";
-            this.start1.Size = new System.Drawing.Size(62, 29);
+            this.start1.Size = new System.Drawing.Size(62, 27);
             this.start1.Text = "Пуск";
             // 
             // help1
             // 
             this.help1.Name = "help1";
-            this.help1.Size = new System.Drawing.Size(92, 29);
+            this.help1.Size = new System.Drawing.Size(92, 27);
             this.help1.Text = "Справка";
             this.help1.Click += new System.EventHandler(this.help1_Click);
             // 
@@ -390,7 +390,7 @@
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(31, 36);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(31, 34);
             this.toolStripMenuItem11.Text = " ";
             // 
             // create2
@@ -408,7 +408,7 @@
             this.open2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.open2.Image = ((System.Drawing.Image)(resources.GetObject("open2.Image")));
             this.open2.Name = "open2";
-            this.open2.Size = new System.Drawing.Size(46, 36);
+            this.open2.Size = new System.Drawing.Size(46, 34);
             this.open2.Text = " ";
             this.open2.Click += new System.EventHandler(this.open2_Click);
             // 
@@ -417,20 +417,20 @@
             this.save2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.save2.Image = ((System.Drawing.Image)(resources.GetObject("save2.Image")));
             this.save2.Name = "save2";
-            this.save2.Size = new System.Drawing.Size(46, 36);
+            this.save2.Size = new System.Drawing.Size(46, 34);
             this.save2.Text = " ";
             this.save2.Click += new System.EventHandler(this.save2_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(31, 36);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(31, 34);
             this.toolStripMenuItem4.Text = " ";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(31, 36);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(31, 34);
             this.toolStripMenuItem5.Text = " ";
             // 
             // left2
@@ -438,7 +438,7 @@
             this.left2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.left2.Image = ((System.Drawing.Image)(resources.GetObject("left2.Image")));
             this.left2.Name = "left2";
-            this.left2.Size = new System.Drawing.Size(46, 36);
+            this.left2.Size = new System.Drawing.Size(46, 34);
             this.left2.Text = " ";
             this.left2.Click += new System.EventHandler(this.left2_Click);
             // 
@@ -447,7 +447,7 @@
             this.rigth2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.rigth2.Image = ((System.Drawing.Image)(resources.GetObject("rigth2.Image")));
             this.rigth2.Name = "rigth2";
-            this.rigth2.Size = new System.Drawing.Size(46, 36);
+            this.rigth2.Size = new System.Drawing.Size(46, 34);
             this.rigth2.Text = " ";
             this.rigth2.Click += new System.EventHandler(this.rigth2_Click);
             // 
@@ -456,7 +456,7 @@
             this.copy2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.copy2.Image = ((System.Drawing.Image)(resources.GetObject("copy2.Image")));
             this.copy2.Name = "copy2";
-            this.copy2.Size = new System.Drawing.Size(46, 36);
+            this.copy2.Size = new System.Drawing.Size(46, 34);
             this.copy2.Text = " ";
             this.copy2.Click += new System.EventHandler(this.copy2_Click);
             // 
@@ -465,7 +465,7 @@
             this.cut2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.cut2.Image = ((System.Drawing.Image)(resources.GetObject("cut2.Image")));
             this.cut2.Name = "cut2";
-            this.cut2.Size = new System.Drawing.Size(46, 36);
+            this.cut2.Size = new System.Drawing.Size(46, 34);
             this.cut2.Text = " ";
             this.cut2.Click += new System.EventHandler(this.cut2_Click);
             // 
@@ -474,7 +474,7 @@
             this.enter2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.enter2.Image = ((System.Drawing.Image)(resources.GetObject("enter2.Image")));
             this.enter2.Name = "enter2";
-            this.enter2.Size = new System.Drawing.Size(46, 36);
+            this.enter2.Size = new System.Drawing.Size(46, 34);
             this.enter2.Text = " ";
             this.enter2.Click += new System.EventHandler(this.enter2_Click);
             // 
