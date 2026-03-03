@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace tflc_1
 {
@@ -24,23 +19,23 @@ namespace tflc_1
             return -1;
         }
 
-        public void Save_List_Files(string tool_name, string text, string save_text, int idx,
-            List<(string[], string[], int)> files)
+        public void Save_List_Files(int file_idx, string[] file, List<(string[], string[], int)> files)
         {
-            ToolStripFunctions tool_functions = new ToolStripFunctions();
-            int index = Find_File(files, tool_name);
-            if (index == -1) return;
-            string[] old_history = files.ElementAt(index).Item2;
-            tool_functions.Roll_Strip(tool_name, text, save_text, old_history, idx, files);
+            files.ElementAt(file_idx).Item1[0] = file[0];
+            files.ElementAt(file_idx).Item1[1] = file[1];
+            files.ElementAt(file_idx).Item1[2] = file[2];
+            files.ElementAt(file_idx).Item1[3] = file[3];
         }
 
-        public string[] Add_List_Files(List<(string[], string[], int)> files, string his_text, 
+        public int Add_List_Files(List<(string[], string[], int)> files, string his_text, 
             string[] file)
         {
             string[] history = new string[HISTORY_SIZE];
             history[0] = his_text;
+
             files.Add((file, history, 1));
-            return history;
+
+            return files.Count() - 1;
         }
     }
 }

@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace tflc_1
 {
     public partial class Compiler : Form
     {
         private const string path_language = "txt/language/";
-        private const int HISTORY_SIZE = 10;
 
         private readonly SyntaxHighlighting syntax_highlighting = new SyntaxHighlighting();
         private readonly ToolStripFunctions tool_functions = new ToolStripFunctions();
@@ -33,13 +23,12 @@ namespace tflc_1
         private readonly OpenApp open = new OpenApp();
 
         private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
-        private bool closing = false, close_all = false, new_tool = true, not_open = true;
-        private string tool_name = "", path = "", buffer = "", save_text = "";
-        private string[] history = new string[HISTORY_SIZE];
+        private bool closing = false, close_all = false, new_tool = true, escape = false;
+        private int width, height, his_idx = 1, file_idx = 0;
+        private readonly SplitContainer splitContainer;
         DataGridView table = new DataGridView();
-        private SplitContainer splitContainer;
-        private int width, height, idx = 1;
-        
+        private string buffer = "";
+
 
         public Compiler()
         {
@@ -54,13 +43,19 @@ namespace tflc_1
             font_functions.Initialize_FontSizes(fontSizes1);
 
             numberBox.SelectionAlignment = HorizontalAlignment.Center;
+
             open.Clean();
-            (tool_name, path, history) = open.Open(menuStrip3, richTextBox, files);
+            file_idx = open.Open(menuStrip3, richTextBox, files);
+            if (file_idx != -1)
+            {
+                tool_functions.Click_Strip(menuStrip3, null, null);
+            }
+
             numbering.Numbering_Lines(richTextBox, numberBox);
 
             if (menuStrip3.Items.Count == 0)
             {
-                (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+                Create();
                 menuStrip3.Items[0].BackColor = Color.CornflowerBlue;
             }
 
@@ -83,7 +78,125 @@ namespace tflc_1
 
             condition.Text = "Successful application opening!";
         }
-        
+
+
+        private void Create()
+        {
+            (string filename, string name) = tool_functions.New_ToolStrip(menuStrip3);
+            tool_functions.Create_ToolStrip(menuStrip3, filename, name);
+
+            string prev_tool = null;
+            if (files.Count() > 0)
+            {
+                prev_tool = files.ElementAt(file_idx).Item1[0];
+                files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
+            }            
+
+            string path = file_functions.Create(filename);
+
+            if (files.Count() > 0) files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
+
+            richTextBox.Text = null;
+            string[] file = { filename, path, richTextBox.Text, "" };
+            file_idx = ls_functions.Add_List_Files(files, "", file);
+
+            string new_tool = files.ElementAt(file_idx).Item1[0];
+            tool_functions.Click_Strip(menuStrip3, prev_tool, new_tool);
+
+            condition.Text = "Successful file creation!";
+        }
+
+        private void Open(string path)
+        {
+            string prev_tool = files.ElementAt(file_idx).Item1[0];
+            files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
+
+            string filename = "", text = "";
+            if (string.IsNullOrEmpty(path))
+            {
+                (filename, path, text) = file_functions.Open(this, menuStrip3);
+            }
+            else
+            {
+                (filename, text) = file_functions.Open_Drop_File(path, menuStrip3);
+            }
+                
+            tool_functions.Click_Strip(menuStrip3, prev_tool, filename);
+
+            string[] file = { filename, path, text, text };
+            file_idx = ls_functions.Add_List_Files(files, text, file);
+
+            new_tool = true;
+            richTextBox.Text = files.ElementAt(file_idx).Item1[2];
+            tool_functions.Click_Strip(menuStrip3, prev_tool, files.ElementAt(file_idx).Item1[0]);
+
+            condition.Text = "Successful file opening!";
+        }
+
+        private void Save()
+        {
+            file_functions.Save(files.ElementAt(file_idx).Item1[1], richTextBox.Text);
+            files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
+        }
+
+        private void Save_How()
+        {
+            string prev_tool = files.ElementAt(file_idx).Item1[0];
+
+            (string new_tool, string path) = file_functions.Save_How(this, prev_tool, richTextBox.Text);
+
+            tool_functions.Change_Name_ToolStrip(menuStrip3, prev_tool, new_tool);
+
+            string text = richTextBox.Text;
+            string[] file = { new_tool, path, text, text };
+            ls_functions.Save_List_Files(file_idx, file, files);
+
+            condition.Text = "Successful file saving how!";
+        }
+
+        private void Help()
+        {
+            Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
+        }
+
+
+        private void Escape()
+        {
+            close_all = false;
+
+            if (escape) return;
+            escape = true;
+
+            ToolStripFunctions tool_functions = new ToolStripFunctions();
+            files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
+            if (tool_functions.ToolStrip_For_Close(files.ElementAt(file_idx).Item1[0], files) != -1)
+            {
+                panel7.Visible = true;
+            }
+            else
+            {
+                string prev_tool = files.ElementAt(file_idx).Item1[0];
+                file_idx = tool_functions.Delete_ToolStrip(menuStrip3, file_idx, files);
+                if (files.Count() != 0)
+                {
+                    richTextBox.Text = files.ElementAt(file_idx).Item1[2];
+                    string new_tool = files.ElementAt(file_idx).Item1[0];
+                    tool_functions.Click_Strip(menuStrip3, prev_tool, new_tool);
+                }
+                else richTextBox.Text = null;
+            }
+
+            Timer timer = new Timer();
+            timer.Interval = 100;
+            timer.Tick += (s, ev) =>
+            {
+                escape = false;
+                timer.Stop();
+                timer.Dispose();
+            };
+            timer.Start();
+        }
+
 
         private void Compiler_SizeChanged(object sender, EventArgs e)
         {
@@ -133,6 +246,7 @@ namespace tflc_1
             {
                 panel10.Height = panel7.Height / 7;
                 panel11.Height = panel10.Height / 2;
+                if (panel10.Height > 20) panel11.Height = panel10.Height + 5;
             }
             else
             {
@@ -156,28 +270,22 @@ namespace tflc_1
             {
                 foreach (string drag_path in drag_files)
                 {
+                    string path = files.ElementAt(file_idx).Item1[1];
                     path = drag_path;
-                    (tool_name, history, not_open, richTextBox.Text, save_text, condition.Text) = file_functions.Open_Drop_File(path, richTextBox, menuStrip3, tool_name, save_text, files, idx);
+                    Open(path);
                 }
             }
         }
 
-        private void create1_Click(object sender, EventArgs e) => 
-            (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
-        private void create2_Click(object sender, EventArgs e) =>
-            (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
-        private void open1_Click(object sender, EventArgs e) => 
-            (tool_name, path, history, not_open, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
-        private void open2_Click(object sender, EventArgs e) =>
-            (tool_name, path, history, not_open, richTextBox.Text, save_text, condition.Text) = file_functions.Open(this, richTextBox, menuStrip3, tool_name, save_text, files, idx);
-        private void save1_Click(object sender, EventArgs e) =>
-            (path, condition.Text) = file_functions.Save(richTextBox, tool_name, path, files);
-        private void saveHow1_Click(object sender, EventArgs e) =>
-            (tool_name, path, save_text, condition.Text) = file_functions.Save_How(this, richTextBox, menuStrip3, tool_name, files);
-        private void save2_Click(object sender, EventArgs e) =>
-            (tool_name, path, save_text, condition.Text) = file_functions.Save_How(this, richTextBox, menuStrip3, tool_name, files);
-        private void help1_Click(object sender, EventArgs e) =>
-            Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
+        private void create1_Click(object sender, EventArgs e) => Create();
+        private void create2_Click(object sender, EventArgs e) => Create();
+        private void open1_Click(object sender, EventArgs e) => Open(null);
+        private void open2_Click(object sender, EventArgs e) => Open(null);
+        private void save1_Click(object sender, EventArgs e) => Save();
+        private void saveHow1_Click(object sender, EventArgs e) => Save_How();
+        private void save2_Click(object sender, EventArgs e) => Save_How();
+        private void help1_Click(object sender, EventArgs e) => Help();
+        private void help2_Click(object sender, EventArgs e) => Help();
 
 
         private void Change_Buffer(int func)
@@ -199,37 +307,28 @@ namespace tflc_1
         }
 
         private void cancel1_Click(object sender, EventArgs e) =>
-            idx = text_functions.Cancel(richTextBox, history, idx);
+            his_idx = text_functions.Cancel(richTextBox, files.ElementAt(file_idx).Item2, his_idx);
         private void left2_Click(object sender, EventArgs e) =>
-            idx = text_functions.Cancel(richTextBox, history, idx);
+            his_idx = text_functions.Cancel(richTextBox, files.ElementAt(file_idx).Item2, his_idx);
         private void return1_Click(object sender, EventArgs e) =>
-            idx = text_functions.Repeat(richTextBox, history, idx);
+            his_idx = text_functions.Repeat(richTextBox, files.ElementAt(file_idx).Item2, his_idx);
         private void rigth2_Click(object sender, EventArgs e) =>
-            idx = text_functions.Repeat(richTextBox, history, idx);
-        private void copy1_Click(object sender, EventArgs e) =>
-            Change_Buffer(1);
-        private void copy2_Click(object sender, EventArgs e) =>
-            Change_Buffer(1);
-        private void cut1_Click(object sender, EventArgs e) =>
-            Change_Buffer(2);
-        private void cut2_Click(object sender, EventArgs e) =>
-            Change_Buffer(2);
-        private void enter1_Click(object sender, EventArgs e) =>
-            text_functions.Paste(richTextBox, buffer);
-        private void enter2_Click(object sender, EventArgs e) =>
-            text_functions.Paste(richTextBox, buffer);
-        private void delete1_Click(object sender, EventArgs e) =>
-            text_functions.Delete(richTextBox);
-        private void select1_Click(object sender, EventArgs e) =>
-            text_functions.Select_All(richTextBox);
+            his_idx = text_functions.Repeat(richTextBox, files.ElementAt(file_idx).Item2, his_idx);
+        private void copy1_Click(object sender, EventArgs e) => Change_Buffer(1);
+        private void copy2_Click(object sender, EventArgs e) => Change_Buffer(1);
+        private void cut1_Click(object sender, EventArgs e) => Change_Buffer(2);
+        private void cut2_Click(object sender, EventArgs e) => Change_Buffer(2);
+        private void enter1_Click(object sender, EventArgs e) => text_functions.Paste(richTextBox, buffer);
+        private void enter2_Click(object sender, EventArgs e) => text_functions.Paste(richTextBox, buffer);
+        private void delete1_Click(object sender, EventArgs e) => text_functions.Delete(richTextBox);
+        private void delete2_Click(object sender, EventArgs e) => text_functions.Delete(richTextBox);
+        private void select1_Click(object sender, EventArgs e) => text_functions.Select_All(richTextBox);
+        private void select2_Click(object sender, EventArgs e) => text_functions.Select_All(richTextBox);
 
 
         private void quit1_Click(object sender, EventArgs e)
         {
-            if (tool_functions.Count_ToolStrip(menuStrip3) == 0) Close();
-            if (tool_functions.ToolStrip_For_Close(tool_name, files) <= -1) Close();
-            panel7.Visible = true;
-            closing = false;
+            Close();
         }
 
         private void exit_Click(object sender, EventArgs e)
@@ -242,15 +341,19 @@ namespace tflc_1
         {
             if (close_all) Close();
 
-            tool_functions.Delete_ToolStrip(menuStrip3, tool_name, files);
+            string prev_tool = files.ElementAt(file_idx).Item1[0];
+            file_idx = tool_functions.Delete_ToolStrip(menuStrip3, file_idx, files);
             panel7.Visible = false;
-            if (files.Count == 0)
+            if (files.Count() == 0 || file_idx < 0)
             {
+                richTextBox.Text = "Closing...";
                 richTextBox.Text = null;
-                return;
             }
-            tool_name = files.ElementAt(files.Count - 1).Item1[0];
-            (path, history, idx, richTextBox.Text) = tool_functions.Click_Strip(tool_name, path, files);  
+            else
+            {
+                richTextBox.Text = files.ElementAt(file_idx).Item1[2];
+                tool_functions.Click_Strip(menuStrip3, prev_tool, files.ElementAt(file_idx).Item1[0]);
+            }
         }
 
         private void yes_Click(object sender, EventArgs e)
@@ -262,15 +365,19 @@ namespace tflc_1
             }
             else
             {
-                tool_functions.Close_ToolStrip(menuStrip3, tool_name, this, richTextBox, condition, files);
+                string prev_tool = files.ElementAt(file_idx).Item1[0];
+                file_idx = tool_functions.Close_ToolStrip(file_idx, menuStrip3, this, richTextBox, condition, files);
                 panel7.Visible = false;
-                if (files.Count == 0)
+                if (files.Count() == 0 || file_idx < 0)
                 {
+                    richTextBox.Text = "Closing...";
                     richTextBox.Text = null;
-                    return;
                 }
-                tool_name = files.ElementAt(files.Count - 1).Item1[0];
-                (path, history, idx, richTextBox.Text) = tool_functions.Click_Strip(tool_name, path, files);
+                else
+                {
+                    richTextBox.Text = files.ElementAt(file_idx).Item1[2];
+                    tool_functions.Click_Strip(menuStrip3, prev_tool, files.ElementAt(file_idx).Item1[0]);
+                }
             }
         }
 
@@ -280,17 +387,17 @@ namespace tflc_1
             if (e.ClickedItem is ToolStripMenuItem clicked_item)
             {
                 new_tool = true;
-                tool_functions.Roll_Strip(tool_name, richTextBox.Text, save_text, history, idx, files);
-                
-                foreach (ToolStripMenuItem item in menuStrip3.Items)
-                {
-                    item.BackColor = SystemColors.Control;
-                }
 
-                tool_name = clicked_item.Text;
-                clicked_item.BackColor = Color.CornflowerBlue;
+                files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
 
-                (path, history, idx, richTextBox.Text) = tool_functions.Click_Strip(tool_name, path, files);
+                string prev_tool = files.ElementAt(file_idx).Item1[0];
+                string tool_name = clicked_item.Text;
+                tool_functions.Click_Strip(menuStrip3, prev_tool, tool_name);
+
+                file_idx = ls_functions.Find_File(files, tool_name);
+                richTextBox.Text = files.ElementAt(file_idx).Item1[2];
+                if (file_idx == -1) MessageBox.Show("This file is not exists");
+
                 richTextBox.Select(richTextBox.Text.Length, 0);
                 syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
             }
@@ -301,53 +408,29 @@ namespace tflc_1
 
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
-            numbering.Numbering_Lines(richTextBox, numberBox);
-
-            idx = text_functions.Add_History(history, richTextBox.Text, idx);
-
             if (menuStrip3.Items.Count == 0)
             {
-                (tool_name, path, history, save_text, condition.Text) = file_functions.Create(menuStrip3, richTextBox, tool_name, save_text, files, idx);
+                Create();
             }
 
-            int index = ls_functions.Find_File(files, tool_name);
-            if (index != -1 && not_open)
-            {
-                save_text = "";
-                files.ElementAt(index).Item1[3] = save_text;
-            }
-            else not_open = true;
+            numbering.Numbering_Lines(richTextBox, numberBox);
+            his_idx = text_functions.Add_History(files.ElementAt(file_idx).Item2, richTextBox.Text, his_idx);
             
             syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
             new_tool = false;
-
-            // Проверка работоспосбности добавления ошибок в таблицу
-            /*if (richTextBox.Text.Contains("error"))
-            {
-                table_functions.Add_Row_Table(richTextBox, table, path, "ERROR");
-            }*/
         }
 
-
+        
         private void Compiler_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            if (files.Count() == 0)
             {
-                close_all = false;
-                if (tool_functions.ToolStrip_For_Close(tool_name, files) >= 0)
-                {
-                    panel7.Visible = true;
-                }
-                else if (tool_functions.ToolStrip_For_Close(tool_name, files) == -1)
-                {
-                    tool_functions.Delete_ToolStrip(menuStrip3, tool_name, files);
-                    richTextBox.Text = null;
-                }
-                return;
+                Create();
             }
 
             KeyboardShortcuts keyboard = new KeyboardShortcuts();
-            (buffer, idx) = keyboard.Keyboard_Shortcusts(e, richTextBox, history, idx, buffer);
+            (buffer, his_idx) = keyboard.Keyboard_Shortcusts(e, richTextBox, files.ElementAt(file_idx).Item2, his_idx, buffer);
+            if (e.KeyCode == Keys.Escape) Escape();
         }
 
 
@@ -371,8 +454,7 @@ namespace tflc_1
                 panel7.Visible = false;
                 closing = true;
 
-                if (tool_functions.Count_ToolStrip(menuStrip3) == 0) Close();
-
+                files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
                 foreach (ToolStripMenuItem item in menuStrip3.Items)
                 {
                     int index = tool_functions.ToolStrip_For_Close(item.Text, files);
@@ -391,6 +473,7 @@ namespace tflc_1
 
         private void FontSizes1_SelectedIndexChanged(object sender, EventArgs e) =>
             condition.Text = font_functions.Selected_Item_FontSizes(fontSizes1, richTextBox, numberBox);
+
         private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
         private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
         private void kazLan1_Click(object sender, EventArgs e) => Change_Language(3);

@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace tflc_1
 {
@@ -15,115 +8,103 @@ namespace tflc_1
     {
         private readonly ListFileFunctions ls_file = new ListFileFunctions();
 
-        public (string, string, string[], string, string) Create(MenuStrip menuStrip, 
-            RichTextBox richTextBox, string tool_name, string save_text, 
-            List<(string[], string[], int)> files, int idx)
+        public string Create(string filename)
         {
-            (string filename, string name) = New_ToolStrip(menuStrip);
-            Create_ToolStrip(menuStrip, filename, name);
-            string path = "cache/" + filename + ".txt";
-            File.Create(path).Close();
-
-            ls_file.Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
-
-            richTextBox.Text = null;
-            string[] file = { filename, path, richTextBox.Text, null };
-            string[] history = ls_file.Add_List_Files(files, "", file);
-
-            return (filename, path, history, "", "Successful file creation!");
-        }
-
-        public (string, string[], bool, string, string, string) Open_Drop_File(string path,
-            RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text,
-            List<(string[], string[], int)> files, int idx)
-        {
-            ls_file.Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
-
-            string filename = "", text = "";
-            text = File.ReadAllText(path);
-
-            filename = Path.GetFileNameWithoutExtension(path);
-            if (!Find_File_In_ToolStrip(menuStrip, filename))
+            try
             {
-                Create_ToolStrip(menuStrip, filename, "file");
+                string path = "cache/" + filename + ".txt";
+                File.Create(path).Close();
+                return path;
             }
-
-            save_text = text;
-            string[] file = { filename, path, text, save_text };
-            string[] history = ls_file.Add_List_Files(files, text, file);
-
-            return (filename, history, false, text, save_text, "Successful file opening!");
+            catch (Exception e)
+            {
+                MessageBox.Show("Exception in the Create function (FileFunctions): " + e.Message);
+                return null;
+            }
         }
 
-        public (string, string, string[], bool, string, string, string) Open(Form form, 
-            RichTextBox richTextBox, MenuStrip menuStrip, string tool_name, string save_text, 
-            List<(string[], string[], int)> files, int idx)
+        public (string, string) Open_Drop_File(string path, MenuStrip menuStrip)
         {
-            ls_file.Save_List_Files(tool_name, richTextBox.Text, save_text, idx, files);
-
-            string filename = "", text = "";
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog(form) == DialogResult.OK)
+            try
             {
-                text = File.ReadAllText(openFileDialog.FileName);
+                string text = File.ReadAllText(path);
+                string filename = Path.GetFileNameWithoutExtension(path);
 
-                filename = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
                 if (!Find_File_In_ToolStrip(menuStrip, filename))
                 {
                     Create_ToolStrip(menuStrip, filename, "file");
                 }
+
+                return (filename, text);
             }
-
-            save_text = text;
-            string[] file = { filename, openFileDialog.FileName, text, save_text };
-            string[] history = ls_file.Add_List_Files(files, text, file);
-
-            return (filename, openFileDialog.FileName, history, false, text, save_text, "Successful file opening!");
+            catch (Exception e)
+            {
+                MessageBox.Show("Exception in the Open_Drop_File function (FileFunctions): " + e.Message);
+                return (null, null);
+            }
         }
 
-        public (string, string) Save(RichTextBox richTextBox, string tool_name, string filename, 
-            List<(string[], string[], int)> files)
+        public (string, string, string) Open(Form form, MenuStrip menuStrip)
         {
-            ToolStripFunctions tool_functions = new ToolStripFunctions();
-            string text; string[] his; int idx;
+            try
+            {
+                string filename = "", text = "";
+                OpenFileDialog openFileDialog = new OpenFileDialog();
 
-            (filename, his, idx, text) = tool_functions.Click_Strip(tool_name, filename, files);
-            if (filename == null) MessageBox.Show("Error: file path is null!");
+                if (openFileDialog.ShowDialog(form) == DialogResult.OK)
+                {
+                    text = File.ReadAllText(openFileDialog.FileName);
 
-            File.WriteAllText(filename, richTextBox.Text);
-            return (filename, "Successful file saving!");
+                    filename = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
+                    if (!Find_File_In_ToolStrip(menuStrip, filename))
+                    {
+                        Create_ToolStrip(menuStrip, filename, "file");
+                    }
+                }
+
+                return (filename, openFileDialog.FileName, text);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Exception in the Open function (FileFunctions): " + e.Message);
+                return (null, null, null);
+            }
         }
 
-        public (string, string, string, string) Save_How(Form form, 
-            RichTextBox richTextBox, MenuStrip menuStrip, string filename, 
-            List<(string[], string[], int)> files)
+        public void Save(string path, string text)
         {
-            int prev = ls_file.Find_File(files, filename);
-            if (prev == -1)
+            try
             {
-                MessageBox.Show("Nothing to save");
-                return (null, null, null, null);
+                File.WriteAllText(path, text);
             }
-
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            string[] history = files.ElementAt(prev).Item2;
-            int idx = files.ElementAt(prev).Item3;
-            saveFileDialog.FileName = filename;
-
-            if (saveFileDialog.ShowDialog(form) == DialogResult.OK)
+            catch (Exception e)
             {
-                File.WriteAllText(saveFileDialog.FileName + ".txt", richTextBox.Text);
+                MessageBox.Show("Exception in the Save function (FileFunctions): " + e.Message);
             }
+            return;
+        }
 
-            string new_filename = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
-            Change_Name_ToolStrip(menuStrip, filename, new_filename);
+        public (string, string) Save_How(Form form, string filename, string text)
+        {
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.FileName = filename;
 
-            string save_text = richTextBox.Text;
-            files.RemoveAt(prev);
-            string[] file = { new_filename, saveFileDialog.FileName, save_text, save_text };
-            files.Add((file, history, idx));
+                if (saveFileDialog.ShowDialog(form) == DialogResult.OK)
+                {
+                    File.WriteAllText(saveFileDialog.FileName, text);
+                }
 
-            return (new_filename, saveFileDialog.FileName, save_text, "Successful file saving how!");
+                string new_filename = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+
+                return (new_filename, saveFileDialog.FileName);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Exception in the Save_How function (FileFunctions): " + e.Message);
+                return (null, null);
+            }
         }
     }
 }

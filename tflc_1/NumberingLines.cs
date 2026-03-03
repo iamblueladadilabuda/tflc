@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace tflc_1
@@ -29,11 +24,12 @@ namespace tflc_1
                 {
                     if (num_line == 2) break;
                     num_line--;
-                    numberBox.Text = "";
-                    for (int i = 1; i < num_line; i++)
-                    {
-                        numberBox.Text += i.ToString() + "\n";
-                    }
+                }
+
+                numberBox.Text = null;
+                for (int i = 1; i < num_line; i++)
+                {
+                    numberBox.Text += i.ToString() + "\n";
                 }
             }
         }
