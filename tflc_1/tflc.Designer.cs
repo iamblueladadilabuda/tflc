@@ -80,6 +80,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel9 = new System.Windows.Forms.Panel();
             this.yes = new System.Windows.Forms.Button();
             this.panel12 = new System.Windows.Forms.Panel();
@@ -98,18 +99,17 @@
             this.condition = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -144,28 +144,28 @@
             // create1
             // 
             this.create1.Name = "create1";
-            this.create1.Size = new System.Drawing.Size(247, 30);
+            this.create1.Size = new System.Drawing.Size(216, 30);
             this.create1.Text = "Создать";
             this.create1.Click += new System.EventHandler(this.create1_Click);
             // 
             // open1
             // 
             this.open1.Name = "open1";
-            this.open1.Size = new System.Drawing.Size(247, 30);
+            this.open1.Size = new System.Drawing.Size(216, 30);
             this.open1.Text = "Открыть";
             this.open1.Click += new System.EventHandler(this.open1_Click);
             // 
             // save1
             // 
             this.save1.Name = "save1";
-            this.save1.Size = new System.Drawing.Size(247, 30);
+            this.save1.Size = new System.Drawing.Size(216, 30);
             this.save1.Text = "Сохранить";
             this.save1.Click += new System.EventHandler(this.save1_Click);
             // 
             // saveHow1
             // 
             this.saveHow1.Name = "saveHow1";
-            this.saveHow1.Size = new System.Drawing.Size(247, 30);
+            this.saveHow1.Size = new System.Drawing.Size(216, 30);
             this.saveHow1.Text = "Сохранить как";
             this.saveHow1.Click += new System.EventHandler(this.saveHow1_Click);
             // 
@@ -175,7 +175,7 @@
             this.language1,
             this.font1});
             this.settings1.Name = "settings1";
-            this.settings1.Size = new System.Drawing.Size(247, 30);
+            this.settings1.Size = new System.Drawing.Size(216, 30);
             this.settings1.Text = "Настройки";
             // 
             // language1
@@ -226,7 +226,7 @@
             // quit1
             // 
             this.quit1.Name = "quit1";
-            this.quit1.Size = new System.Drawing.Size(247, 30);
+            this.quit1.Size = new System.Drawing.Size(216, 30);
             this.quit1.Text = "Выход";
             this.quit1.Click += new System.EventHandler(this.quit1_Click);
             // 
@@ -351,9 +351,11 @@
             // 
             // start1
             // 
+            this.start1.Image = ((System.Drawing.Image)(resources.GetObject("start1.Image")));
             this.start1.Name = "start1";
-            this.start1.Size = new System.Drawing.Size(62, 27);
+            this.start1.Size = new System.Drawing.Size(84, 27);
             this.start1.Text = "Пуск";
+            this.start1.Click += new System.EventHandler(this.start1_Click);
             // 
             // help1
             // 
@@ -547,6 +549,17 @@
             this.panel8.Size = new System.Drawing.Size(346, 156);
             this.panel8.TabIndex = 0;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(15, 21);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(55, 50);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // panel9
             // 
             this.panel9.Controls.Add(this.yes);
@@ -732,17 +745,6 @@
             this.panel6.Size = new System.Drawing.Size(720, 436);
             this.panel6.TabIndex = 9;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(15, 21);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(55, 50);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // Compiler
             // 
             this.AllowDrop = true;
@@ -774,6 +776,7 @@
             this.panel7.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel9.ResumeLayout(false);
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
@@ -783,7 +786,6 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

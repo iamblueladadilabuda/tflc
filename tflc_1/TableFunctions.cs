@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace tflc_1
 {
     internal class TableFunctions
     {
+        private string path;
         private int table_count = 0;
 
         public DataGridView Initialize_Table()
@@ -34,15 +30,195 @@ namespace tflc_1
             return table;
         }
 
-        public void Add_Row_Table(RichTextBox richTextBox, DataGridView table, string path, string message)
+        public void Set_Path(string path)
         {
-            table.Rows.Add(++table_count, path, Get_Line(richTextBox), message);
+            this.path = path;
         }
 
-        private int Get_Line(RichTextBox richTextBox)
+        public void Clear_Table(DataGridView table)
         {
-            // (!!!) Поменять функцию, когда начнёшь работать с ошибками
-            return richTextBox.Text.IndexOf("error") + 1;
+            table_count = 0;
+            table.Rows.Clear();
+        }
+
+        public void Scaner(DataGridView table, string text, int line)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                char token = text[i];
+
+                switch(token)
+                {
+                    case '#':
+                        Add_Row_Table(table, line, "OPERATOR: #");
+                        break;
+
+                    case char _ when char.IsLetter(token):
+
+                        string letter = token.ToString();
+
+                        if ((i + 1) < text.Length)
+                        {
+                            while (char.IsLetterOrDigit(text[i + 1]) || text[i + 1] == '_' || text[i + 1] == '-')
+                            {
+                                letter += text[i + 1].ToString();
+                                i++;
+
+                                if ((i + 1) >= text.Length) break;
+                            }
+                        }
+
+                        if (letter == "define")
+                        {
+                            Add_Row_Table(table, line, "KEYWORD: define");
+                        }
+                        else
+                        {
+                            Add_Row_Table(table, line, "IDENTIFIER: " + letter);
+                        }
+
+                        break;
+
+                    case char _ when char.IsDigit(token):
+
+                        bool error = false;
+                        string digit = token.ToString();
+
+                        if ((i + 1) < text.Length)
+                        {
+                            while (char.IsDigit(text[i + 1]))
+                            {
+                                digit += text[i + 1].ToString();
+                                i++;
+
+                                if ((i + 1) >= text.Length) break;
+                            }
+
+                            if ((i + 1) < text.Length && text[i + 1] == '.')
+                            {
+                                digit += text[i + 1].ToString();
+                                i++;
+
+                                if ((i + 1) >= text.Length)
+                                {
+                                    Add_Row_Table(table, line, "ERROR: " + digit);
+                                    error = true;
+                                    break;
+                                }
+
+                                while (!char.IsWhiteSpace(text[i + 1]))
+                                {
+                                    if (!char.IsDigit(text[i + 1]))
+                                    {
+                                        while (!char.IsWhiteSpace(text[i + 1]) || text[i + 1] != ';')
+                                        {
+                                            digit += text[i + 1].ToString();
+                                            i++;
+                                            if ((i + 1) >= text.Length) break;
+                                        }
+
+                                        Add_Row_Table(table, line, "ERROR: " + digit);
+                                        error = true;
+
+                                        break;
+                                    }
+
+                                    digit += text[i + 1].ToString();
+                                    i++;
+
+                                    if ((i + 1) >= text.Length) break;
+                                }
+                            }
+                        }
+
+                        if (!error)
+                        {
+                            if (digit.IndexOf('.') != -1)
+                            {
+                                Add_Row_Table(table, line, "DOUBLE: " + digit);
+                            }
+                            else
+                            {
+                                Add_Row_Table(table, line, "INTEGER: " + digit);
+                            }
+                        }
+
+
+                        break;
+
+                    case char _ when char.IsWhiteSpace(token):
+                        Add_Row_Table(table, line, "SEPARATOR: space");
+                        break;
+
+                    case '(':
+                        Add_Row_Table(table, line, "SEPARATOR: (");
+                        break;
+
+                    case ')':
+                        Add_Row_Table(table, line, "SEPARATOR: )");
+                        break;
+
+                    case '{':
+                        Add_Row_Table(table, line, "SEPARATOR: {");
+                        break;
+
+                    case '}':
+                        Add_Row_Table(table, line, "SEPARATOR: }");
+                        break;
+
+                    case '\\':
+                        Add_Row_Table(table, line, "SEPARATOR: \\");
+                        break;
+
+                    case ';':
+                        Add_Row_Table(table, line, "SEPARATOR: ;");
+                        break;
+
+                    case '=':
+                        Add_Row_Table(table, line, "OPERATOR: =");
+                        break;
+
+                    case '+':
+                        Add_Row_Table(table, line, "OPERATOR: +");
+                        break;
+
+                    case '-':
+                        Add_Row_Table(table, line, "OPERATOR: -");
+                        break;
+
+                    case '*':
+                        Add_Row_Table(table, line, "OPERATOR: *");
+                        break;
+
+                    case '/':
+                        Add_Row_Table(table, line, "OPERATOR: /");
+                        break;
+
+                    case '"':
+                        Add_Row_Table(table, line, "QUOTE: \"");
+                        break;
+
+                    case ',':
+                        Add_Row_Table(table, line, "SEPARATOR: ,");
+                        break;
+
+                    default:
+                        Add_Row_Table(table, line, "ERROR: " + token);
+                        break;
+                }
+            }
+        }
+
+        private void Add_Row_Table(DataGridView table, int line, string message)
+        {
+            table.Rows.Add(++table_count, path, line, message);
+
+            if (message.StartsWith("ERROR"))
+            {
+                table.Rows[table_count - 1].DefaultCellStyle.BackColor = Color.LightCoral;
+                table.Rows[table_count - 1].DefaultCellStyle.ForeColor = Color.DarkRed;
+                table.Rows[table_count - 1].DefaultCellStyle.Font = new Font(table.Font, FontStyle.Bold);
+            }
         }
     }
 }

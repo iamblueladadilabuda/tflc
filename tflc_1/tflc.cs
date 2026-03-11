@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace tflc_1
 {
@@ -154,6 +155,19 @@ namespace tflc_1
             condition.Text = "Successful file saving how!";
         }
 
+        private void Start()
+        {
+            table_functions.Clear_Table(table);
+            table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
+
+            int line = 0;
+            foreach (string text in richTextBox.Text.Split('\n'))
+            {
+                line++;
+                table_functions.Scaner(table, text, line);
+            }
+        }
+
         private void Help()
         {
             Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
@@ -284,6 +298,7 @@ namespace tflc_1
         private void save1_Click(object sender, EventArgs e) => Save();
         private void saveHow1_Click(object sender, EventArgs e) => Save_How();
         private void save2_Click(object sender, EventArgs e) => Save_How();
+        private void start1_Click(object sender, EventArgs e) => Start();
         private void help1_Click(object sender, EventArgs e) => Help();
         private void help2_Click(object sender, EventArgs e) => Help();
 
@@ -420,7 +435,7 @@ namespace tflc_1
             new_tool = false;
         }
 
-        
+
         private void Compiler_KeyDown(object sender, KeyEventArgs e)
         {
             if (files.Count() == 0)
