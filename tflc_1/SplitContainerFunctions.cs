@@ -9,6 +9,8 @@ namespace tflc_1
         {
             Point location = main.Location;
             Size size = main.Size;
+            DockStyle dockStyle = main.Dock;
+            AnchorStyles anchor = main.Anchor;
             Control parent = main.Parent;
             int index = parent.Controls.GetChildIndex(main);
 
@@ -17,14 +19,19 @@ namespace tflc_1
             SplitContainer splitContainer = new SplitContainer();
             splitContainer.Location = location;
             splitContainer.Size = size;
-            splitContainer.Dock = DockStyle.Top;
+
+            splitContainer.Dock = DockStyle.Fill;
 
             splitContainer.Orientation = Orientation.Horizontal;
             splitContainer.SplitterWidth = 10;
-            splitContainer.SplitterDistance = size.Width / 3;
 
-            splitContainer.Panel1.Controls.Add(Initializate_Panel(top));
-            splitContainer.Panel2.Controls.Add(Initializate_Panel(bottom));
+            splitContainer.SplitterDistance = size.Height / 3;
+
+            splitContainer.Panel1MinSize = 50;
+            splitContainer.Panel2MinSize = 50;
+
+            splitContainer.Panel1.Controls.Add(Initialize_Panel(top));
+            splitContainer.Panel2.Controls.Add(Initialize_Panel(bottom));
 
             parent.Controls.Add(splitContainer);
             parent.Controls.SetChildIndex(splitContainer, index);
@@ -32,13 +39,21 @@ namespace tflc_1
             return splitContainer;
         }
 
-        private Panel Initializate_Panel(Panel old_panel)
+        private Panel Initialize_Panel(Panel old_panel)
         {
             Panel new_panel = new Panel();
             new_panel.Dock = DockStyle.Fill;
+            new_panel.BackColor = old_panel.BackColor;
+            new_panel.Padding = old_panel.Padding;
+            new_panel.Margin = old_panel.Margin;
 
-            old_panel.Parent.Controls.Remove(old_panel);
+            if (old_panel.Parent != null)
+            {
+                old_panel.Parent.Controls.Remove(old_panel);
+            }
+
             old_panel.Dock = DockStyle.Fill;
+
             new_panel.Controls.Add(old_panel);
 
             return new_panel;

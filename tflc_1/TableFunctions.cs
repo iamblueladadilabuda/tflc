@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace tflc_1
@@ -8,10 +9,34 @@ namespace tflc_1
         private string path;
         private int table_count = 0;
 
+        private Dictionary<int, string> tokens = new Dictionary<int, string>()
+        {
+            { -1, "ERROR" },
+            { 1, "OPERATOR" },
+            { 2, "KEYWORD" },
+            { 3, "IDENTIFIER" },
+            { 4, "SEPARATOR" },
+            { 5, "SEPARATOR" },
+            { 6, "SEPARATOR" },
+            { 7, "SEPARATOR" },
+            { 8, "SEPARATOR" },
+            { 9, "SEPARATOR" },
+            { 10, "OPERATOR" },
+            { 11, "OPERATOR" },
+            { 12, "OPERATOR" },
+            { 13, "QUOTE" },
+            { 14, "OPERATOR" },
+            { 15, "OPERATOR" },
+            { 16, "SEPARATOR" },
+            { 17, "INTEGER" },
+            { 18, "SEPARATOR" },
+            { 19, "DOUBLE" },
+        };
+
         public DataGridView Initialize_Table()
         {
             DataGridView table = new DataGridView();
-            string[] columns_text = { "№", "File path", "Line", "Message" };
+            string[] columns_text = { "№", "File path", "Code", "Type of token", "Token", "Line" };
             foreach (string col_text in columns_text)
             {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
@@ -23,6 +48,7 @@ namespace tflc_1
 
             table.Dock = DockStyle.Fill;
             table.AllowUserToAddRows = false;
+            table.ScrollBars = ScrollBars.Both;
             table.ReadOnly = true;
             table.RowHeadersVisible = false;
             table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -50,7 +76,7 @@ namespace tflc_1
                 switch(token)
                 {
                     case '#':
-                        Add_Row_Table(table, line, "OPERATOR: #");
+                        Add_Row_Table(table, 1, line, i + 1, "#");
                         break;
 
                     case char _ when char.IsLetter(token):
@@ -70,11 +96,11 @@ namespace tflc_1
 
                         if (letter == "define")
                         {
-                            Add_Row_Table(table, line, "KEYWORD: define");
+                            Add_Row_Table(table, 2, line, i + 1, "define");
                         }
                         else
                         {
-                            Add_Row_Table(table, line, "IDENTIFIER: " + letter);
+                            Add_Row_Table(table, 3, line, i + 1, letter);
                         }
 
                         break;
@@ -101,23 +127,28 @@ namespace tflc_1
 
                                 if ((i + 1) >= text.Length)
                                 {
-                                    Add_Row_Table(table, line, "ERROR: " + digit);
+                                    Add_Row_Table(table, -1, line, i - digit.Length + 2, digit);
                                     error = true;
                                     break;
                                 }
 
                                 while (!char.IsWhiteSpace(text[i + 1]))
                                 {
+                                    if (text[i + 1] == ';') break;
+
                                     if (!char.IsDigit(text[i + 1]))
                                     {
-                                        while (!char.IsWhiteSpace(text[i + 1]) || text[i + 1] != ';')
+                                        while (!char.IsWhiteSpace(text[i + 1]))
                                         {
+                                            if (text[i + 1] == ';') break;
+
                                             digit += text[i + 1].ToString();
                                             i++;
+
                                             if ((i + 1) >= text.Length) break;
                                         }
 
-                                        Add_Row_Table(table, line, "ERROR: " + digit);
+                                        Add_Row_Table(table, -1, line, i - digit.Length + 2, digit);
                                         error = true;
 
                                         break;
@@ -135,11 +166,11 @@ namespace tflc_1
                         {
                             if (digit.IndexOf('.') != -1)
                             {
-                                Add_Row_Table(table, line, "DOUBLE: " + digit);
+                                Add_Row_Table(table, 19, line, i + 1, digit);
                             }
                             else
                             {
-                                Add_Row_Table(table, line, "INTEGER: " + digit);
+                                Add_Row_Table(table, 17, line, i + 1, digit);
                             }
                         }
 
@@ -147,78 +178,85 @@ namespace tflc_1
                         break;
 
                     case char _ when char.IsWhiteSpace(token):
-                        Add_Row_Table(table, line, "SEPARATOR: space");
+                        Add_Row_Table(table, 18, line, i + 1, "space");
                         break;
 
                     case '(':
-                        Add_Row_Table(table, line, "SEPARATOR: (");
+                        Add_Row_Table(table, 4, line, i + 1, "(");
                         break;
 
                     case ')':
-                        Add_Row_Table(table, line, "SEPARATOR: )");
+                        Add_Row_Table(table, 5, line, i + 1, ")");
                         break;
 
                     case '{':
-                        Add_Row_Table(table, line, "SEPARATOR: {");
+                        Add_Row_Table(table, 6, line, i + 1, "{");
                         break;
 
                     case '}':
-                        Add_Row_Table(table, line, "SEPARATOR: }");
+                        Add_Row_Table(table, 7, line, i + 1, "}");
                         break;
 
                     case '\\':
-                        Add_Row_Table(table, line, "SEPARATOR: \\");
+                        Add_Row_Table(table, 8, line, i + 1, "\\");
                         break;
 
                     case ';':
-                        Add_Row_Table(table, line, "SEPARATOR: ;");
+                        Add_Row_Table(table, 9, line, i + 1, ";");
                         break;
 
                     case '=':
-                        Add_Row_Table(table, line, "OPERATOR: =");
+                        Add_Row_Table(table, 10, line, i + 1, "=");
                         break;
 
                     case '+':
-                        Add_Row_Table(table, line, "OPERATOR: +");
+                        Add_Row_Table(table, 11, line, i + 1, "+");
                         break;
 
                     case '-':
-                        Add_Row_Table(table, line, "OPERATOR: -");
+                        Add_Row_Table(table, 12 ,line, i + 1, "-");
                         break;
 
                     case '*':
-                        Add_Row_Table(table, line, "OPERATOR: *");
+                        Add_Row_Table(table, 14, line, i + 1, "*");
                         break;
 
                     case '/':
-                        Add_Row_Table(table, line, "OPERATOR: /");
+                        Add_Row_Table(table, 15, line, i + 1, "/");
                         break;
 
                     case '"':
-                        Add_Row_Table(table, line, "QUOTE: \"");
+                        Add_Row_Table(table, 13, line, i + 1, "\"");
                         break;
 
                     case ',':
-                        Add_Row_Table(table, line, "SEPARATOR: ,");
+                        Add_Row_Table(table, 16, line, i + 1, ",");
                         break;
 
                     default:
-                        Add_Row_Table(table, line, "ERROR: " + token);
+                        Add_Row_Table(table, -1, line, i + 1, token.ToString());
                         break;
                 }
             }
         }
 
-        private void Add_Row_Table(DataGridView table, int line, string message)
+        private void Add_Row_Table(DataGridView table, int code, int line, int start_idx, string token)
         {
-            table.Rows.Add(++table_count, path, line, message);
+            table.Rows.Add(++table_count, path, code, tokens[code], token, Get_Line(line, start_idx, token));
 
-            if (message.StartsWith("ERROR"))
+            if (code == -1)
             {
                 table.Rows[table_count - 1].DefaultCellStyle.BackColor = Color.LightCoral;
                 table.Rows[table_count - 1].DefaultCellStyle.ForeColor = Color.DarkRed;
                 table.Rows[table_count - 1].DefaultCellStyle.Font = new Font(table.Font, FontStyle.Bold);
             }
+        }
+
+        private string Get_Line(int line, int start_idx, string token)
+        {
+            if (token == "space") token = " ";
+            int end_idx = start_idx + token.Length - 1;
+            return $"line {line}, {start_idx}-{end_idx}";
         }
     }
 }
