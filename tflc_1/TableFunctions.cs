@@ -96,11 +96,11 @@ namespace tflc_1
 
                         if (letter == "define")
                         {
-                            Add_Row_Table(table, 2, line, i + 1, "define");
+                            Add_Row_Table(table, 2, line, i - letter.Length + 2, "define");
                         }
                         else
                         {
-                            Add_Row_Table(table, 3, line, i + 1, letter);
+                            Add_Row_Table(table, 3, line, i - letter.Length + 2, letter);
                         }
 
                         break;
@@ -125,7 +125,7 @@ namespace tflc_1
                                 digit += text[i + 1].ToString();
                                 i++;
 
-                                if ((i + 1) >= text.Length)
+                                if ((i + 1) >= text.Length || (!char.IsDigit(text[i + 1])))
                                 {
                                     Add_Row_Table(table, -1, line, i - digit.Length + 2, digit);
                                     error = true;
@@ -166,11 +166,11 @@ namespace tflc_1
                         {
                             if (digit.IndexOf('.') != -1)
                             {
-                                Add_Row_Table(table, 19, line, i + 1, digit);
+                                Add_Row_Table(table, 19, line, i - digit.Length + 2, digit);
                             }
                             else
                             {
-                                Add_Row_Table(table, 17, line, i + 1, digit);
+                                Add_Row_Table(table, 17, line, i - digit.Length + 2, digit);
                             }
                         }
 
@@ -254,7 +254,6 @@ namespace tflc_1
 
         private string Get_Line(int line, int start_idx, string token)
         {
-            if (token == "space") token = " ";
             int end_idx = start_idx + token.Length - 1;
             return $"line {line}, {start_idx}-{end_idx}";
         }

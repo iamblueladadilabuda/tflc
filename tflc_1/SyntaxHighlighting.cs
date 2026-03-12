@@ -21,15 +21,15 @@ namespace tflc_1
 
             if (new_tool) end = 0;
 
-            int selectionStart = richTextBox.SelectionStart;
-            int selectionLength = richTextBox.SelectionLength;
+            int selection_start = richTextBox.SelectionStart;
+            int selection_length = richTextBox.SelectionLength;
 
             if (end > richTextBox.Text.Length)
             {
                 end = 0;
                 richTextBox.SelectAll();
                 richTextBox.SelectionColor = Color.Black;
-                richTextBox.Select(selectionStart, selectionLength);
+                richTextBox.Select(selection_start, selection_length);
             }
 
             int is_updating = Coloring(richTextBox, Color.Blue, blue);
@@ -37,7 +37,7 @@ namespace tflc_1
 
             if (is_updating != 0) end = richTextBox.Text.Length;
 
-            richTextBox.Select(selectionStart, selectionLength);
+            richTextBox.Select(selection_start, selection_length);
             richTextBox.SelectionColor = richTextBox.ForeColor;
         }
 

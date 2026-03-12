@@ -25,9 +25,9 @@ namespace tflc_1
 
         private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
         private bool closing = false, close_all = false, new_tool = true, escape = false;
+        private readonly DataGridView table = new DataGridView();
         private int width, height, his_idx = 1, file_idx = 0;
         private readonly SplitContainer splitContainer;
-        DataGridView table = new DataGridView();
         private string buffer = "";
 
 
@@ -62,6 +62,7 @@ namespace tflc_1
 
             table = table_functions.Initialize_Table();
             panel5.Controls.Add(table);
+            table.CellClick += table_CellClick;
 
             syntax_highlighting.Syntax_Color();
 
@@ -209,6 +210,30 @@ namespace tflc_1
                 timer.Dispose();
             };
             timer.Start();
+        }
+
+
+        private void table_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            DataGridViewRow row = table.Rows[e.RowIndex];
+
+            if (row.Cells[3].Value.ToString() == "ERROR")
+            {
+                string line = row.Cells[5].Value.ToString();
+                int line_number = Convert.ToInt32(line.Split(',')[0].Split(' ')[1]) - 1;
+                int idx = Convert.ToInt32(line.Split(',')[1].Split(' ')[1].Split('-')[0]) - 1;
+
+                int char_idx = richTextBox.GetFirstCharIndexFromLine(line_number);
+
+                if (char_idx >= 0)
+                {
+                    richTextBox.Select(char_idx + idx, 0);
+                    richTextBox.ScrollToCaret();
+                    richTextBox.Focus();
+                }
+            }
         }
 
 
