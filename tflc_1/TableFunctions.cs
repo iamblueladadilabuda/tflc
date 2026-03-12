@@ -131,7 +131,7 @@ namespace tflc_1
                                     error = true;
                                     break;
                                 }
-
+                                
                                 while (!char.IsWhiteSpace(text[i + 1]))
                                 {
                                     if (text[i + 1] == ';') break;

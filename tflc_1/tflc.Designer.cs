@@ -353,7 +353,7 @@
             // 
             this.start1.Image = ((System.Drawing.Image)(resources.GetObject("start1.Image")));
             this.start1.Name = "start1";
-            this.start1.Size = new System.Drawing.Size(84, 29);
+            this.start1.Size = new System.Drawing.Size(84, 27);
             this.start1.Text = "Пуск";
             this.start1.Click += new System.EventHandler(this.start1_Click);
             // 
