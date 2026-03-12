@@ -37,8 +37,15 @@ namespace tflc_1
         public void Scroll(RichTextBox richTextBox, RichTextBox numberBox)
         {
             int i = richTextBox.GetLineFromCharIndex(richTextBox.GetCharIndexFromPosition(new Point(1, 1)));
-            numberBox.SelectionStart = numberBox.GetFirstCharIndexFromLine(i);
-            numberBox.ScrollToCaret();
+            if (i >= 0)
+            {
+                int sel_start = numberBox.GetFirstCharIndexFromLine(i);
+                if (sel_start >= 0)
+                {
+                    numberBox.SelectionStart = sel_start;
+                    numberBox.ScrollToCaret();
+                }
+            }
         }
     }
 }

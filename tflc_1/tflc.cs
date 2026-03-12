@@ -160,13 +160,7 @@ namespace tflc_1
         {
             table_functions.Clear_Table(table);
             table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
-
-            int line = 0;
-            foreach (string text in richTextBox.Text.Split('\n'))
-            {
-                line++;
-                table_functions.Scaner(table, text, line);
-            }
+            table_functions.Find_All_Tokens(table, richTextBox);
         }
 
         private void Help()
@@ -511,8 +505,13 @@ namespace tflc_1
         }
 
 
-        private void FontSizes1_SelectedIndexChanged(object sender, EventArgs e) =>
+        private void FontSizes1_SelectedIndexChanged(object sender, EventArgs e)
+        {
             condition.Text = font_functions.Selected_Item_FontSizes(fontSizes1, richTextBox, numberBox);
+            string update = richTextBox.Text;
+            richTextBox.Text = null;
+            richTextBox.Text = update;
+        }
 
         private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
         private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
