@@ -55,8 +55,8 @@
 1.4 + 1. = 2.8e56  
 ![alt text](image-1.png)
   
-#define MAX 50
-@aboba2
+#define MAX 50  
+@aboba2  
 ![alt text](image-2.png)
   
   
@@ -105,7 +105,7 @@
 
 ## Инструкция по сборке и запуску:
 ### Путь к готовому исполняемому файлу
-./tflc_1/bin/Debug/tflc_1.exe
+./tflc_1/bin/Release/tflc_1.exe
 
 ## Описание интерфейса и функций (руководство пользователя):
 https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?tab=t.0
