@@ -80,6 +80,7 @@
     <Compile Include="ListFileFunctions.cs" />
     <Compile Include="NumberingLines.cs" />
     <Compile Include="OpenApp.cs" />
+    <Compile Include="ParserFunctions.cs" />
     <Compile Include="ScanerFunctions.cs" />
     <Compile Include="SplitContainerFunctions.cs" />
     <Compile Include="SyntaxHighlighting.cs" />

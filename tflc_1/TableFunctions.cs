@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace tflc_1
 {
-    internal class TableFunctions : ScanerFunctions
+    internal class TableFunctions : ParserFunctions
     {
         private string path;
         private int table_count = 0;
@@ -12,7 +14,7 @@ namespace tflc_1
         public DataGridView Initialize_Table()
         {
             DataGridView table = new DataGridView();
-            string[] columns_text = { "№", "File path", "Code", "Type of token", "Token", "Line" };
+            string[] columns_text = { "№", "Path", "Invalid code", "Line", "Description" };
             foreach (string col_text in columns_text)
             {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
@@ -43,38 +45,28 @@ namespace tflc_1
             table.Rows.Clear();
         }
 
-        public void Find_All_Tokens(DataGridView table, RichTextBox richTextBox)
+        public void Fill_Table(DataGridView table, RichTextBox richTextBox)
         {
-            int line = 0;
-            foreach (string text in richTextBox.Text.Split('\n'))
-            {
-                line++;
-                (int[] numbers, string[] token_all, int[] idx) = Scaner(text);
+            (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
 
-                for (int i = 0; i < token_all.Length; i++)
-                {
-                    Add_Row_Table(table, numbers[i], line, idx[i], token_all[i]);
-                }
+            (string[] tokens, int[] codes, int[] lines, int[] pos) = Space_Clean(tokens_all, codes_all, lines_all, positions);
+            Dictionary<int, (int, string)> errors = Parser(tokens, codes);
+
+            if (errors.Count == 0)
+            {
+                table.Rows.Add(++table_count, path, "Успешно!", "", "Ошибок не обнаружено!");
+            }
+
+            for (int j = 0; j < errors.Count; j++)
+            {
+                (int i, string description) = errors[j];
+                table.Rows.Add(++table_count, path, tokens[i], Get_Line(lines[i], pos[i]), description);
             }
         }
 
-        private void Add_Row_Table(DataGridView table, int code, int line, int start_idx, string token)
+        private string Get_Line(int line, int idx)
         {
-            table.Rows.Add(++table_count, path, code, tokens[code], token, Get_Line(line, start_idx, token));
-
-            if (code == -1)
-            {
-                table.Rows[table_count - 1].DefaultCellStyle.BackColor = Color.LightCoral;
-                table.Rows[table_count - 1].DefaultCellStyle.ForeColor = Color.DarkRed;
-                table.Rows[table_count - 1].DefaultCellStyle.Font = new Font(table.Font, FontStyle.Bold);
-            }
-        }
-
-        private string Get_Line(int line, int start_idx, string token)
-        {
-            if (token == "space") token = " ";
-            int end_idx = start_idx + token.Length - 1;
-            return $"line {line}, {start_idx}-{end_idx}";
+            return $"строка {line}, позиция {idx}";
         }
     }
 }

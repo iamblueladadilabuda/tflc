@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace tflc_1
 {
     internal class ScanerFunctions
     {
-        protected Dictionary<int, string> tokens = new Dictionary<int, string>()
+        protected Dictionary<int, string> codes_value = new Dictionary<int, string>()
         {
             { -1, "ERROR" },
             { 1, "OPERATOR" },
@@ -17,20 +18,42 @@ namespace tflc_1
             { 4, "SEPARATOR" },
             { 5, "SEPARATOR" },
             { 6, "SEPARATOR" },
-            { 7, "SEPARATOR" },
-            { 8, "SEPARATOR" },
-            { 9, "SEPARATOR" },
+            { 7, "OPERATOR" },
+            { 8, "OPERATOR" },
+            { 9, "OPERATOR" },
             { 10, "OPERATOR" },
             { 11, "OPERATOR" },
-            { 12, "OPERATOR" },
-            { 13, "QUOTE" },
-            { 14, "OPERATOR" },
-            { 15, "OPERATOR" },
-            { 16, "SEPARATOR" },
-            { 17, "INTEGER" },
-            { 18, "SEPARATOR" },
-            { 19, "DOUBLE" },
+            { 12, "SEPARATOR" },
+            { 13, "INTEGER" },
+            { 14, "SEPARATOR" },
+            { 15, "DOUBLE" },
         };
+
+        protected (int[], string[], int[], int[]) Find_All_Tokens(RichTextBox richTextBox)
+        {
+            int line = 0;
+
+            List<int> codes = new List<int>();
+            List<string> tokens = new List<string>();
+            List<int> lines = new List<int>();
+            List<int> positions = new List<int>();
+
+            foreach (string text in richTextBox.Text.Split('\n'))
+            {
+                line++;
+                (int[] numbers, string[] token_all, int[] idx) = Scaner(text);
+
+                for (int i = 0; i < numbers.Length; i++)
+                {
+                    codes.Add(numbers[i]);
+                    tokens.Add(token_all[i]);
+                    lines.Add(line);
+                    positions.Add(idx[i]);
+                }
+            }
+
+            return (codes.ToArray(), tokens.ToArray(), lines.ToArray(), positions.ToArray());
+        }
 
         protected (int[], string[], int[]) Scaner(string text)
         {
@@ -56,7 +79,7 @@ namespace tflc_1
 
                         if ((i + 1) < text.Length)
                         {
-                            while (char.IsLetterOrDigit(text[i + 1]) || text[i + 1] == '_' || text[i + 1] == '-')
+                            while (char.IsLetterOrDigit(text[i + 1]) || text[i + 1] == '_')
                             {
                                 letter += text[i + 1].ToString();
                                 i++;
@@ -82,7 +105,6 @@ namespace tflc_1
 
                     case char _ when char.IsDigit(token):
 
-                        bool error = false;
                         string digit = token.ToString();
 
                         if ((i + 1) < text.Length)
@@ -102,16 +124,16 @@ namespace tflc_1
 
                                 if ((i + 1) >= text.Length || (!char.IsDigit(text[i + 1])))
                                 {
-                                    token_numbers.Add(-1);
+                                    token_numbers.Add(15);
                                     token_all.Add(digit);
                                     token_idx.Add(i - digit.Length + 2);
-                                    error = true;
                                     break;
                                 }
 
                                 while (!char.IsWhiteSpace(text[i + 1]))
                                 {
                                     if (text[i + 1] == ';') break;
+                                    if (text[i + 1] == ')') break;
 
                                     if (!char.IsDigit(text[i + 1]))
                                     {
@@ -125,11 +147,9 @@ namespace tflc_1
                                             if ((i + 1) >= text.Length) break;
                                         }
 
-                                        token_numbers.Add(-1);
+                                        token_numbers.Add(15);
                                         token_all.Add(digit);
                                         token_idx.Add(i - digit.Length + 2);
-                                        error = true;
-
                                         break;
                                     }
 
@@ -141,27 +161,23 @@ namespace tflc_1
                             }
                         }
 
-                        if (!error)
+                        if (digit.IndexOf('.') != -1)
                         {
-                            if (digit.IndexOf('.') != -1)
-                            {
-                                token_numbers.Add(19);
-                                token_all.Add(digit);
-                                token_idx.Add(i - digit.Length + 2);
-                            }
-                            else
-                            {
-                                token_numbers.Add(17);
-                                token_all.Add(digit);
-                                token_idx.Add(i - digit.Length + 2);
-                            }
+                            token_numbers.Add(15);
+                            token_all.Add(digit);
+                            token_idx.Add(i - digit.Length + 2);
                         }
-
+                        else
+                        {
+                            token_numbers.Add(13);
+                            token_all.Add(digit);
+                            token_idx.Add(i - digit.Length + 2);
+                        }
 
                         break;
 
                     case char _ when char.IsWhiteSpace(token):
-                        token_numbers.Add(18);
+                        token_numbers.Add(14);
                         token_all.Add("space");
                         token_idx.Add(i + 1);
                         break;
@@ -178,68 +194,44 @@ namespace tflc_1
                         token_idx.Add(i + 1);
                         break;
 
-                    case '{':
+                    case ';':
                         token_numbers.Add(6);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
-                    case '}':
+                    case '=':
                         token_numbers.Add(7);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
-                    case '\\':
+                    case '+':
                         token_numbers.Add(8);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
-                    case ';':
+                    case '-':
                         token_numbers.Add(9);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
-                    case '=':
+                    case '*':
                         token_numbers.Add(10);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
-                    case '+':
+                    case '/':
                         token_numbers.Add(11);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
-                    case '-':
-                        token_numbers.Add(12);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
-                    case '*':
-                        token_numbers.Add(14);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
-                    case '/':
-                        token_numbers.Add(15);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
-                    case '"':
-                        token_numbers.Add(13);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
                     case ',':
-                        token_numbers.Add(16);
+                        token_numbers.Add(12);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;

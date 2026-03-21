@@ -160,7 +160,7 @@ namespace tflc_1
         {
             table_functions.Clear_Table(table);
             table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
-            table_functions.Find_All_Tokens(table, richTextBox);
+            table_functions.Fill_Table(table, richTextBox);
         }
 
         private void Help()
@@ -213,11 +213,11 @@ namespace tflc_1
 
             DataGridViewRow row = table.Rows[e.RowIndex];
 
-            if (row.Cells[3].Value.ToString() == "ERROR")
+            string line = row.Cells[3].Value.ToString();
+            if (line != "")
             {
-                string line = row.Cells[5].Value.ToString();
                 int line_number = Convert.ToInt32(line.Split(',')[0].Split(' ')[1]) - 1;
-                int idx = Convert.ToInt32(line.Split(',')[1].Split(' ')[1].Split('-')[0]) - 1;
+                int idx = Convert.ToInt32(line.Split(',')[1].Split(' ')[2]) - 1;
 
                 int char_idx = richTextBox.GetFirstCharIndexFromLine(line_number);
 
