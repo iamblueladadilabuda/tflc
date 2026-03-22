@@ -34,66 +34,68 @@
 15. Вещественное число
 
 ## Разработка грамматики:
-1.	<start> ::= “#” “define” <function-call> <macros body> “;”
+	1. <start> ::= “#” “define” <function-call> <macros body> “;”
  
-2.	<function-call> ::= <identifier> <functions-param>
-3.	<functions-param> ::= “(“ <list-param> “)”
-4.	<list-param> ::= <identifier> <parameters> | ε
-5.	<parameters> ::=  “,” <identifier> <parameters> | ε
+	2.	<function-call> ::= <identifier> <functions-param>
+	3.	<functions-param> ::= “(“ <list-param> “)”
+	4.	<list-param> ::= <identifier> <parameters> | ε
+	5.	<parameters> ::=  “,” <identifier> <parameters> | ε
  
-6.	<macros body> ::= “(“ <expression> “)”
-7.	<expression> ::= <term> <expression-body>
-8.	<expression-body> ::= <operators> <term> <expression-body> | ε
+	6.	<macros body> ::= “(“ <expression> “)”
+	7.	<expression> ::= <term> <expression-body>
+	8.	<expression-body> ::= <operators> <term> <expression-body> | ε
  
-9.	<term> ::= 
-	<identifier> 
-	| <number> 
-	| <function-call> 
-	| “(“ <expression> “)” 
+	9.	<term> ::= 
+		<identifier> 
+		| <number> 
+		| <function-call> 
+		| “(“ <expression> “)” 
  
-10.	<identifier> ::= <letter> <identifier-body>
-11.	<identifier-body> ::= 
-	<letter> <identifier-body> 
-	| <digit> <identifier-body>  
-	| “_” <identifier-body> 
-	| ε 
+	10.	<identifier> ::= <letter> <identifier-body>
+	11.	<identifier-body> ::= 
+		<letter> <identifier-body> 
+		| <digit> <identifier-body>  
+		| “_” <identifier-body> 
+		| ε 
  
-12.	<number> ::= <integer> | <double>
-13.	<integer> ::= <digit-without-0> <int> | “0”
-14.	<int> ::= <digit> <int> | ε
-15.	<double> ::= <int> “.” <int>
- 
-16.	<letter> ::= “a” | “b” | “c” | “d” | “e” | “f” | “g” | “h” | “i” | “j” | “k” | “l” 
-		| “m” | “n” | “o” | “p” | “q” | “r” | “s” | “t” | “u” | “v” | “w” | “x” 
-		| “y” | “z” | “A” | “B” | “C” | “D” | “E” | “F” | “G” | “H” | “I” 
-		| “J” | “K” | “L” | “M” | “N” | “O” | “P” | “Q” | “R” | “S” | “T” 
-		| “U” | “V” | “W” | “X” | “Y” | “Z”
- 
-17.	<digit-without-0> ::= “1” | “2” | “3” | “4” | “5” | “6” | “7” | “8” | “9”
-18.	<digit> ::= “0” | “1” | “2” | “3” | “4” | “5” | “6” | “7” | “8” | “9”
- 
-19.	<operators> ::= “=” | “+” | “-“ | “*” | “/”
+	12.	<number> ::= <integer> | <double>
+	13.	<integer> ::= <digit-without-0> <int> | “0”
+	14.	<int> ::= <digit> <int> | ε
+	15.	<double> ::= <int> “.” <int>
+	
+	16.	<letter> ::= “a” | “b” | “c” | “d” | “e” | “f” | “g” | “h” | “i” | “j” | “k” | “l” 
+			| “m” | “n” | “o” | “p” | “q” | “r” | “s” | “t” | “u” | “v” | “w” | “x” 
+			| “y” | “z” | “A” | “B” | “C” | “D” | “E” | “F” | “G” | “H” | “I” 
+			| “J” | “K” | “L” | “M” | “N” | “O” | “P” | “Q” | “R” | “S” | “T” 
+			| “U” | “V” | “W” | “X” | “Y” | “Z”
+	
+	17.	<digit-without-0> ::= “1” | “2” | “3” | “4” | “5” | “6” | “7” | “8” | “9”
+	18.	<digit> ::= “0” | “1” | “2” | “3” | “4” | “5” | “6” | “7” | “8” | “9”
+	
+	19.	<operators> ::= “=” | “+” | “-“ | “*” | “/”
 
 ## Классификация грамматики (по Хомскому):
 Контекстно-свободная грамматика
 
 ## Метод анализа:
-Рекурсивный спуск:
+Рекурсивный спуск:  
 ![alt text](Парсер.png)
 
 ## Диагностика и нейтрализация синтаксических ошибок:
 В данной реализации синтаксического анализатора нейтрализация ошибок выполняется по методу Айронса. При обнаружении лексемы, не соответствующей ожидаемой грамматикой, анализатор переходит в режим пропуска лексем до тех пор, пока не встретит соответствующую лексему
 
 ## Тестовые примеры:
-#define SQUARE(x) ((x)*(x))  
-![alt text](image.png)
+#define SQUARE(x) ((x)*(x)); 
+![alt text](image-3.png)
   
-1.4 + 1. = 2.8e56  
-![alt text](image-1.png)
+#define SQUARE(x) ((x*(x));
+![alt text](image-4.png)
   
-#define MAX 50  
-@aboba2  
-![alt text](image-2.png)
+@@@#macros define 1SQUARE(x) ((x*(x) + 1.));
+![alt text](image-5.png)
+  
+define SQUARE(x) ((x)*(x));
+![alt text](image-6.png)
  
 
 
