@@ -62,6 +62,8 @@ namespace tflc_1
                 (int i, string description) = errors[j];
                 table.Rows.Add(++table_count, path, tokens[i], Get_Line(lines[i], pos[i]), description);
             }
+
+            table.Rows.Add(null, null, null, "Общее количество ошибок:", errors.Count);
         }
 
         private string Get_Line(int line, int idx)
