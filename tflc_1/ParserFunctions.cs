@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,14 @@ namespace tflc_1
         {
             errors.Clear();
             count_errors = -1;
-            arquments.Clear();
 
             if (tokens == null) return null;
 
             int i = 0;
             while (i < tokens.Length)
             {
+                arquments.Clear();
+
                 i = Start(tokens, codes, i);
                 if (i >= tokens.Length) return errors;
 
@@ -41,17 +43,17 @@ namespace tflc_1
                 i = Macros_Body(tokens, codes, i);
                 if (i >= tokens.Length)
                 {
-                    errors.Add(++count_errors, (i - 1, $"Ожидалась \";\""));
+                    errors.Add(++count_errors, (tokens.Length - 1, $"Ожидалась \";\" в конце строки"));
                     return errors;
                 }
 
-                if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
+                i = Scaner_Error(tokens, codes, i);
                 if (i >= tokens.Length)
                 {
-                    errors.Add(++count_errors, (i - 1, $"Ожидалась \";\""));
+                    errors.Add(++count_errors, (tokens.Length - 1, $"Ожидалась \";\" в конце строки"));
                     return errors;
                 }
-                if (tokens[i] != ";") errors.Add(++count_errors, (i, $"Ожидалась \";\", но вместо неё получена \"{tokens[i]}\""));
+                i = Airons_Tokens(tokens, i, ";");
                 i += 1;
             }
 
@@ -78,111 +80,50 @@ namespace tflc_1
             return (new_tokens.ToArray(), new_codes.ToArray(), new_lines.ToArray(), new_pos.ToArray());
         }
 
-        private bool Dublicate_Arq()
-        {
-            int dubl_count = -1;
-
-            foreach (string arq in arquments)
-            {
-                foreach (string dubl in arquments)
-                {
-                    if (arq == dubl) dubl_count++;
-
-                    if (dubl_count > 0) return true;
-                }
-            }
-
-            return false;
-        }
-
         private int Start(string[] tokens, int[] codes, int i)
         {
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (tokens[i] != "#") errors.Add(++count_errors, (i, $"Ожидался \"#\", но вместо него получен \"{tokens[i]}\""));
-            if (++i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            i = Scaner_Error(tokens, codes, i);
+            if (Is_End(tokens.Length, i)) return i;
+            i = Airons_Tokens(tokens, i, "#");
+            if (Is_End(tokens.Length, ++i)) return i;
 
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (tokens[i] != "define") errors.Add(++count_errors, (i, $"Ожидался \"define\", но вместо него получен \"{tokens[i]}\""));
-            if (++i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            i = Scaner_Error(tokens, codes, i);
+            if (Is_End(tokens.Length, i)) return i;
+            i = Airons_Tokens(tokens, i, "define");
+            if (Is_End(tokens.Length, ++i)) return i;
 
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (codes[i] != id_code) errors.Add(++count_errors, (i, $"Ожидался IDENTIFIER, но вместо него получен \"{codes_value[codes[i]]}\""));
-            if (++i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            i = Scaner_Error(tokens, codes, i);
+            if (Is_End(tokens.Length, i)) return i;
+            i = Airons_Codes(codes, i, "IDENTIFIER");
+            if (Is_End(tokens.Length, ++i)) return i;
 
             return i;
         }
 
         private int List_Param(string[] tokens, int[] codes, int i)
         {
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (tokens[i] != "(") errors.Add(++count_errors, (i, $"Ожидалась \"(\", но вместо неё получена \"{tokens[i]}\""));
+            i = Scaner_Error(tokens, codes, i);
+            if (Is_End(tokens.Length, i)) return i;
+            i = Airons_Tokens(tokens, i, "(");
 
-            if (++i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            if (Is_End(tokens.Length, ++i)) return i;
 
             if (codes[i] != id_code)
             {
-                if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-                if (i >= tokens.Length)
-                {
-                    errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                    return i;
-                }
-                if (tokens[i] != ")") errors.Add(++count_errors, (i, $"Ожидалась \")\", но вместо неё получена \"{tokens[i]}\""));
+                i = Scaner_Error(tokens, codes, i);
+                if (Is_End(tokens.Length, i)) return i;
+                i = Airons_Tokens(tokens, i, ")");
                 return ++i;
             }
 
             arquments.Add(tokens[i]);
-            if (++i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            if (Is_End(tokens.Length, ++i)) return i;
 
             if (tokens[i] != ",")
             {
-                if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-                if (i >= tokens.Length)
-                {
-                    errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                    return i;
-                }
-                if (tokens[i] != ")") errors.Add(++count_errors, (i, $"Ожидалась \")\", но вместо неё получена \"{tokens[i]}\""));
+                i = Scaner_Error(tokens, codes, i);
+                if (Is_End(tokens.Length, i)) return i;
+                i = Airons_Tokens(tokens, i, ")");
                 return ++i;
             }
 
@@ -191,34 +132,18 @@ namespace tflc_1
 
         private int Parameters(string[] tokens, int[] codes, int i)
         {
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            if (Is_End(tokens.Length, i)) return i;
 
             if (tokens[i] == ")") return ++i;
 
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (tokens[i] != ",") errors.Add(++count_errors, (i, $"Ожидалась \",\", но вместо неё получена \"{tokens[i]}\""));
-            if (++i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            i = Scaner_Error(tokens, codes, i);
+            if (Is_End(tokens.Length, i)) return i;
+            i = Airons_Tokens(tokens, i, ",");
+            if (Is_End(tokens.Length, ++i)) return i;
 
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (codes[i] != id_code) errors.Add(++count_errors, (i, $"Ожидался IDENTIFIER, но вместо него получен \"{codes_value[codes[i]]}\""));
+            i = Scaner_Error(tokens, codes, i);
+            if (Is_End(tokens.Length, i)) return i;
+            i = Airons_Codes(codes, i, "IDENTIFIER");
             arquments.Add(tokens[i]);
 
             return Parameters(tokens, codes, ++i);
@@ -226,54 +151,43 @@ namespace tflc_1
 
         private int Macros_Body(string[] tokens, int[] codes, int i)
         {
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (tokens[i] != "(") errors.Add(++count_errors, (i, $"Ожидалась \"(\", но вместо неё получена \"{tokens[i]}\""));
-
-            i = Term(tokens, codes, ++i);
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-
-            if (tokens[i - 1] == ")" && tokens[i] == ")") return i++;
+            i = Scaner_Error(tokens, codes, i);
+            if (i >= tokens.Length) return i;
+            i = Airons_Tokens(tokens, i, "(");
 
             i = Expression(tokens, codes, i);
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
+            if (i >= tokens.Length) return i;
 
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (tokens[i] != ")") errors.Add(++count_errors, (i, $"Ожидалась \")\", но вместо неё получена \"{tokens[i]}\""));
+            i = Scaner_Error(tokens, codes, i);
+            if (i >= tokens.Length) return i;
+            i = Airons_Tokens(tokens, i, ")");
 
             return ++i;
         }
 
         private int Expression(string[] tokens, int[] codes, int i)
         {
-            if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-            if (i >= tokens.Length)
-            {
-                errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                return i;
-            }
-            if (codes_value[codes[i]] != "OPERATOR") errors.Add(++count_errors, (i, $"Ожидался OPERATOR, но вместо него получен \"{codes_value[codes[i]]}\""));
+            i = Term(tokens, codes, ++i);
+            if (i >= tokens.Length) return i;
+
+            if (tokens[i - 1] == ")" && tokens[i] == ")") return ++i;
+
+            return Expression_Body(tokens, codes, i);
+        }
+
+        private int Expression_Body(string[] tokens, int[] codes, int i)
+        {
+            if (tokens[i] == ")") return i;
+
+            i = Scaner_Error(tokens, codes, i);
+            if (i >= tokens.Length) return i;
+            i = Airons_Codes(codes, i, "OPERATOR");
 
             if (++i >= tokens.Length) return i;
 
-            return Term(tokens, codes, i);
+            i = Term(tokens, codes, i);
+
+            return Expression_Body(tokens, codes, i);
         }
 
         private int Term(string[] tokens, int[] codes, int i)
@@ -289,13 +203,9 @@ namespace tflc_1
                 i = Expression(tokens, codes, i);
                 if (i >= tokens.Length) return i;
 
-                if (codes[i] == -1) errors.Add(++count_errors, (i, $"Неизвестный токен: \"{tokens[i++]}\""));
-                if (i >= tokens.Length)
-                {
-                    errors.Add(++count_errors, (i - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
-                    return i;
-                }
-                if (tokens[i] != ")") errors.Add(++count_errors, (i, $"Ожидалась \")\", но вместо неё получена \"{tokens[i]}\""));
+                i = Scaner_Error(tokens, codes, i);
+                if (Is_End(tokens.Length, i)) return i;
+                i = Airons_Tokens(tokens, i, ")");
 
                 return ++i;
             }
@@ -356,6 +266,79 @@ namespace tflc_1
             }
 
             return i;
+        }
+
+        private int Airons_Tokens(string[] tokens, int i, string token)
+        {
+            if (tokens[i] != token) errors.Add(++count_errors, (i, $"Ожидался токен \"{token}\", но вместо него получен \"{tokens[i]}\""));
+
+            while (i < tokens.Length)
+            {
+                if (tokens[i] == token) break;
+                i += 1;
+            }
+
+            return i;
+        }
+
+        private int Airons_Codes(int[] codes, int i, string token)
+        {
+            string value = codes_value[codes[i]];
+
+            if (value != token) errors.Add(++count_errors, (i, $"Ожидался {token}, но вместо него получен {value}"));
+
+            while (i < codes.Length)
+            {
+                value = codes_value[codes[i]];
+                if (value == token) break;
+                i += 1;
+            }
+
+            return i;
+        }
+
+        private int Scaner_Error(string[] tokens, int[] codes, int i)
+        {
+            if (codes[i] != -1) return i;
+
+            int pos = i;
+            string error_token = "";
+
+            while (codes[i] == -1)
+            {
+                error_token += tokens[i++];
+            }
+
+            errors.Add(++count_errors, (pos, $"Неизвестный токен: \"{error_token}\""));
+
+            return i;
+        }
+
+        private bool Is_End(int length, int i)
+        {
+            if (i >= length)
+            {
+                errors.Add(++count_errors, (length - 1, "Ожидалась строка формата \"#define <name_function>() <function>;\""));
+                return true;
+            }
+            return false;
+        }
+
+        private bool Dublicate_Arq()
+        {
+            int dubl_count = -1;
+
+            foreach (string arq in arquments)
+            {
+                foreach (string dubl in arquments)
+                {
+                    if (arq == dubl) dubl_count++;
+
+                    if (dubl_count > 0) return true;
+                }
+            }
+
+            return false;
         }
     }
 }

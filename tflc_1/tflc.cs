@@ -158,9 +158,13 @@ namespace tflc_1
 
         private void Start()
         {
+            if (string.IsNullOrEmpty(richTextBox.Text)) return;
+
             table_functions.Clear_Table(table);
             table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
-            table_functions.Fill_Table(table, richTextBox);
+
+            int errors_count = table_functions.Fill_Table(table, richTextBox);
+            condition.Text = $"Общее количество ошибок: {errors_count}";
         }
 
         private void Help()
@@ -358,6 +362,45 @@ namespace tflc_1
         private void delete2_Click(object sender, EventArgs e) => text_functions.Delete(richTextBox);
         private void select1_Click(object sender, EventArgs e) => text_functions.Select_All(richTextBox);
         private void select2_Click(object sender, EventArgs e) => text_functions.Select_All(richTextBox);
+
+
+        private void settingTask1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://docs.google.com/document/d/1W_xG-8e9pEodegER7xnym3bayDsgoeizu2-OA2WSRPo/edit?tab=t.ybu2qljgfd3f");
+        }
+
+        private void grammar1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://docs.google.com/document/d/1W_xG-8e9pEodegER7xnym3bayDsgoeizu2-OA2WSRPo/edit?tab=t.0");
+        }
+
+        private void grammerClassification1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://docs.google.com/document/d/1W_xG-8e9pEodegER7xnym3bayDsgoeizu2-OA2WSRPo/edit?tab=t.cr5bz3jigrvd");
+        }
+
+        private void methodAnalyze1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://docs.google.com/document/d/1W_xG-8e9pEodegER7xnym3bayDsgoeizu2-OA2WSRPo/edit?tab=t.h5awbonb1i6m");
+        }
+
+        private void example1_Click(object sender, EventArgs e)
+        {
+            Open("txt/tests/test-1.txt");
+            Open("txt/tests/test-2.txt");
+            Open("txt/tests/test-3.txt");
+            Open("txt/tests/test-4.txt");
+        }
+
+        private void literature1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://docs.google.com/document/d/1W_xG-8e9pEodegER7xnym3bayDsgoeizu2-OA2WSRPo/edit?tab=t.9daqaw1qsobw");
+        }
+
+        private void code1_Click(object sender, EventArgs e)
+        {
+
+        }
 
 
         private void quit1_Click(object sender, EventArgs e)

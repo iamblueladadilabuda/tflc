@@ -45,7 +45,7 @@ namespace tflc_1
             table.Rows.Clear();
         }
 
-        public void Fill_Table(DataGridView table, RichTextBox richTextBox)
+        public int Fill_Table(DataGridView table, RichTextBox richTextBox)
         {
             (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
 
@@ -60,10 +60,18 @@ namespace tflc_1
             for (int j = 0; j < errors.Count; j++)
             {
                 (int i, string description) = errors[j];
-                table.Rows.Add(++table_count, path, tokens[i], Get_Line(lines[i], pos[i]), description);
+                if (description.StartsWith("Неизвестный токен"))
+                {
+                    string token = description.Split('"')[1];
+                    table.Rows.Add(++table_count, path, token, Get_Line(lines[i], pos[i]), description);
+                }
+                else
+                {
+                    table.Rows.Add(++table_count, path, tokens[i], Get_Line(lines[i], pos[i]), description);
+                }
             }
 
-            table.Rows.Add(null, null, null, "Общее количество ошибок:", errors.Count);
+            return errors.Count;
         }
 
         private string Get_Line(int line, int idx)

@@ -124,7 +124,7 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(40, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(760, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(760, 31);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -312,42 +312,49 @@
             this.settingTask1.Name = "settingTask1";
             this.settingTask1.Size = new System.Drawing.Size(323, 30);
             this.settingTask1.Text = "Постановка задачи";
+            this.settingTask1.Click += new System.EventHandler(this.settingTask1_Click);
             // 
             // grammar1
             // 
             this.grammar1.Name = "grammar1";
             this.grammar1.Size = new System.Drawing.Size(323, 30);
             this.grammar1.Text = "Грамматика";
+            this.grammar1.Click += new System.EventHandler(this.grammar1_Click);
             // 
             // grammerClassification1
             // 
             this.grammerClassification1.Name = "grammerClassification1";
             this.grammerClassification1.Size = new System.Drawing.Size(323, 30);
             this.grammerClassification1.Text = "Классификация грамматики";
+            this.grammerClassification1.Click += new System.EventHandler(this.grammerClassification1_Click);
             // 
             // methodAnalyze1
             // 
             this.methodAnalyze1.Name = "methodAnalyze1";
             this.methodAnalyze1.Size = new System.Drawing.Size(323, 30);
             this.methodAnalyze1.Text = "Метод анализа";
+            this.methodAnalyze1.Click += new System.EventHandler(this.methodAnalyze1_Click);
             // 
             // example1
             // 
             this.example1.Name = "example1";
             this.example1.Size = new System.Drawing.Size(323, 30);
             this.example1.Text = "Тестовый пример";
+            this.example1.Click += new System.EventHandler(this.example1_Click);
             // 
             // literature1
             // 
             this.literature1.Name = "literature1";
             this.literature1.Size = new System.Drawing.Size(323, 30);
             this.literature1.Text = "Список литературы";
+            this.literature1.Click += new System.EventHandler(this.literature1_Click);
             // 
             // code1
             // 
             this.code1.Name = "code1";
             this.code1.Size = new System.Drawing.Size(323, 30);
             this.code1.Text = "Исходный код программы";
+            this.code1.Click += new System.EventHandler(this.code1_Click);
             // 
             // start1
             // 
@@ -382,9 +389,9 @@
             this.delete2,
             this.select2,
             this.help2});
-            this.menuStrip2.Location = new System.Drawing.Point(40, 33);
+            this.menuStrip2.Location = new System.Drawing.Point(40, 31);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(760, 40);
+            this.menuStrip2.Size = new System.Drawing.Size(760, 38);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -523,9 +530,9 @@
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 79);
+            this.panel2.Location = new System.Drawing.Point(760, 73);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 430);
+            this.panel2.Size = new System.Drawing.Size(40, 436);
             this.panel2.TabIndex = 4;
             // 
             // panel7
@@ -662,9 +669,9 @@
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
+            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(760, 6);
+            this.menuStrip3.Size = new System.Drawing.Size(760, 4);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -730,7 +737,7 @@
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 216);
+            this.panel5.Location = new System.Drawing.Point(0, 222);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(720, 174);
             this.panel5.TabIndex = 8;
@@ -740,9 +747,9 @@
             this.panel6.Controls.Add(this.panel5);
             this.panel6.Controls.Add(this.panel3);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(40, 79);
+            this.panel6.Location = new System.Drawing.Point(40, 73);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(720, 390);
+            this.panel6.Size = new System.Drawing.Size(720, 396);
             this.panel6.TabIndex = 9;
             // 
             // Compiler
