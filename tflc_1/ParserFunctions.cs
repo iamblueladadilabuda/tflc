@@ -3,6 +3,7 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Hosting;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
@@ -172,10 +173,13 @@ namespace tflc_1
 
             if (tokens[i - 1] == ")" && tokens[i] == ")") return ++i;
 
-            return Expression_Body(tokens, codes, i);
+            if (tokens[i] == "=") Airons_Codes(codes, i - 1, "IDENTIFIER");
+
+            int start = i;
+            return Expression_Body(tokens, codes, i, start);
         }
 
-        private int Expression_Body(string[] tokens, int[] codes, int i)
+        private int Expression_Body(string[] tokens, int[] codes, int i, int start)
         {
             if (tokens[i] == ")") return i;
 
@@ -183,11 +187,13 @@ namespace tflc_1
             if (i >= tokens.Length) return i;
             i = Airons_Codes(codes, i, "OPERATOR");
 
+            if (tokens[i] == "=" && start == -1) errors.Add(++count_errors, (i, $"Токен \"=\" может находиться только в левой части выражения"));
+
             if (++i >= tokens.Length) return i;
 
             i = Term(tokens, codes, i);
 
-            return Expression_Body(tokens, codes, i);
+            return Expression_Body(tokens, codes, i, -1);
         }
 
         private int Term(string[] tokens, int[] codes, int i)
@@ -326,16 +332,11 @@ namespace tflc_1
 
         private bool Dublicate_Arq()
         {
-            int dubl_count = -1;
+            if (arquments.Count == 0) return false;
 
             foreach (string arq in arquments)
             {
-                foreach (string dubl in arquments)
-                {
-                    if (arq == dubl) dubl_count++;
-
-                    if (dubl_count > 0) return true;
-                }
+                if (arquments.Count(x => x == arq) > 1) return true;
             }
 
             return false;
