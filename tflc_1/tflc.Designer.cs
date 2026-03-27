@@ -99,6 +99,10 @@
             this.condition = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.regex1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reg1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reg2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reg3 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -121,6 +125,7 @@
             this.correction1,
             this.text1,
             this.start1,
+            this.regex1,
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(40, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -752,6 +757,37 @@
             this.panel6.Size = new System.Drawing.Size(720, 396);
             this.panel6.TabIndex = 9;
             // 
+            // regex1
+            // 
+            this.regex1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reg1,
+            this.reg2,
+            this.reg3});
+            this.regex1.Name = "regex1";
+            this.regex1.Size = new System.Drawing.Size(35, 27);
+            this.regex1.Text = "4";
+            // 
+            // reg1
+            // 
+            this.reg1.Name = "reg1";
+            this.reg1.Size = new System.Drawing.Size(280, 30);
+            this.reg1.Text = "Цвет (HEX)";
+            this.reg1.Click += new System.EventHandler(this.reg1_Click);
+            // 
+            // reg2
+            // 
+            this.reg2.Name = "reg2";
+            this.reg2.Size = new System.Drawing.Size(280, 30);
+            this.reg2.Text = "Комментарии (Python)";
+            this.reg2.Click += new System.EventHandler(this.reg2_Click);
+            // 
+            // reg3
+            // 
+            this.reg3.Name = "reg3";
+            this.reg3.Size = new System.Drawing.Size(280, 30);
+            this.reg3.Text = "MAC-адрес";
+            this.reg3.Click += new System.EventHandler(this.reg3_Click);
+            // 
             // Compiler
             // 
             this.AllowDrop = true;
@@ -869,6 +905,10 @@
         private System.Windows.Forms.ToolStripMenuItem select2;
         private System.Windows.Forms.ToolStripMenuItem help2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ToolStripMenuItem regex1;
+        private System.Windows.Forms.ToolStripMenuItem reg1;
+        private System.Windows.Forms.ToolStripMenuItem reg2;
+        private System.Windows.Forms.ToolStripMenuItem reg3;
     }
 }
 

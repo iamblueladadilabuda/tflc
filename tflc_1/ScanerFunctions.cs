@@ -135,24 +135,6 @@ namespace tflc_1
                                     if (text[i + 1] == ';') break;
                                     if (text[i + 1] == ')') break;
 
-                                    if (!char.IsDigit(text[i + 1]))
-                                    {
-                                        while (!char.IsWhiteSpace(text[i + 1]))
-                                        {
-                                            if (text[i + 1] == ';') break;
-
-                                            digit += text[i + 1].ToString();
-                                            i++;
-
-                                            if ((i + 1) >= text.Length) break;
-                                        }
-
-                                        token_numbers.Add(15);
-                                        token_all.Add(digit);
-                                        token_idx.Add(i - digit.Length + 2);
-                                        break;
-                                    }
-
                                     digit += text[i + 1].ToString();
                                     i++;
 

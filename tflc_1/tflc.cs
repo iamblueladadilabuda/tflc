@@ -28,6 +28,7 @@ namespace tflc_1
         private readonly DataGridView table = new DataGridView();
         private int width, height, his_idx = 1, file_idx = 0;
         private readonly SplitContainer splitContainer;
+        private int language = 1, reg = 1;
         private string buffer = "";
 
 
@@ -60,7 +61,7 @@ namespace tflc_1
                 menuStrip3.Items[0].BackColor = Color.CornflowerBlue;
             }
 
-            table = table_functions.Initialize_Table();
+            table = table_functions.Initialize_Table(1);
             panel5.Controls.Add(table);
             table.CellClick += table_CellClick;
 
@@ -78,7 +79,7 @@ namespace tflc_1
             richTextBox.DragEnter += Compiler_DragEnter;
             richTextBox.DragDrop += Compiler_DragDrop;
 
-            condition.Text = "Successful application opening!";
+            Condition_Text("app_open", null);
         }
 
 
@@ -105,7 +106,7 @@ namespace tflc_1
             string new_tool = files.ElementAt(file_idx).Item1[0];
             tool_functions.Click_Strip(menuStrip3, prev_tool, new_tool);
 
-            condition.Text = "Successful file creation!";
+            Condition_Text("create", null);
         }
 
         private void Open(string path)
@@ -132,13 +133,14 @@ namespace tflc_1
             richTextBox.Text = files.ElementAt(file_idx).Item1[2];
             tool_functions.Click_Strip(menuStrip3, prev_tool, files.ElementAt(file_idx).Item1[0]);
 
-            condition.Text = "Successful file opening!";
+            Condition_Text("open", null);
         }
 
         private void Save()
         {
             file_functions.Save(files.ElementAt(file_idx).Item1[1], richTextBox.Text);
             files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
+            Condition_Text("save", null);
         }
 
         private void Save_How()
@@ -153,18 +155,37 @@ namespace tflc_1
             string[] file = { new_tool, path, text, text };
             ls_functions.Save_List_Files(file_idx, file, files);
 
-            condition.Text = "Successful file saving how!";
+            Condition_Text("save_how", null);
         }
 
         private void Start()
         {
+            string pattern;
+
+            switch (reg)
+            {
+                case 1:
+                    pattern = "#[\\dA-F]{6}";
+                    Regex(pattern, false);
+                    return;
+                case 2:
+                    pattern = "(#.*$)|(\"{3}.*?\"{3}|\'{3}.*?\'{3})";
+                    Regex(pattern, true);
+                    return;
+
+                case 3:
+                    pattern = "([\\dA-F]{2}:){5}[\\dA-F]{2}$";
+                    Regex(pattern, true);
+                    return;
+            }
+
             if (string.IsNullOrEmpty(richTextBox.Text)) return;
 
             table_functions.Clear_Table(table);
             table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
 
             int errors_count = table_functions.Fill_Table(table, richTextBox);
-            condition.Text = $"Общее количество ошибок: {errors_count}";
+            Condition_Text("parser", errors_count.ToString());
         }
 
         private void Help()
@@ -217,6 +238,7 @@ namespace tflc_1
 
             DataGridViewRow row = table.Rows[e.RowIndex];
 
+            string word = row.Cells[2].Value.ToString();
             string line = row.Cells[3].Value.ToString();
             if (line != "")
             {
@@ -227,7 +249,7 @@ namespace tflc_1
 
                 if (char_idx >= 0)
                 {
-                    richTextBox.Select(char_idx + idx, 0);
+                    richTextBox.Select(char_idx + idx, word.Length);
                     richTextBox.ScrollToCaret();
                     richTextBox.Focus();
                 }
@@ -403,6 +425,104 @@ namespace tflc_1
         }
 
 
+        private void Regex(string pattern, bool automat)
+        {
+            switch (language)
+            {
+                case 1:
+                    table.Columns[2].HeaderText = "Найденная подстрока";
+                    table.Columns[3].HeaderText = "Позиция";
+                    table.Columns[4].HeaderText = "Длина";
+
+                    if (string.IsNullOrEmpty(richTextBox.Text))
+                    {
+                        condition.Text = "Нет данных для поиска";
+                        return;
+                    }
+                    break;
+
+                case 2:
+                    table.Columns[2].HeaderText = "The found substring";
+                    table.Columns[3].HeaderText = "Line";
+                    table.Columns[4].HeaderText = "Length";
+
+                    if (string.IsNullOrEmpty(richTextBox.Text))
+                    {
+                        condition.Text = "There is no data to search for";
+                        return;
+                    }
+                    break;
+
+                case 3:
+                    table.Columns[2].HeaderText = "Табылған ішкі жол";
+                    table.Columns[3].HeaderText = "Позиция";
+                    table.Columns[4].HeaderText = "Ұзындығы";
+
+                    if (string.IsNullOrEmpty(richTextBox.Text))
+                    {
+                        condition.Text = "Іздеуге болатын Деректер жоқ";
+                        return;
+                    }
+                    break;
+            }
+
+            RegexFunctions rf = new RegexFunctions();
+
+            int line_count = 1;
+            List<int> lines = new List<int>();
+            List<string> strs = new List<string>();
+            List<int> index = new List<int>();
+
+            foreach (string line in richTextBox.Lines)
+            {
+                string[] str = null; int[] l = null; int[] idx = null;
+
+                if (automat)
+                {
+                    (str, l, idx) = rf.Find_Regex_Automat(pattern, line, line_count);
+                }
+                else
+                {
+                    (str, l, idx) = rf.Find_Regex(pattern, line, line_count);
+                }  
+
+                for (int i = 0; i < idx.Length; i++)
+                {
+                    strs.Add(str[i]);
+                    lines.Add(l[i]);
+                    index.Add(idx[i]);
+                }
+
+                line_count++;
+            }
+
+            table_functions.Clear_Table(table);
+            table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
+
+            if (strs.Count > 0)
+            {
+                table_functions.Fill_Table_Regex(table, strs.ToArray(), lines.ToArray(), index.ToArray());
+            }
+
+            condition.Text = $"Количество найденный совпадений: {strs.Count}";
+        }
+
+        private void reg1_Click(object sender, EventArgs e)
+        {
+            reg = 1;
+        }
+
+        private void reg2_Click(object sender, EventArgs e)
+        {
+            reg = 2;
+        }
+
+        private void reg3_Click(object sender, EventArgs e)
+        {
+            reg = 3;
+        }
+
+
         private void quit1_Click(object sender, EventArgs e)
         {
             Close();
@@ -563,7 +683,11 @@ namespace tflc_1
         private void Change_Language(int choice)
         {
             bool[] visible = new bool[3] { true, true, true };
-            switch (choice)
+
+            language = choice;
+            table_functions.Set_Language(language);
+
+            switch (language)
             {
                 case 1:
                     visible[0] = false;
@@ -581,7 +705,8 @@ namespace tflc_1
                     Translate(File.ReadAllLines(path_language + "kaz.txt"));
                     break;
             }
-            condition.Text = "Successful change language!";
+
+            Condition_Text("language", null);
         }
 
         private void Language_Visible(bool[] visible)
@@ -627,6 +752,129 @@ namespace tflc_1
             confirmation.Text = language[31];
             yes.Text = language[32];
             no.Text = language[33];
+            reg1.Text = language[34];
+            reg2.Text = language[35];
+            reg3.Text = language[36];
+        }
+
+        private void Condition_Text(string type, string param)
+        {
+            switch (language)
+            {
+                case 1:
+                    Errors_RU(type, param);
+                    break;
+
+                case 2:
+                    Errors_EN(type, param);
+                    break;
+
+                case 3:
+                    Errors_KAZ(type, param);
+                    break;
+            }
+        }
+
+        private void Errors_RU(string type, string param)
+        {
+            switch (type)
+            {
+                case "app_open":
+                    condition.Text = "Успешное открытие приложения!";
+                    break;
+
+                case "create":
+                    condition.Text = "Успешное создание файла!";
+                    break;
+
+                case "open":
+                    condition.Text = "Успешное открытие файла!";
+                    break;
+
+                case "save":
+                    condition.Text = "Успешное сохранение файла!";
+                    break;
+
+                case "save_how":
+                    condition.Text = "Успешно выполнена функция \"Сохранить как\"!";
+                    break;
+
+                case "language":
+                    condition.Text = "Успешная смена языка!";
+                    break;
+
+                case "parser":
+                    condition.Text = $"Общее количество ошибок: {param}";
+                    break;
+            }
+        }
+
+        private void Errors_EN(string type, string param)
+        {
+            switch (type)
+            {
+                case "app_open":
+                    condition.Text = "Successful application opening!";
+                    break;
+
+                case "create":
+                    condition.Text = "Successful file creation!";
+                    break;
+
+                case "open":
+                    condition.Text = "Successful file opening!";
+                    break;
+
+                case "save":
+                    condition.Text = "Successful file saving!";
+                    break;
+
+                case "save_how":
+                    condition.Text = "Successful file saving how!";
+                    break;
+
+                case "language":
+                    condition.Text = "Successful change language!";
+                    break;
+
+                case "parser":
+                    condition.Text = $"Total number of errors: {param}";
+                    break;
+            }
+        }
+
+        private void Errors_KAZ(string type, string param)
+        {
+            switch (type)
+            {
+                case "app_open":
+                    condition.Text = "Қолданбаны сәтті ашу!";
+                    break;
+
+                case "create":
+                    condition.Text = "Файлды сәтті құру!";
+                    break;
+
+                case "open":
+                    condition.Text = "Файлды сәтті ашу!";
+                    break;
+
+                case "save":
+                    condition.Text = "Файлды сәтті сақтау!";
+                    break;
+
+                case "save_how":
+                    condition.Text = "\"Басқаша сақтау\" функциясы сәтті орындалды!";
+                    break;
+
+                case "language":
+                    condition.Text = "Тілді сәтті өзгерту!";
+                    break;
+
+                case "parser":
+                    condition.Text = $"Қателердің жалпы саны: {param}";
+                    break;
+            }
         }
     }
 }
