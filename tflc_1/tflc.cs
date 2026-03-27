@@ -29,6 +29,7 @@ namespace tflc_1
         private int width, height, his_idx = 1, file_idx = 0;
         private readonly SplitContainer splitContainer;
         private string buffer = "";
+        private int language = 1;
 
 
         public Compiler()
@@ -60,7 +61,7 @@ namespace tflc_1
                 menuStrip3.Items[0].BackColor = Color.CornflowerBlue;
             }
 
-            table = table_functions.Initialize_Table();
+            table = table_functions.Initialize_Table(1);
             panel5.Controls.Add(table);
             table.CellClick += table_CellClick;
 
@@ -78,7 +79,7 @@ namespace tflc_1
             richTextBox.DragEnter += Compiler_DragEnter;
             richTextBox.DragDrop += Compiler_DragDrop;
 
-            condition.Text = "Successful application opening!";
+            Condition_Text("app_open", null);
         }
 
 
@@ -105,7 +106,7 @@ namespace tflc_1
             string new_tool = files.ElementAt(file_idx).Item1[0];
             tool_functions.Click_Strip(menuStrip3, prev_tool, new_tool);
 
-            condition.Text = "Successful file creation!";
+            Condition_Text("create", null);
         }
 
         private void Open(string path)
@@ -132,13 +133,14 @@ namespace tflc_1
             richTextBox.Text = files.ElementAt(file_idx).Item1[2];
             tool_functions.Click_Strip(menuStrip3, prev_tool, files.ElementAt(file_idx).Item1[0]);
 
-            condition.Text = "Successful file opening!";
+            Condition_Text("open", null);
         }
 
         private void Save()
         {
             file_functions.Save(files.ElementAt(file_idx).Item1[1], richTextBox.Text);
             files.ElementAt(file_idx).Item1[2] = richTextBox.Text;
+            Condition_Text("save", null);
         }
 
         private void Save_How()
@@ -153,7 +155,7 @@ namespace tflc_1
             string[] file = { new_tool, path, text, text };
             ls_functions.Save_List_Files(file_idx, file, files);
 
-            condition.Text = "Successful file saving how!";
+            Condition_Text("save_how", null);
         }
 
         private void Start()
@@ -164,7 +166,7 @@ namespace tflc_1
             table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
 
             int errors_count = table_functions.Fill_Table(table, richTextBox);
-            condition.Text = $"Общее количество ошибок: {errors_count}";
+            Condition_Text("parser", errors_count.ToString());
         }
 
         private void Help()
@@ -563,7 +565,11 @@ namespace tflc_1
         private void Change_Language(int choice)
         {
             bool[] visible = new bool[3] { true, true, true };
-            switch (choice)
+
+            language = choice;
+            table_functions.Set_Language(language);
+
+            switch (language)
             {
                 case 1:
                     visible[0] = false;
@@ -581,7 +587,8 @@ namespace tflc_1
                     Translate(File.ReadAllLines(path_language + "kaz.txt"));
                     break;
             }
-            condition.Text = "Successful change language!";
+
+            Condition_Text("language", null);
         }
 
         private void Language_Visible(bool[] visible)
@@ -627,6 +634,126 @@ namespace tflc_1
             confirmation.Text = language[31];
             yes.Text = language[32];
             no.Text = language[33];
+        }
+
+        private void Condition_Text(string type, string param)
+        {
+            switch (language)
+            {
+                case 1:
+                    Errors_RU(type, param);
+                    break;
+
+                case 2:
+                    Errors_EN(type, param);
+                    break;
+
+                case 3:
+                    Errors_KAZ(type, param);
+                    break;
+            }
+        }
+
+        private void Errors_RU(string type, string param)
+        {
+            switch (type)
+            {
+                case "app_open":
+                    condition.Text = "Успешное открытие приложения!";
+                    break;
+
+                case "create":
+                    condition.Text = "Успешное создание файла!";
+                    break;
+
+                case "open":
+                    condition.Text = "Успешное открытие файла!";
+                    break;
+
+                case "save":
+                    condition.Text = "Успешное сохранение файла!";
+                    break;
+
+                case "save_how":
+                    condition.Text = "Успешно выполнена функция \"Сохранить как\"!";
+                    break;
+
+                case "language":
+                    condition.Text = "Успешная смена языка!";
+                    break;
+
+                case "parser":
+                    condition.Text = $"Общее количество ошибок: {param}";
+                    break;
+            }
+        }
+
+        private void Errors_EN(string type, string param)
+        {
+            switch (type)
+            {
+                case "app_open":
+                    condition.Text = "Successful application opening!";
+                    break;
+
+                case "create":
+                    condition.Text = "Successful file creation!";
+                    break;
+
+                case "open":
+                    condition.Text = "Successful file opening!";
+                    break;
+
+                case "save":
+                    condition.Text = "Successful file saving!";
+                    break;
+
+                case "save_how":
+                    condition.Text = "Successful file saving how!";
+                    break;
+
+                case "language":
+                    condition.Text = "Successful change language!";
+                    break;
+
+                case "parser":
+                    condition.Text = $"Total number of errors: {param}";
+                    break;
+            }
+        }
+
+        private void Errors_KAZ(string type, string param)
+        {
+            switch (type)
+            {
+                case "app_open":
+                    condition.Text = "Қолданбаны сәтті ашу!";
+                    break;
+
+                case "create":
+                    condition.Text = "Файлды сәтті құру!";
+                    break;
+
+                case "open":
+                    condition.Text = "Файлды сәтті ашу!";
+                    break;
+
+                case "save":
+                    condition.Text = "Файлды сәтті сақтау!";
+                    break;
+
+                case "save_how":
+                    condition.Text = "\"Басқаша сақтау\" функциясы сәтті орындалды!";
+                    break;
+
+                case "language":
+                    condition.Text = "Тілді сәтті өзгерту!";
+                    break;
+
+                case "parser":
+                    condition.Text = $"Қателердің жалпы саны: {param}";
+                    break;
+            }
         }
     }
 }
