@@ -170,7 +170,7 @@ namespace tflc_1
                     return;
                 case 2:
                     pattern = "(#.*$)|(\"{3}.*?\"{3}|\'{3}.*?\'{3})";
-                    Regex(pattern, true);
+                    Regex(pattern, false);
                     return;
 
                 case 3:
@@ -510,16 +510,37 @@ namespace tflc_1
         private void reg1_Click(object sender, EventArgs e)
         {
             reg = 1;
+            richTextBox.Text = 
+                "#FF12AA\n" +
+                "#FF1201\n" +
+                "#FA89BA\n\n" +
+                "#FFHA12\n" +
+                "#F3A\n" +
+                "FA89BA\n";
         }
 
         private void reg2_Click(object sender, EventArgs e)
         {
             reg = 2;
+            richTextBox.Text =
+                "#aboba123\n'''" +
+                "aboba123'''\n" +
+                "\"\"\"aboba123\"\"\"\n\n" +
+                "aboba\n" +
+                "\"\"\"aboba'''\n" +
+                "'''aboba\"\"\"\n";
         }
 
         private void reg3_Click(object sender, EventArgs e)
         {
             reg = 3;
+            richTextBox.Text =
+                "AA:BB:CC:DD:EE:FF\n" +
+                "12:34:56:78:12:01\n" +
+                "A1:7B:CC:90:8E:0F\n\n" +
+                "00:1B:44:11:3A:G7\n" +
+                "00:1B:44:11:3A\n" +
+                "0:1B:44:11:3A:7C\n";
         }
 
 

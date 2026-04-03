@@ -67,11 +67,8 @@ aboba
 """aboba'''  
 '''aboba"""  
 
-#### Граф автомата
-![alt text](automat_1.png)
-
 #### Тестовые примеры (скриншоты)
-![alt text](image-1.png)
+![alt text](image-3.png)
 
 
 ### 3. MAC-адрес:
@@ -100,7 +97,7 @@ A1:7B:CC:90:8E:0F
 0:1B:44:11:3A:7C  
 
 #### Граф автомата
-![alt text](automat_2.png)
+![alt text](automat.png)
 
 #### Тестовые примеры (скриншоты)
 ![alt text](image-2.png)
