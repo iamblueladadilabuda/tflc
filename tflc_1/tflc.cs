@@ -174,7 +174,11 @@ namespace tflc_1
                     return;
 
                 case 3:
-                    pattern = "([\\dA-F]{2}:){5}[\\dA-F]{2}$";
+                    pattern = "([\\dA-F]{2}:){5}[\\dA-F]{2}";
+                    Regex(pattern, false);
+                    return;
+                case 4:
+                    pattern = "([\\dA-F]{2}:){5}[\\dA-F]{2}";
                     Regex(pattern, true);
                     return;
             }
@@ -534,6 +538,18 @@ namespace tflc_1
         private void reg3_Click(object sender, EventArgs e)
         {
             reg = 3;
+            richTextBox.Text =
+                "AA:BB:CC:DD:EE:FF\n" +
+                "12:34:56:78:12:01\n" +
+                "A1:7B:CC:90:8E:0F\n\n" +
+                "00:1B:44:11:3A:G7\n" +
+                "00:1B:44:11:3A\n" +
+                "0:1B:44:11:3A:7C\n";
+        }
+
+        private void reg4_Click(object sender, EventArgs e)
+        {
+            reg = 4;
             richTextBox.Text =
                 "AA:BB:CC:DD:EE:FF\n" +
                 "12:34:56:78:12:01\n" +

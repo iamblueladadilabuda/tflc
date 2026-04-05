@@ -60,6 +60,11 @@
             this.literature1 = new System.Windows.Forms.ToolStripMenuItem();
             this.code1 = new System.Windows.Forms.ToolStripMenuItem();
             this.start1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.regex1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reg1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reg2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reg3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reg4 = new System.Windows.Forms.ToolStripMenuItem();
             this.help1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.create2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,10 +104,6 @@
             this.condition = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.regex1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.reg1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.reg2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.reg3 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -129,7 +130,7 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(40, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(760, 31);
+            this.menuStrip1.Size = new System.Drawing.Size(760, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -143,7 +144,7 @@
             this.settings1,
             this.quit1});
             this.file1.Name = "file1";
-            this.file1.Size = new System.Drawing.Size(66, 27);
+            this.file1.Size = new System.Drawing.Size(66, 29);
             this.file1.Text = "Файл";
             // 
             // create1
@@ -246,7 +247,7 @@
             this.delete1,
             this.select1});
             this.correction1.Name = "correction1";
-            this.correction1.Size = new System.Drawing.Size(83, 27);
+            this.correction1.Size = new System.Drawing.Size(83, 29);
             this.correction1.Text = "Правка";
             // 
             // cancel1
@@ -309,7 +310,7 @@
             this.literature1,
             this.code1});
             this.text1.Name = "text1";
-            this.text1.Size = new System.Drawing.Size(67, 27);
+            this.text1.Size = new System.Drawing.Size(67, 29);
             this.text1.Text = "Текст";
             // 
             // settingTask1
@@ -365,14 +366,53 @@
             // 
             this.start1.Image = ((System.Drawing.Image)(resources.GetObject("start1.Image")));
             this.start1.Name = "start1";
-            this.start1.Size = new System.Drawing.Size(84, 27);
+            this.start1.Size = new System.Drawing.Size(84, 29);
             this.start1.Text = "Пуск";
             this.start1.Click += new System.EventHandler(this.start1_Click);
+            // 
+            // regex1
+            // 
+            this.regex1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reg1,
+            this.reg2,
+            this.reg3,
+            this.reg4});
+            this.regex1.Name = "regex1";
+            this.regex1.Size = new System.Drawing.Size(35, 29);
+            this.regex1.Text = "4";
+            // 
+            // reg1
+            // 
+            this.reg1.Name = "reg1";
+            this.reg1.Size = new System.Drawing.Size(280, 30);
+            this.reg1.Text = "Цвет (HEX)";
+            this.reg1.Click += new System.EventHandler(this.reg1_Click);
+            // 
+            // reg2
+            // 
+            this.reg2.Name = "reg2";
+            this.reg2.Size = new System.Drawing.Size(280, 30);
+            this.reg2.Text = "Комментарии (Python)";
+            this.reg2.Click += new System.EventHandler(this.reg2_Click);
+            // 
+            // reg3
+            // 
+            this.reg3.Name = "reg3";
+            this.reg3.Size = new System.Drawing.Size(280, 30);
+            this.reg3.Text = "MAC-адрес";
+            this.reg3.Click += new System.EventHandler(this.reg3_Click);
+            // 
+            // reg4
+            // 
+            this.reg4.Name = "reg4";
+            this.reg4.Size = new System.Drawing.Size(280, 30);
+            this.reg4.Text = "MAC-адрес (автомат)";
+            this.reg4.Click += new System.EventHandler(this.reg4_Click);
             // 
             // help1
             // 
             this.help1.Name = "help1";
-            this.help1.Size = new System.Drawing.Size(92, 27);
+            this.help1.Size = new System.Drawing.Size(92, 29);
             this.help1.Text = "Справка";
             this.help1.Click += new System.EventHandler(this.help1_Click);
             // 
@@ -394,9 +434,9 @@
             this.delete2,
             this.select2,
             this.help2});
-            this.menuStrip2.Location = new System.Drawing.Point(40, 31);
+            this.menuStrip2.Location = new System.Drawing.Point(40, 33);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(760, 38);
+            this.menuStrip2.Size = new System.Drawing.Size(760, 40);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -535,9 +575,9 @@
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 73);
+            this.panel2.Location = new System.Drawing.Point(760, 79);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 436);
+            this.panel2.Size = new System.Drawing.Size(40, 430);
             this.panel2.TabIndex = 4;
             // 
             // panel7
@@ -674,9 +714,9 @@
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
+            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(760, 4);
+            this.menuStrip3.Size = new System.Drawing.Size(760, 6);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -742,7 +782,7 @@
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 222);
+            this.panel5.Location = new System.Drawing.Point(0, 216);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(720, 174);
             this.panel5.TabIndex = 8;
@@ -752,41 +792,10 @@
             this.panel6.Controls.Add(this.panel5);
             this.panel6.Controls.Add(this.panel3);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(40, 73);
+            this.panel6.Location = new System.Drawing.Point(40, 79);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(720, 396);
+            this.panel6.Size = new System.Drawing.Size(720, 390);
             this.panel6.TabIndex = 9;
-            // 
-            // regex1
-            // 
-            this.regex1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.reg1,
-            this.reg2,
-            this.reg3});
-            this.regex1.Name = "regex1";
-            this.regex1.Size = new System.Drawing.Size(35, 27);
-            this.regex1.Text = "4";
-            // 
-            // reg1
-            // 
-            this.reg1.Name = "reg1";
-            this.reg1.Size = new System.Drawing.Size(280, 30);
-            this.reg1.Text = "Цвет (HEX)";
-            this.reg1.Click += new System.EventHandler(this.reg1_Click);
-            // 
-            // reg2
-            // 
-            this.reg2.Name = "reg2";
-            this.reg2.Size = new System.Drawing.Size(280, 30);
-            this.reg2.Text = "Комментарии (Python)";
-            this.reg2.Click += new System.EventHandler(this.reg2_Click);
-            // 
-            // reg3
-            // 
-            this.reg3.Name = "reg3";
-            this.reg3.Size = new System.Drawing.Size(280, 30);
-            this.reg3.Text = "MAC-адрес";
-            this.reg3.Click += new System.EventHandler(this.reg3_Click);
             // 
             // Compiler
             // 
@@ -909,6 +918,7 @@
         private System.Windows.Forms.ToolStripMenuItem reg1;
         private System.Windows.Forms.ToolStripMenuItem reg2;
         private System.Windows.Forms.ToolStripMenuItem reg3;
+        private System.Windows.Forms.ToolStripMenuItem reg4;
     }
 }
 
