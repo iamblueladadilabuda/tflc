@@ -68,6 +68,20 @@ namespace tflc_1
                         break;
                     }
 
+                    if (count + 1 == 6 && s.Length == 17 && correct_str)
+                    {
+                        str.Add(s);
+                        lines.Add(line);
+                        index.Add(start_idx);
+
+                        count = 0;
+                        s = "";
+                        correct_str = true;
+                        start_idx = i + 1;
+
+                        continue;
+                    }
+
                     if (text[i] == ':')
                     {
                         s += ":";
@@ -79,18 +93,6 @@ namespace tflc_1
                             correct_str = false;
                             break;
                         }
-                    }
-
-                    if (count + 1 == 6 && s.Length == 17 && correct_str)
-                    {
-                        str.Add(s);
-                        lines.Add(line);
-                        index.Add(start_idx);
-
-                        count = 0;
-                        s = "";
-                        correct_str = true;
-                        start_idx = i + 1;
                     }
                 }
 
