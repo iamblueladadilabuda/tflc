@@ -75,20 +75,32 @@ namespace tflc_1
                         table.Rows.Add(++table_count, path, "Сәтті!", "", "Қателер табылған жоқ!");
                         break;
                 }
-            } 
+            }
 
+            string line = "";
             for (int j = 0; j < errors.Count; j++)
             {
                 (int i, string description) = errors[j];
 
+                if (j > 0)
+                {
+                    if (Get_Line(lines[i], pos[i]) == line)
+                    {
+                        continue;
+                    }
+                }
+
+                line = Get_Line(lines[i], pos[i]);
+
                 if (description.StartsWith(des))
                 {
                     string token = description.Split('"')[1];
-                    table.Rows.Add(++table_count, path, token, Get_Line(lines[i], pos[i]), description);
+                    table.Rows.Add(++table_count, path, token, line, description);
                 }
                 else
                 {
-                    table.Rows.Add(++table_count, path, tokens[i], Get_Line(lines[i], pos[i]), description);
+                    
+                    table.Rows.Add(++table_count, path, tokens[i], line, description);
                 }
             }
 

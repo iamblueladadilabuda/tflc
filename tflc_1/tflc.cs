@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace tflc_1
 {
@@ -24,7 +23,7 @@ namespace tflc_1
         private readonly OpenApp open = new OpenApp();
 
         private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
-        private bool closing = false, close_all = false, new_tool = true, escape = false;
+        private bool closing = false, close_all = false, new_tool = true, escape = false, open_files = false;
         private readonly DataGridView table = new DataGridView();
         private int width, height, his_idx = 1, file_idx = 0;
         private readonly SplitContainer splitContainer;
@@ -388,10 +387,18 @@ namespace tflc_1
 
         private void example1_Click(object sender, EventArgs e)
         {
+            open_files = true;
+
             Open("txt/tests/test-1.txt");
             Open("txt/tests/test-2.txt");
             Open("txt/tests/test-3.txt");
             Open("txt/tests/test-4.txt");
+            Open("txt/tests/test-5.txt");
+
+            syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
+            new_tool = false;
+
+            open_files = false;
         }
 
         private void literature1_Click(object sender, EventArgs e)
@@ -401,7 +408,7 @@ namespace tflc_1
 
         private void code1_Click(object sender, EventArgs e)
         {
-
+            Process.Start("https://github.com/iamblueladadilabuda/tflc");
         }
 
 
@@ -487,16 +494,19 @@ namespace tflc_1
 
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (menuStrip3.Items.Count == 0)
+            if (!open_files)
             {
-                Create();
-            }
+                if (menuStrip3.Items.Count == 0)
+                {
+                    Create();
+                }
 
-            numbering.Numbering_Lines(richTextBox, numberBox);
-            his_idx = text_functions.Add_History(files.ElementAt(file_idx).Item2, richTextBox.Text, his_idx);
-            
-            syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
-            new_tool = false;
+                numbering.Numbering_Lines(richTextBox, numberBox);
+                his_idx = text_functions.Add_History(files.ElementAt(file_idx).Item2, richTextBox.Text, his_idx);
+
+                syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
+                new_tool = false;
+            }
         }
 
 

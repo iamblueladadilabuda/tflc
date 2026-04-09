@@ -50,11 +50,9 @@ namespace tflc_1
 
             is_updating += Coloring(richTextBox, Color.Purple, Scaner_Array(richTextBox.Text, 2));
             is_updating += Coloring(richTextBox, Color.DeepSkyBlue, Scaner_Array(richTextBox.Text, 3));
-            //is_updating += Coloring(richTextBox, Color.Orange, Scaner_Array(richTextBox.Text, 8));
-            //is_updating += Coloring(richTextBox, Color.OrangeRed, Scaner_Array(richTextBox.Text, 13));
             is_updating += Coloring(richTextBox, Color.YellowGreen, Scaner_Array(richTextBox.Text, 13));
             is_updating += Coloring(richTextBox, Color.YellowGreen, Scaner_Array(richTextBox.Text, 15));
-            
+
             int func = Find_Functions(richTextBox, Color.Yellow);
             if (func != -1) is_updating += func;
 

@@ -85,18 +85,58 @@
 В данной реализации синтаксического анализатора нейтрализация ошибок выполняется по методу Айронса. При обнаружении лексемы, не соответствующей ожидаемой грамматикой, анализатор переходит в режим пропуска лексем до тех пор, пока не встретит соответствующую лексему
 
 ## Тестовые примеры:
-#define SQUARE(x) ((x)*(x)); 
+#define SQUARE(x) ((x)*(x));
+#define SQUARE(x) ((x + 1) * 2);
+#define SQUARE() (1 + 1);
+#define SQUARE(x) (x - 20.5);
+#define SQUARE(x, y) ((x)/(y));
+#define SQUARE(x, y, z) (((x) * y) - z);
+#define S() (Func());
 ![alt text](image-3.png)
   
 #define SQUARE(x) ((x*(x));
+#define AREA(r) (3.14 * (r) * (r);
+#define CUBE(x) (x)*(x)*(x;
+#define SUM(a,b) (a)+(b);
+#define ABS(x) ((x) + 0 - (x) - (x);
+#define MIN(a,b) ((a) - (b)) + (a) / (b);
 ![alt text](image-4.png)
   
 @@@#macros define 1SQUARE(x) ((x*(x) + 1.));
+#define S(x) (x + @, (1 + 2) / 8 * define () / func() 1);
 ![alt text](image-5.png)
   
 define SQUARE(x) ((x)*(x));
+# SQUARE(x) ((x)*(x));
+#define (x) ((x)*(x));
+#define SQUARE x) ((x)*(x));
+#define SQUARE ) ((x)*(x));
+#define SQUARE(x) (x)*(x));
+#define SQUARE(x) (*(x));
+#define SQUARE(x) ((x) (x));
+#define SQUARE(x) ((x)*);
+#define SQUARE(x) ((x)*(x);
+#define SQUARE(x) ((x)*(x))ф
 ![alt text](image-6.png)
- 
+  
+;
+1;
+@;
+#;
+#define;
+#define S;
+#define S(;
+#define S(x;
+#define S(x,;
+#define S(x, y;
+#define S(x, y);
+#define S();
+#define S() (;
+#define S() ();
+#define S() (1;
+#define S() (1 +;
+#define S() (1 + 1;
+![alt text](image-7.png)  
 
 
 
