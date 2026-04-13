@@ -86,6 +86,17 @@ namespace tflc_1
 
         private int Macros(string[] tokens, int[] codes, int i)
         {
+            if (tokens[i] == ")")
+            {
+                if (can_write_er)
+                {
+                    Add_Error(tokens[i], "#", i, "token");
+                    balance--;
+                }
+                can_write_er = false;
+                i += 1;
+            }
+
             i = Start(tokens, codes, i);
             if (Is_End(tokens.Length, i) || Is_Semicolon_Point(tokens, i) || is_end)
             {
@@ -106,13 +117,16 @@ namespace tflc_1
 
             if (balance > 0)
             {
-                if (i >= tokens.Length) Add_Error(")", ")", tokens.Length - 1, "bracket_end");
-                else Add_Error(")", ")", i, "bracket_end");
+                if (can_write_er)
+                {
+                    if (i >= tokens.Length) Add_Error(")", ")", tokens.Length - 1, "bracket_end");
+                    else Add_Error(")", ")", i, "bracket_end");
+                }  
             }
 
             if (Is_End(tokens.Length, i))
             {
-                Add_Error(";", ";", tokens.Length - 1, "end");
+                if (can_write_er) Add_Error(";", ";", tokens.Length - 1, "end");
                 return i;
             }
 
@@ -121,11 +135,23 @@ namespace tflc_1
 
             if (Is_Correct_Token(tokens, codes, i, ";", false)) return i + 1;
 
+            string err = "";
             while (tokens[i] != ";")
             {
+                err += tokens[i];
                 i += 1;
-                if (i >= tokens.Length) return i;
+                if (i >= tokens.Length)
+                {
+                    if (can_write_er) Add_Error(err, ";", tokens.Length - 1, "token");
+                    return i;
+                }
             }
+
+            if (can_write_er)
+            {
+                if (i >= tokens.Length) Add_Error(err, ";", tokens.Length - 1, "token");
+                else Add_Error(err, ";", i, "token");
+            }   
 
             return i + 1;
         }
@@ -138,7 +164,6 @@ namespace tflc_1
             int prev_i = i;
             i = Airon_Method(tokens, codes, i, "#", ends_1, choices_1);
 
-            if (codes[i] == id_code && prev_i + 1 != i) return i;
             is_end = Is_Semicolon_Point(tokens, i);
             if (Is_End(tokens.Length, i) || is_end) return i;
 
@@ -159,7 +184,6 @@ namespace tflc_1
             if (Is_End(tokens.Length, i) || is_end) return i;
 
             i = List_Param(tokens, codes, i);
-            if (Dublicate_Arq()) Add_Error(null, null, i - 1, "dublicate_arq");
 
             return i;
         }
@@ -182,15 +206,8 @@ namespace tflc_1
             int[] choices_2 = { 4, 4 };
             i = Airon_Method(tokens, codes, i, id_code.ToString(), ends_2, choices_2);
 
-            arquments.Add(tokens[i - 1]);
-
             is_end = Is_Semicolon_Point(tokens, i);
             if (Is_End(tokens.Length, i) || is_end) return i;
-            if (tokens[i] == ")")
-            {
-                Balance_Bracket(tokens[i], i);
-                return i + 1;
-            }
 
             return Parameters(tokens, codes, i);
         }
@@ -209,20 +226,12 @@ namespace tflc_1
             int[] choices_1 = { 2, 1 };
             i = Airon_Method(tokens, codes, i, ",", ends_1, choices_1);
 
-            if (tokens[i] == ")")
-            {
-                Balance_Bracket(tokens[i], i);
-                return i + 1;
-            }
-
             is_end = Is_Semicolon_Point(tokens, i);
             if (Is_End(tokens.Length, i) || is_end) return i;
 
             string[] ends_2 = { ")", "," };
             int[] choices_2 = { 4, 4 };
             i = Airon_Method(tokens, codes, i, id_code.ToString(), ends_2, choices_2);
-
-            arquments.Add(tokens[i - 1]);
 
             is_end = Is_Semicolon_Point(tokens, i);
             if (Is_End(tokens.Length, i) || is_end) return i;
@@ -236,12 +245,6 @@ namespace tflc_1
             int[] choices_1 = { 2, 2, 2, 1, 1 };
             i = Airon_Method(tokens, codes, i, "(", ends_1, choices_1);
 
-            if (tokens[i] == ")")
-            {
-                Balance_Bracket(tokens[i], i);
-                return i + 1;
-            }
-
             is_end = Is_Semicolon_Point(tokens, i);
             if (Is_End(tokens.Length, i) || is_end) return i;
 
@@ -249,7 +252,7 @@ namespace tflc_1
             is_end = Is_Semicolon_Point(tokens, i);
             if (Is_End(tokens.Length, i) || is_end)
             {
-                Add_Error(tokens[i], "term", i, "token");
+                if (can_write_er) Add_Error(tokens[i], "term", i, "token");
                 return i;
             }
 
@@ -280,11 +283,6 @@ namespace tflc_1
 
             if (Is_End(tokens.Length, i)) return i;
 
-            if (tokens[i - 1] == "=")
-            {
-                if (!equal) Add_Error(null, null, i, "equal");
-            }
-
             i = Term(tokens, codes, i);
 
             return Expression_Body(tokens, codes, i, false);
@@ -314,13 +312,6 @@ namespace tflc_1
                     can_write_er = true;
                     return i;
                 }
-
-                /*if (codes_value[codes[i]] == "OPERATOR")
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return i + 1;
-                }*/
 
                 if (codes[i] == id_code)
                 {
@@ -383,15 +374,6 @@ namespace tflc_1
                     return List_Param(tokens, codes, ++i);
                 }
 
-                foreach (string arq in arquments)
-                {
-                    if (tokens[i] == arq)
-                    {
-                        return i + 1;
-                    }
-                }
-
-                if (can_write_er) Add_Error(tokens[i], null, i, "unknown_arq");
                 return i + 1;
             }
 
@@ -464,33 +446,6 @@ namespace tflc_1
                     can_write_er = true;
                     return i;
                 }
-
-                /*if (codes[i] == id_code)
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return Term(tokens, codes, i);
-                }
-
-                if (codes[i] == int_code)
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return Term(tokens, codes, i);
-                }
-
-                if (codes[i] == double_code)
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return Term(tokens, codes, i);
-                }
-
-                if (tokens[i] == "(")
-                {
-                    can_write_er = true;
-                    return Term(tokens, codes, i);
-                }*/
             }
 
             balance = prev_balance;
@@ -531,6 +486,8 @@ namespace tflc_1
                 return i + 1;
             }
 
+            string err = "";
+            int a = codes[i];
             List<int> res_i = new List<int>();
             int prev_i = i;
             for (int j = 0; j < token_end.Length; j++, i = prev_i)
@@ -561,13 +518,9 @@ namespace tflc_1
                                 res_i.Add(i);
                                 break;
                             }
-
-                            /*if (tokens[i] == token_need)
-                            {
-                                res_i.Add(i);
-                                break;
-                            }*/
                         }
+
+                        if (i >= codes.Length) break;
 
                         if (tokens[i] == token_end[j])
                         {
@@ -600,13 +553,9 @@ namespace tflc_1
                                 res_i.Add(i);
                                 break;
                             }
-
-                            /*if (tokens[i] == token_need)
-                            {
-                                res_i.Add(i);
-                                break;
-                            }*/
                         }
+
+                        if (i >= codes.Length) break;
 
                         if (codes[i].ToString() == token_end[j])
                         {
@@ -639,13 +588,9 @@ namespace tflc_1
                                 res_i.Add(i);
                                 break;
                             }
-
-                            /*if (codes[i].ToString() == token_need)
-                            {
-                                res_i.Add(i);
-                                break;
-                            }*/
                         }
+
+                        if (i >= codes.Length) break;
 
                         if (codes[i].ToString() == token_end[j])
                         {
@@ -678,13 +623,9 @@ namespace tflc_1
                                 res_i.Add(i);
                                 break;
                             }
-
-                            /*if (codes[i].ToString() == token_need)
-                            {
-                                res_i.Add(i);
-                                break;
-                            }*/
                         }
+
+                        if (i >= codes.Length) break;
 
                         if (tokens[i] == token_end[j])
                         {
@@ -707,11 +648,32 @@ namespace tflc_1
                     }
                     else
                     {
+                        int b = prev_i;
                         for (; prev_i < res; prev_i++)
                         {
                             if (tokens[prev_i] == "(" || tokens[prev_i] == ")")
                             {
-                                Balance_Bracket(tokens[prev_i], i);
+                                Balance_Bracket(tokens[prev_i], prev_i);
+                            }
+
+                            err += tokens[prev_i];
+                        }
+
+                        if (err == "") err = tokens[b];
+
+                        if (can_write_er)
+                        {
+                            int c = res;
+                            if (res >= tokens.Length) c = tokens.Length - 1;
+
+                            if (!is_code)
+                            {
+                                if (can_write_er) Add_Error(err, token_need, c, "token");
+                            }
+                            else
+                            {
+                                int code = Convert.ToInt32(token_need);
+                                if (can_write_er) Add_Error(codes_value[a], codes_value[code], c, "code");
                             }
                         }
 
@@ -719,6 +681,18 @@ namespace tflc_1
                         return res;
                     }
                 }
+            }
+
+            if (err == "") err = tokens[prev_i];
+
+            if (!is_code)
+            {
+                if (can_write_er) Add_Error(err, token_need, prev_i, "token");
+            }
+            else
+            {
+                int code = Convert.ToInt32(token_need);
+                if (can_write_er) Add_Error(codes_value[a], codes_value[code], prev_i, "code");
             }
 
             can_write_er = false;
@@ -750,7 +724,6 @@ namespace tflc_1
             {
                 if (tokens[i] != token)
                 {
-                    if (can_write_er) Add_Error(tokens[i], token, i, "token");
                     return false;
                 }
 
@@ -762,7 +735,6 @@ namespace tflc_1
 
                 if (codes[i] != code)
                 {
-                    if (can_write_er) Add_Error(codes_value[codes[i]], codes_value[code], i, "code");
                     return false;
                 }
 
@@ -777,7 +749,7 @@ namespace tflc_1
 
             if (balance < 0)
             {
-                Add_Error(")", ")", i, "bracket");
+                if (can_write_er) Add_Error(")", ")", i, "bracket");
             }
         }
 
@@ -804,12 +776,15 @@ namespace tflc_1
 
         private bool Is_Semicolon_Point(string[] tokens, int i)
         {
+            if (Is_End(tokens.Length, i)) return true;
             if (tokens[i] == ";") return true;
             else return false;
         }
 
         private int Error_Token(string[] tokens, int[] codes, int i)
         {
+            if (Is_End(tokens.Length, i)) return i;
+
             if (codes[i] != -1) return i;
 
             int pos = i;
@@ -826,28 +801,6 @@ namespace tflc_1
             return i;
         }
 
-        private bool Dublicate_Arq()
-        {
-            if (arquments.Count == 0) return false;
-
-            foreach (string arq in arquments)
-            {
-                if (arquments.Count(x => x == arq) > 1) return true;
-            }
-
-            return false;
-        }
-
-
-
-        private void Error_End(int length, int i)
-        {
-            if (i + 1 >= length)
-            {
-                i = length;
-                Add_Error(null, null, i - 1, "end");
-            }
-        }
 
         private void Add_Error(string error, string correct, int i, string type)
         {
@@ -883,14 +836,6 @@ namespace tflc_1
                     errors.Add(++count_errors, (i, $"Ожидался {correct}, но вместо него получен {error}"));
                     break;
 
-                case "dublicate_arq":
-                    errors.Add(++count_errors, (i, $"Одинаковые параметры в агрументах"));
-                    break;
-
-                case "unknown_arq":
-                    errors.Add(++count_errors, (i, $"Неизвестный аргумент: {error}"));
-                    break;
-
                 case "unknown_token":
                     errors.Add(++count_errors, (i, $"Неизвестный токен: \"{error}\""));
                     break;
@@ -901,10 +846,6 @@ namespace tflc_1
 
                 case "double":
                     errors.Add(++count_errors, (i, $"Ожидалась цифра после десятичной точки"));
-                    break;
-
-                case "equal":
-                    errors.Add(++count_errors, (i, $"Токен \"=\" может находиться только в левой части выражения"));
                     break;
 
                 case "bracket":
@@ -933,14 +874,6 @@ namespace tflc_1
                     errors.Add(++count_errors, (i, $"{correct}, was expected, but \"{error}\" was received instead"));
                     break;
 
-                case "dublicate_arq":
-                    errors.Add(++count_errors, (i, "The same parameters in the arquments"));
-                    break;
-
-                case "unknown_arq":
-                    errors.Add(++count_errors, (i, $"Unknown argument: {error}"));
-                    break;
-
                 case "unknown_token":
                     errors.Add(++count_errors, (i, $"Unknown token: \"{error}\""));
                     break;
@@ -951,10 +884,6 @@ namespace tflc_1
 
                 case "double":
                     errors.Add(++count_errors, (i, "The number after the decimal point was expected"));
-                    break;
-
-                case "equal":
-                    errors.Add(++count_errors, (i, "The \"=\" token can only be found on the left side of the expression"));
                     break;
 
                 case "bracket":
@@ -983,14 +912,6 @@ namespace tflc_1
                     errors.Add(++count_errors, (i, $"{correct} күтілді, бірақ оның орнына {error} алынды"));
                     break;
 
-                case "dublicate_arq":
-                    errors.Add(++count_errors, (i, $"Агрументтердегі бірдей параметрлер"));
-                    break;
-
-                case "unknown_arq":
-                    errors.Add(++count_errors, (i, $"Белгісіз дәлел: {error}"));
-                    break;
-
                 case "unknown_token":
                     errors.Add(++count_errors, (i, $"Белгісіз белгі: \"{error}\""));
                     break;
@@ -1001,10 +922,6 @@ namespace tflc_1
 
                 case "double":
                     errors.Add(++count_errors, (i, $"Ондық бөлшектен кейін сан күтілді"));
-                    break;
-
-                case "equal":
-                    errors.Add(++count_errors, (i, $"\"=\" таңбалауышы өрнектің сол жағында ғана болуы мүмкін"));
                     break;
 
                 case "bracket":

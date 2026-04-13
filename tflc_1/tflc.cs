@@ -504,7 +504,7 @@ namespace tflc_1
                 numbering.Numbering_Lines(richTextBox, numberBox);
                 his_idx = text_functions.Add_History(files.ElementAt(file_idx).Item2, richTextBox.Text, his_idx);
 
-                syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
+                //syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
                 new_tool = false;
             }
         }
