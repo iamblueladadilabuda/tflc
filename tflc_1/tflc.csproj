@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ASTFunctions.cs" />
     <Compile Include="FileFunctions.cs" />
     <Compile Include="FontFunctions.cs" />
     <Compile Include="KeyboardShortcuts.cs" />

@@ -168,6 +168,36 @@ namespace tflc_1
             Condition_Text("parser", errors_count.ToString());
         }
 
+        private void AST()
+        {
+            if (string.IsNullOrEmpty(richTextBox.Text)) return;
+            Start();
+
+            if (table.Rows.Count > 0)
+            {
+                DataGridViewRow row = table.Rows[0];
+
+                string err = row.Cells[2].Value.ToString();
+                if (!(err == "Успешно!" || err == "Successfully!" || err == "Сәтті!"))
+                {
+                    string line = row.Cells[3].Value.ToString();
+                    if (line != "")
+                    {
+                        int line_number = Convert.ToInt32(line.Split(',')[0].Split(' ')[1]) - 1;
+
+                        if (line_number == 0)
+                        {
+                            MessageBox.Show("В строке ошибка, AST не может быть построено!");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            ASTFunctions ast = new ASTFunctions();
+            ast.AST(richTextBox.Lines[0]);
+        }
+
         private void Help()
         {
             Process.Start("https://docs.google.com/document/d/1fWNk5rWH6WQS7mHoRATFV-HjUk_kn4-cbsnOeN8V2jE/edit?usp=sharing");
@@ -323,6 +353,7 @@ namespace tflc_1
         private void saveHow1_Click(object sender, EventArgs e) => Save_How();
         private void save2_Click(object sender, EventArgs e) => Save_How();
         private void start1_Click(object sender, EventArgs e) => Start();
+        private void ast_Click(object sender, EventArgs e) => AST();
         private void help1_Click(object sender, EventArgs e) => Help();
         private void help2_Click(object sender, EventArgs e) => Help();
 

@@ -54,7 +54,7 @@ namespace tflc_1
         {
             Column_Language(table);
 
-            (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
+            (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox.Text);
 
             (string[] tokens, int[] codes, int[] lines, int[] pos) = Space_Clean(tokens_all, codes_all, lines_all, positions);
             Dictionary<int, (int, string)> errors = Parser(tokens, codes, language);

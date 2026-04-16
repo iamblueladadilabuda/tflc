@@ -29,7 +29,7 @@ namespace tflc_1
             { 15, "DOUBLE" },
         };
 
-        protected (int[], string[], int[], int[]) Find_All_Tokens(RichTextBox richTextBox)
+        protected (int[], string[], int[], int[]) Find_All_Tokens(string richTextBox)
         {
             int line = 0;
 
@@ -38,7 +38,7 @@ namespace tflc_1
             List<int> lines = new List<int>();
             List<int> positions = new List<int>();
 
-            foreach (string text in richTextBox.Text.Split('\n'))
+            foreach (string text in richTextBox.Split('\n'))
             {
                 line++;
                 (int[] numbers, string[] token_all, int[] idx) = Scaner(text);
@@ -178,12 +178,6 @@ namespace tflc_1
 
                     case ';':
                         token_numbers.Add(6);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
-                    case '=':
-                        token_numbers.Add(7);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
