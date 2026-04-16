@@ -27,10 +27,10 @@
 ![alt text](AST-1.png)  
 
 ### Формат вывода AST в программе
-## Для строки: "#define S(x) (x + x);"
+#### Для строки: "#define S(x) (x + x);"
 ![alt text](image-2.png)  
 
-## Для строки: "#define Func(x, y) (2 * (x + y));"
+#### Для строки: "#define Func(x, y) (2 * (x + y));"
 ![alt text](image-3.png)  
 
 ## Тестовые примеры (скриншоты)
