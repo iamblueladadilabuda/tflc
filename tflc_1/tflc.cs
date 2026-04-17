@@ -78,6 +78,8 @@ namespace tflc_1
             richTextBox.DragEnter += Compiler_DragEnter;
             richTextBox.DragDrop += Compiler_DragDrop;
 
+            ast_panel.Visible = false;
+
             Condition_Text("app_open", null);
         }
 
@@ -195,7 +197,10 @@ namespace tflc_1
             }
 
             ASTFunctions ast = new ASTFunctions();
-            ast.AST(richTextBox.Lines[0]);
+            ast.AST_Graphic(richTextBox.Lines[0]);
+
+            ast_panel.Visible = true;
+            ast.AST_Print(ast_text);
         }
 
         private void Help()

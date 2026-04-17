@@ -1,8 +1,10 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace tflc_1
 {
@@ -19,7 +21,188 @@ namespace tflc_1
         private float horizontal_gap = 40;
         private float vertical_gap = 20;
 
-        public void AST(string text)
+        public void AST_Print(RichTextBox output)
+        {
+            if (root_node == null)
+            {
+                output.Text = "AST is empty";
+                return;
+            }
+
+            output.Clear();
+            output.Font = new Font("Consolas", 10);
+
+            Print_Node(output, root_node);
+        }
+
+        private void Print_Node(RichTextBox output, object node)
+        {
+            if (node == null) return;
+
+            string node_type = node.GetType().GetProperty("Type")?.GetValue(node)?.ToString() ?? "Unknown";
+
+            switch (node_type)
+            {
+                case "Define":
+                    output.AppendText("Macros\n");
+                    var children = Get_Children(node);
+                    for (int i = 0; i < children.Count; i++)
+                    {
+                        Print_Function_Call(output, children[i], "", i == children.Count - 1);
+                    }
+                    break;
+            }
+        }
+
+        private void Print_Function_Call(RichTextBox output, object node, string indent, bool is_last)
+        {
+            string macros_name = node.GetType().GetProperty("MacroName")?.GetValue(node)?.ToString() ?? "?";
+            string prefix = is_last ? "└── " : "├── ";
+            output.AppendText(indent + prefix + "FunctionCallNode\n");
+
+            string name_indent = indent + (is_last ? "    " : "│   ");
+            output.AppendText(name_indent + "├── name: \"" + macros_name + "\"\n");
+
+            var children = Get_Children(node);
+
+            if (children.Count > 0)
+            {
+                var real_parameters = new List<object>();
+                object body_node = null;
+
+                foreach (var child in children)
+                {
+                    string param_name = child.GetType().GetProperty("ParameterName")?.GetValue(child)?.ToString() ?? "";
+                    if (!string.IsNullOrEmpty(param_name) && param_name != "?")
+                    {
+                        real_parameters.Add(child);
+                    }
+
+                    var param_children = Get_Children(child);
+                    if (param_children.Count > 0 && body_node == null)
+                    {
+                        body_node = param_children[0];
+                    }
+                }
+
+                if (real_parameters.Count > 0)
+                {
+                    output.AppendText(name_indent + "├── parameters:\n");
+                    string param_indent = name_indent + "│   ";
+
+                    for (int i = 0; i < real_parameters.Count; i++)
+                    {
+                        bool is_last_param = (i == real_parameters.Count - 1);
+                        Print_Param_Node(output, real_parameters[i], param_indent, is_last_param);
+                    }
+                }
+
+                if (body_node != null)
+                {
+                    string body_prefix = (real_parameters.Count > 0) ? "└── " : "├── ";
+                    output.AppendText(name_indent + body_prefix + "MacrosBody:\n");
+                    Print_Body_Node(output, body_node, name_indent + "    ", true);
+                }
+                else if (real_parameters.Count == 0 && children.Count > 0)
+                {
+                    output.AppendText(name_indent + "└── MacrosBody:\n");
+                    Print_Body_Node(output, children[0], name_indent + "    ", true);
+                }
+            }
+            else
+            {
+                output.AppendText(name_indent + "└── MacrosBody:\n");
+                output.AppendText(name_indent + "    (empty)\n");
+            }
+        }
+
+        private void Print_Param_Node(RichTextBox output, object node, string indent, bool is_last)
+        {
+            string param_name = node.GetType().GetProperty("ParameterName")?.GetValue(node)?.ToString() ?? "?";
+
+            if (param_name == "?" || string.IsNullOrEmpty(param_name))
+            {
+                return;
+            }
+
+            string prefix = is_last ? "└── " : "├── ";
+            output.AppendText(indent + prefix + "ParamNode\n");
+
+            string name_indent = indent + (is_last ? "    " : "│   ");
+            output.AppendText(name_indent + "└── name: \"" + param_name + "\"\n");
+        }
+
+        private void Print_Body_Node(RichTextBox output, object node, string indent, bool is_last)
+        {
+            if (node == null) return;
+
+            string node_type = node.GetType().GetProperty("Type")?.GetValue(node)?.ToString() ?? "Unknown";
+
+            switch (node_type)
+            {
+                case "OP":
+                    output.AppendText(indent + "OpNode\n");
+                    string operator_token = node.GetType().GetProperty("Operator")?.GetValue(node)?.ToString() ?? "?";
+
+                    string op_indent = indent + "    ";
+                    output.AppendText(op_indent + "├── operator: \"" + operator_token + "\"\n");
+
+                    var children = Get_Children(node);
+                    for (int i = 0; i < children.Count; i++)
+                    {
+                        Print_Expression_Node(output, children[i], op_indent, i == children.Count - 1);
+                    }
+                    break;
+
+                default:
+                    Print_Expression_Node(output, node, indent, is_last);
+                    break;
+            }
+        }
+
+        private void Print_Expression_Node(RichTextBox output, object node, string indent, bool is_last)
+        {
+            if (node == null) return;
+
+            string node_type = node.GetType().GetProperty("Type")?.GetValue(node)?.ToString() ?? "Unknown";
+            string prefix = is_last ? "└── " : "├── ";
+
+            switch (node_type)
+            {
+                case "OP":
+                    output.AppendText(indent + prefix + "OpNode\n");
+                    string operator_token = node.GetType().GetProperty("Operator")?.GetValue(node)?.ToString() ?? "?";
+
+                    string op_indent = indent + (is_last ? "    " : "│   ");
+                    output.AppendText(op_indent + "├── operator: \"" + operator_token + "\"\n");
+
+                    var children = Get_Children(node);
+                    for (int i = 0; i < children.Count; i++)
+                    {
+                        Print_Expression_Node(output, children[i], op_indent, i == children.Count - 1);
+                    }
+                    break;
+
+                case "Variable":
+                    output.AppendText(indent + prefix + "VariableNode\n");
+                    string var_name = node.GetType().GetProperty("Name")?.GetValue(node)?.ToString() ?? "?";
+
+                    string var_indent = indent + (is_last ? "    " : "│   ");
+                    output.AppendText(var_indent + "└── name: \"" + var_name + "\"\n");
+                    break;
+
+                case "Number":
+                    output.AppendText(indent + prefix + "NumberNode\n");
+                    int value = (int)(node.GetType().GetProperty("Value")?.GetValue(node) ?? 0);
+
+                    string num_indent = indent + (is_last ? "    " : "│   ");
+                    output.AppendText(num_indent + "└── value: " + value + "\n");
+                    break;
+            }
+        }
+
+
+        public void AST_Graphic(string text)
         {
             (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(text);
             (string[] tokens, int[] codes, int[] lines, int[] pos) = Space_Clean(tokens_all, codes_all, lines_all, positions);
