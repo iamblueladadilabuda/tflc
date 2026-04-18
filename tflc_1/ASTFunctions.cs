@@ -45,6 +45,7 @@ namespace tflc_1
             {
                 case "Define":
                     output.AppendText("Macros\n");
+                    output.AppendText("├── Define: #define\n");
                     var children = Get_Children(node);
                     for (int i = 0; i < children.Count; i++)
                     {
