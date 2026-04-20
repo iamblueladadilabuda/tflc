@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 
 namespace tflc_1
@@ -74,6 +75,8 @@ namespace tflc_1
             richTextBox.AllowDrop = true;
             richTextBox.DragEnter += Compiler_DragEnter;
             richTextBox.DragDrop += Compiler_DragDrop;
+
+            Change_Theme(Color.FromArgb(32, 32, 32), Color.White);
 
             Condition_Text("app_open", null);
         }
@@ -572,6 +575,158 @@ namespace tflc_1
             richTextBox.Text = update;
         }
 
+
+        private void white_theme1_Click(object sender, EventArgs e) => Change_Theme(SystemColors.Control, Color.Black);
+        private void dark_theme1_Click(object sender, EventArgs e) => Change_Theme(Color.FromArgb(32, 32, 32), Color.White);
+
+        private void Change_Theme(Color theme_color, Color font_color)
+        {
+            Color cell_color = theme_color;
+
+            if (font_color == Color.White)
+            {
+                numberBox.BackColor = Color.FromArgb(45, 45, 48);
+                richTextBox.BackColor = Color.FromArgb(45, 45, 48);
+                yes.BackColor = Color.FromArgb(60, 60, 60);
+                no.BackColor = Color.FromArgb(60, 60, 60);
+                cell_color = Color.FromArgb(45, 45, 48);
+            }
+            else
+            {
+                numberBox.BackColor = Color.White;
+                richTextBox.BackColor = Color.White;
+                yes.BackColor = Color.White;
+                no.BackColor = Color.White;
+                cell_color = Color.White;
+            }
+
+            BackColor = theme_color;
+            menuStrip1.BackColor = theme_color;
+            menuStrip2.BackColor = theme_color;
+            menuStrip3.BackColor = theme_color;
+            table.BackgroundColor = theme_color;
+
+            table_functions.Set_Theme(cell_color);
+
+            table.ColumnHeadersDefaultCellStyle.BackColor = cell_color;
+            table.ColumnHeadersDefaultCellStyle.ForeColor = font_color;
+            table.EnableHeadersVisualStyles = false;
+
+            foreach (DataGridViewColumn column in table.Columns)
+            {
+                column.DefaultCellStyle.BackColor = cell_color;
+                column.DefaultCellStyle.ForeColor = font_color;
+            }
+
+            file1.BackColor = theme_color;
+            create1.BackColor = theme_color;
+            open1.BackColor = theme_color;
+            save1.BackColor = theme_color;
+            saveHow1.BackColor = theme_color;
+            settings1.BackColor = theme_color;
+            quit1.BackColor = theme_color;
+
+            language1.BackColor = theme_color;
+            font1.BackColor = theme_color;
+            theme1.BackColor = theme_color;
+
+            rusLan1.BackColor = theme_color;
+            enLan1.BackColor = theme_color;
+            kazLan1.BackColor = theme_color;
+
+            fontSizes1.BackColor = theme_color;
+
+            white_theme1.BackColor = theme_color;
+            dark_theme1.BackColor = theme_color;
+
+            cancel1.BackColor = theme_color;
+            return1.BackColor = theme_color;
+            cut1.BackColor = theme_color;
+            copy1.BackColor = theme_color;
+            enter1.BackColor = theme_color;
+            delete1.BackColor = theme_color;
+            select1.BackColor = theme_color;
+
+            settingTask1.BackColor = theme_color;
+            grammar1.BackColor = theme_color;
+            grammerClassification1.BackColor = theme_color;
+            methodAnalyze1.BackColor = theme_color;
+            example1.BackColor = theme_color;
+            literature1.BackColor = theme_color;
+            code1.BackColor = theme_color;
+
+            scaner_button.BackColor = theme_color;
+            parser_button.BackColor = theme_color;
+            tetrad_button.BackColor = theme_color;
+            polis_button.BackColor = theme_color;
+
+            string this_tool = files.ElementAt(file_idx).Item1[0];
+            foreach (ToolStripMenuItem item in menuStrip3.Items)
+            {
+                if (item.Text == this_tool)
+                {
+                    item.BackColor = Color.CornflowerBlue;
+                }
+                else
+                {
+                    item.BackColor = theme_color;
+                }
+            }
+
+            ForeColor = font_color;
+            menuStrip1.ForeColor = font_color;
+            menuStrip3.ForeColor = font_color;
+            numberBox.ForeColor = font_color;
+            richTextBox.ForeColor = font_color;
+            file1.ForeColor = font_color;
+            correction1.ForeColor = font_color;
+            text1.ForeColor = font_color;
+            start1.ForeColor = font_color;
+            table.ForeColor = font_color;
+
+            create1.ForeColor = font_color;
+            open1.ForeColor = font_color;
+            save1.ForeColor = font_color;
+            saveHow1.ForeColor = font_color;
+            settings1.ForeColor = font_color;
+            quit1.ForeColor = font_color;
+
+            language1.ForeColor = font_color;
+            font1.ForeColor = font_color;
+            theme1.ForeColor = font_color;
+
+            rusLan1.ForeColor = font_color;
+            enLan1.ForeColor = font_color;
+            kazLan1.ForeColor = font_color;
+
+            fontSizes1.ForeColor = font_color;
+
+            white_theme1.ForeColor = font_color;
+            dark_theme1.ForeColor = font_color;
+
+            cancel1.ForeColor = font_color;
+            return1.ForeColor = font_color;
+            cut1.ForeColor = font_color;
+            copy1.ForeColor = font_color;
+            enter1.ForeColor = font_color;
+            delete1.ForeColor = font_color;
+            select1.ForeColor = font_color;
+
+            settingTask1.ForeColor = font_color;
+            grammar1.ForeColor = font_color;
+            grammerClassification1.ForeColor = font_color;
+            methodAnalyze1.ForeColor = font_color;
+            example1.ForeColor = font_color;
+            literature1.ForeColor = font_color;
+            code1.ForeColor = font_color;
+
+            scaner_button.ForeColor = font_color;
+            parser_button.ForeColor = font_color;
+            tetrad_button.ForeColor = font_color;
+            polis_button.ForeColor = font_color;
+        }
+
+
         private void rusLan1_Click(object sender, EventArgs e) => Change_Language(1);
         private void enLan1_Click(object sender, EventArgs e) => Change_Language(2);
         private void kazLan1_Click(object sender, EventArgs e) => Change_Language(3);
@@ -652,6 +807,9 @@ namespace tflc_1
             parser_button.Text = language[35];
             tetrad_button.Text = language[36];
             polis_button.Text = language[37];
+            theme1.Text = language[38];
+            white_theme1.Text = language[39];
+            dark_theme1.Text = language[40];
         }
 
         private void Condition_Text(string type, string param)

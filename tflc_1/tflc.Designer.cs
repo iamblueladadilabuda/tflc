@@ -103,6 +103,9 @@
             this.condition = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.theme1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.white_theme1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.dark_theme1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -128,12 +131,13 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(40, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(760, 31);
+            this.menuStrip1.Size = new System.Drawing.Size(760, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // file1
             // 
+            this.file1.BackColor = System.Drawing.SystemColors.Control;
             this.file1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.create1,
             this.open1,
@@ -148,28 +152,28 @@
             // create1
             // 
             this.create1.Name = "create1";
-            this.create1.Size = new System.Drawing.Size(216, 30);
+            this.create1.Size = new System.Drawing.Size(247, 30);
             this.create1.Text = "Создать";
             this.create1.Click += new System.EventHandler(this.create1_Click);
             // 
             // open1
             // 
             this.open1.Name = "open1";
-            this.open1.Size = new System.Drawing.Size(216, 30);
+            this.open1.Size = new System.Drawing.Size(247, 30);
             this.open1.Text = "Открыть";
             this.open1.Click += new System.EventHandler(this.open1_Click);
             // 
             // save1
             // 
             this.save1.Name = "save1";
-            this.save1.Size = new System.Drawing.Size(216, 30);
+            this.save1.Size = new System.Drawing.Size(247, 30);
             this.save1.Text = "Сохранить";
             this.save1.Click += new System.EventHandler(this.save1_Click);
             // 
             // saveHow1
             // 
             this.saveHow1.Name = "saveHow1";
-            this.saveHow1.Size = new System.Drawing.Size(216, 30);
+            this.saveHow1.Size = new System.Drawing.Size(247, 30);
             this.saveHow1.Text = "Сохранить как";
             this.saveHow1.Click += new System.EventHandler(this.saveHow1_Click);
             // 
@@ -177,9 +181,10 @@
             // 
             this.settings1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.language1,
-            this.font1});
+            this.font1,
+            this.theme1});
             this.settings1.Name = "settings1";
-            this.settings1.Size = new System.Drawing.Size(216, 30);
+            this.settings1.Size = new System.Drawing.Size(247, 30);
             this.settings1.Text = "Настройки";
             // 
             // language1
@@ -189,7 +194,7 @@
             this.enLan1,
             this.kazLan1});
             this.language1.Name = "language1";
-            this.language1.Size = new System.Drawing.Size(227, 30);
+            this.language1.Size = new System.Drawing.Size(247, 30);
             this.language1.Text = "Язык";
             // 
             // rusLan1
@@ -218,7 +223,7 @@
             this.font1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fontSizes1});
             this.font1.Name = "font1";
-            this.font1.Size = new System.Drawing.Size(227, 30);
+            this.font1.Size = new System.Drawing.Size(247, 30);
             this.font1.Text = "Размер шрифта";
             // 
             // fontSizes1
@@ -230,7 +235,7 @@
             // quit1
             // 
             this.quit1.Name = "quit1";
-            this.quit1.Size = new System.Drawing.Size(216, 30);
+            this.quit1.Size = new System.Drawing.Size(247, 30);
             this.quit1.Text = "Выход";
             this.quit1.Click += new System.EventHandler(this.quit1_Click);
             // 
@@ -245,7 +250,7 @@
             this.delete1,
             this.select1});
             this.correction1.Name = "correction1";
-            this.correction1.Size = new System.Drawing.Size(83, 27);
+            this.correction1.Size = new System.Drawing.Size(83, 29);
             this.correction1.Text = "Правка";
             // 
             // cancel1
@@ -308,7 +313,7 @@
             this.literature1,
             this.code1});
             this.text1.Name = "text1";
-            this.text1.Size = new System.Drawing.Size(67, 27);
+            this.text1.Size = new System.Drawing.Size(67, 29);
             this.text1.Text = "Текст";
             // 
             // settingTask1
@@ -375,35 +380,35 @@
             // scaner_button
             // 
             this.scaner_button.Name = "scaner_button";
-            this.scaner_button.Size = new System.Drawing.Size(247, 30);
+            this.scaner_button.Size = new System.Drawing.Size(167, 30);
             this.scaner_button.Text = "Лексер";
             this.scaner_button.Click += new System.EventHandler(this.scaner_button_Click);
             // 
             // parser_button
             // 
             this.parser_button.Name = "parser_button";
-            this.parser_button.Size = new System.Drawing.Size(247, 30);
+            this.parser_button.Size = new System.Drawing.Size(167, 30);
             this.parser_button.Text = "Парсер";
             this.parser_button.Click += new System.EventHandler(this.parser_button_Click);
             // 
             // tetrad_button
             // 
             this.tetrad_button.Name = "tetrad_button";
-            this.tetrad_button.Size = new System.Drawing.Size(247, 30);
+            this.tetrad_button.Size = new System.Drawing.Size(167, 30);
             this.tetrad_button.Text = "Тетрады";
             this.tetrad_button.Click += new System.EventHandler(this.tetrad_button_Click);
             // 
             // polis_button
             // 
             this.polis_button.Name = "polis_button";
-            this.polis_button.Size = new System.Drawing.Size(247, 30);
+            this.polis_button.Size = new System.Drawing.Size(167, 30);
             this.polis_button.Text = "ПОЛИЗ";
             this.polis_button.Click += new System.EventHandler(this.polis_button_Click);
             // 
             // help1
             // 
             this.help1.Name = "help1";
-            this.help1.Size = new System.Drawing.Size(92, 27);
+            this.help1.Size = new System.Drawing.Size(92, 29);
             this.help1.Text = "Справка";
             this.help1.Click += new System.EventHandler(this.help1_Click);
             // 
@@ -425,9 +430,9 @@
             this.delete2,
             this.select2,
             this.help2});
-            this.menuStrip2.Location = new System.Drawing.Point(40, 31);
+            this.menuStrip2.Location = new System.Drawing.Point(40, 33);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(760, 38);
+            this.menuStrip2.Size = new System.Drawing.Size(760, 40);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -566,9 +571,9 @@
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 73);
+            this.panel2.Location = new System.Drawing.Point(760, 79);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 436);
+            this.panel2.Size = new System.Drawing.Size(40, 430);
             this.panel2.TabIndex = 4;
             // 
             // panel7
@@ -705,9 +710,9 @@
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
+            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(760, 4);
+            this.menuStrip3.Size = new System.Drawing.Size(760, 6);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -773,7 +778,7 @@
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 222);
+            this.panel5.Location = new System.Drawing.Point(0, 216);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(720, 174);
             this.panel5.TabIndex = 8;
@@ -783,16 +788,40 @@
             this.panel6.Controls.Add(this.panel5);
             this.panel6.Controls.Add(this.panel3);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(40, 73);
+            this.panel6.Location = new System.Drawing.Point(40, 79);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(720, 396);
+            this.panel6.Size = new System.Drawing.Size(720, 390);
             this.panel6.TabIndex = 9;
+            // 
+            // theme1
+            // 
+            this.theme1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.white_theme1,
+            this.dark_theme1});
+            this.theme1.Name = "theme1";
+            this.theme1.Size = new System.Drawing.Size(247, 30);
+            this.theme1.Text = "Тема";
+            // 
+            // white_theme1
+            // 
+            this.white_theme1.Name = "white_theme1";
+            this.white_theme1.Size = new System.Drawing.Size(247, 30);
+            this.white_theme1.Text = "Светлая";
+            this.white_theme1.Click += new System.EventHandler(this.white_theme1_Click);
+            // 
+            // dark_theme1
+            // 
+            this.dark_theme1.Name = "dark_theme1";
+            this.dark_theme1.Size = new System.Drawing.Size(247, 30);
+            this.dark_theme1.Text = "Тёмная";
+            this.dark_theme1.Click += new System.EventHandler(this.dark_theme1_Click);
             // 
             // Compiler
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(800, 509);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
@@ -802,6 +831,7 @@
             this.Controls.Add(this.menuStrip2);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel1);
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Compiler";
@@ -909,6 +939,9 @@
         private System.Windows.Forms.ToolStripMenuItem parser_button;
         private System.Windows.Forms.ToolStripMenuItem tetrad_button;
         private System.Windows.Forms.ToolStripMenuItem polis_button;
+        private System.Windows.Forms.ToolStripMenuItem theme1;
+        private System.Windows.Forms.ToolStripMenuItem white_theme1;
+        private System.Windows.Forms.ToolStripMenuItem dark_theme1;
     }
 }
 

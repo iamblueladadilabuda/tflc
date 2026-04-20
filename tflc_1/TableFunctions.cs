@@ -12,6 +12,7 @@ namespace tflc_1
         private int table_count = 0;
         private int language = 1;
         private string unknown_token;
+        private Color theme = Color.FromArgb(32, 32, 32);
 
         public DataGridView Initialize_Table(DataGridView table, int lang, int choice)
         {
@@ -192,6 +193,11 @@ namespace tflc_1
             language = lang;
         }
 
+        public void Set_Theme(Color them)
+        {
+            theme = them;
+        }
+
 
         private void Column_Scaner(DataGridView table)
         {
@@ -288,6 +294,18 @@ namespace tflc_1
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
                 column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.DefaultCellStyle.BackColor = theme;
+                table.ColumnHeadersDefaultCellStyle.BackColor = theme;
+                if (theme == Color.FromArgb(32, 32, 32))
+                {
+                    column.DefaultCellStyle.ForeColor = Color.White;
+                    table.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+                }
+                else
+                {
+                    column.DefaultCellStyle.ForeColor = Color.Black;
+                    table.ColumnHeadersDefaultCellStyle.ForeColor = Color.Black;
+                }
                 column.HeaderText = col_text;
                 table.Columns.Add(column);
             }

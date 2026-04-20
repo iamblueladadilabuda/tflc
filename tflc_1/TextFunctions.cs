@@ -11,6 +11,7 @@ namespace tflc_1
     internal class TextFunctions
     {
         private const int HISTORY_SIZE = 10;
+        public bool remove = false;
 
         public int Get_Index(string[] history, int idx)
         {
@@ -21,16 +22,14 @@ namespace tflc_1
 
         public int Add_History(string[] history, string text, int idx)
         {
-            if (idx > history.Length) idx = HISTORY_SIZE;
-            int index = Get_Index(history, idx);
-
-            int ind = index;
-            if (index == 1) ind = 3;
-            if (index == 0) ind = 2;
-            if (text == history[ind - 2])
+            if (remove)
             {
+                remove = false;
                 return idx;
             }
+
+            if (idx > history.Length) idx = HISTORY_SIZE;
+            int index = Get_Index(history, idx);
 
             if (index == idx - 1 && idx == HISTORY_SIZE)
             {
@@ -42,7 +41,16 @@ namespace tflc_1
             }
             else
             {
-                if (!string.IsNullOrEmpty(text)) history[index] = text;
+                if (!string.IsNullOrEmpty(text))
+                {
+                    history[index] = text;
+                    for (int i = index + 1; i < HISTORY_SIZE; i++)
+                    {
+                        if (history[i] == null) break;
+                        history[i] = null;
+                    }
+                }
+
                 if (history[idx] != null && idx < HISTORY_SIZE - 1) idx += 1;
             }
 
@@ -51,6 +59,8 @@ namespace tflc_1
 
         public int Cancel(RichTextBox richTextBox, string[] history, int idx)
         {
+            remove = true;
+
             int index = Get_Index(history, idx);
 
             if (index > 1)
@@ -76,6 +86,7 @@ namespace tflc_1
 
         public int Repeat(RichTextBox richTextBox, string[] history, int idx)
         {
+            remove = true;
             int index = Get_Index(history, idx);
             if (idx + 1 < history.Length) idx += 1;
             if (history[index] != null) richTextBox.Text = history[index];

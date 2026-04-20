@@ -39,7 +39,14 @@ namespace tflc_1
                 {
                     end = 0;
                     richTextBox.SelectAll();
-                    richTextBox.SelectionColor = Color.Black;
+                    if (richTextBox.BackColor == SystemColors.Control)
+                    {
+                        richTextBox.SelectionColor = Color.Black;
+                    }  
+                    else
+                    {
+                        richTextBox.SelectionColor = Color.White;
+                    }  
                     richTextBox.Select(selection_start, selection_length);
                 }
             }

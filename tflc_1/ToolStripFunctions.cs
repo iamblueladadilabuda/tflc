@@ -51,7 +51,7 @@ namespace tflc_1
                 }
                 if (item.Text == prev_tool)
                 {
-                    item.BackColor = SystemColors.Control;
+                    item.BackColor = menuStrip.BackColor;
                 }
                 if (item.Text == new_tool)
                 {
