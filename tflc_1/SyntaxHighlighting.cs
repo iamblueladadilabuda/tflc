@@ -12,8 +12,6 @@ namespace tflc_1
 {
     internal class SyntaxHighlighting : ScanerFunctions
     {
-        private const string path_syntax = "txt/syntax/";
-        private string[] blue, violet;
         private string text = "";
         private int end = 0;
 
@@ -48,16 +46,9 @@ namespace tflc_1
 
             int is_updating = 0;
 
-            is_updating += Coloring(richTextBox, Color.Purple, Scaner_Array(richTextBox.Text, 2));
-            is_updating += Coloring(richTextBox, Color.DeepSkyBlue, Scaner_Array(richTextBox.Text, 3));
-            is_updating += Coloring(richTextBox, Color.YellowGreen, Scaner_Array(richTextBox.Text, 13));
-            is_updating += Coloring(richTextBox, Color.YellowGreen, Scaner_Array(richTextBox.Text, 15));
-
-            int func = Find_Functions(richTextBox, Color.Yellow);
-            if (func != -1) is_updating += func;
-
-            is_updating += Coloring(richTextBox, Color.Blue, blue);
-            is_updating += Coloring(richTextBox, Color.Purple, violet);
+            is_updating += Coloring(richTextBox, Color.DeepSkyBlue, Scaner_Array(richTextBox.Text, 1));
+            is_updating += Coloring(richTextBox, Color.YellowGreen, Scaner_Array(richTextBox.Text, 11));
+            is_updating += Coloring(richTextBox, Color.YellowGreen, Scaner_Array(richTextBox.Text, 12));
 
             if (is_updating != 0) end = text.Length;
 
@@ -73,12 +64,6 @@ namespace tflc_1
 
             richTextBox.Select(selection_start, selection_length);
             richTextBox.SelectionColor = richTextBox.ForeColor;
-        }
-
-        public void Syntax_Color()
-        {
-            blue = File.ReadAllLines(path_syntax + "blue.txt");
-            violet = File.ReadAllLines(path_syntax + "violet.txt");
         }
 
         private int Coloring(RichTextBox richTextBox, Color color, string[] colors)
@@ -127,70 +112,6 @@ namespace tflc_1
             }
 
             return array.ToArray();
-        }
-
-        private int Find_Functions(RichTextBox richTextBox, Color color)
-        {
-            string rb = richTextBox.Text;
-            if (rb.IndexOf('(') == -1 || rb.IndexOf(')') == -1) return -1;
-            if (Count_Staples(rb, '(') != Count_Staples(rb, ')')) return -1;
-
-            List<int> idx = new List<int>();
-            for (int i = rb.IndexOf('(', 0); rb.IndexOf('(', i) != -1;)
-            {
-                idx.Add(i);
-                i = rb.IndexOf("(", i + 1);
-                if (i == -1) break;
-            }
-
-            for (int i = idx.Count - 1; i >= 0; i--)
-            {
-                int idx_func = idx.ElementAt(i);
-                if (idx_func - 1 >= 0)
-                {
-                    idx_func -= 1;
-                    idx_func = Idx_Func(idx_func, rb, true);
-                    if (idx_func < 0) break;
-                    idx_func = Idx_Func(idx_func, rb, false);
-                    idx_func += 1;
-                }
-
-                richTextBox.Select(idx_func, idx.ElementAt(i) - idx_func);
-                richTextBox.SelectionColor = color;
-            }
-
-            return 1;
-        }
-
-        private int Count_Staples(string rb, char staple)
-        {
-            int count = -1;
-            for (int i = 0; rb.IndexOf(staple, i) != -1;)
-            {
-                count++;
-                i = rb.IndexOf(staple, i + 1);
-                if (i == -1) break;
-            }
-            return count;
-        }
-
-        private int Idx_Func(int idx_func, string rb, bool space)
-        {
-            while (char.IsWhiteSpace(rb[idx_func]) == space)
-            {
-                if (!space)
-                {
-                    if (!(char.IsLetterOrDigit(rb[idx_func]) ||
-                    rb[idx_func] == '-' ||
-                    rb[idx_func] == '_'))
-                        break;
-                }
-
-                idx_func--;
-                if (idx_func < 0) break;
-            }
-
-            return idx_func;
         }
     }
 }

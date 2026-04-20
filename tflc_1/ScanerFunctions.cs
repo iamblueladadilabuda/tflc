@@ -12,21 +12,18 @@ namespace tflc_1
         protected Dictionary<int, string> codes_value = new Dictionary<int, string>()
         {
             { -1, "ERROR" },
-            { 1, "OPERATOR" },
-            { 2, "KEYWORD" },
-            { 3, "IDENTIFIER" },
-            { 4, "SEPARATOR" },
-            { 5, "SEPARATOR" },
-            { 6, "SEPARATOR" },
+            { 1, "IDENTIFIER" },
+            { 2, "SEPARATOR" },
+            { 3, "SEPARATOR" },
+            { 4, "OPERATOR" },
+            { 5, "OPERATOR" },
+            { 6, "OPERATOR" },
             { 7, "OPERATOR" },
             { 8, "OPERATOR" },
-            { 9, "OPERATOR" },
-            { 10, "OPERATOR" },
-            { 11, "OPERATOR" },
-            { 12, "SEPARATOR" },
-            { 13, "INTEGER" },
-            { 14, "SEPARATOR" },
-            { 15, "DOUBLE" },
+            { 9, "SEPARATOR" },
+            { 10, "SEPARATOR" },
+            { 11, "INTEGER" },
+            { 12, "DOUBLE" },
         };
 
         protected (int[], string[], int[], int[]) Find_All_Tokens(RichTextBox richTextBox)
@@ -82,7 +79,7 @@ namespace tflc_1
                             }
                         }
 
-                        token_numbers.Add(3);
+                        token_numbers.Add(1);
                         token_all.Add(letter);
                         token_idx.Add(i - letter.Length + 2);
 
@@ -130,13 +127,13 @@ namespace tflc_1
 
                         if (digit.IndexOf('.') != -1)
                         {
-                            token_numbers.Add(15);
+                            token_numbers.Add(12);
                             token_all.Add(digit);
                             token_idx.Add(i - digit.Length + 2);
                         }
                         else
                         {
-                            token_numbers.Add(13);
+                            token_numbers.Add(11);
                             token_all.Add(digit);
                             token_idx.Add(i - digit.Length + 2);
                         }
@@ -144,49 +141,55 @@ namespace tflc_1
                         break;
 
                     case char _ when char.IsWhiteSpace(token):
-                        token_numbers.Add(14);
+                        token_numbers.Add(2);
                         token_all.Add("space");
                         token_idx.Add(i + 1);
                         break;
 
-                    case '(':
-                        token_numbers.Add(4);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
-                    case ')':
-                        token_numbers.Add(5);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
                     case ';':
-                        token_numbers.Add(6);
+                        token_numbers.Add(3);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
                     case '+':
-                        token_numbers.Add(8);
+                        token_numbers.Add(4);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
                     case '-':
-                        token_numbers.Add(9);
+                        token_numbers.Add(5);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
                     case '*':
-                        token_numbers.Add(10);
+                        token_numbers.Add(6);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;
 
                     case '/':
-                        token_numbers.Add(11);
+                        token_numbers.Add(7);
+                        token_all.Add(token.ToString());
+                        token_idx.Add(i + 1);
+                        break;
+
+                    case '%':
+                        token_numbers.Add(8);
+                        token_all.Add(token.ToString());
+                        token_idx.Add(i + 1);
+                        break;
+
+                    case '(':
+                        token_numbers.Add(9);
+                        token_all.Add(token.ToString());
+                        token_idx.Add(i + 1);
+                        break;
+
+                    case ')':
+                        token_numbers.Add(10);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;

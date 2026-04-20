@@ -13,7 +13,10 @@ C / C++
 	4. <mult> → ε | * <operand> <mult> | / <operand> <mult> | % <operand> <mult>
 	5. <operand> → <num> | <id> | ( <expression> )
 	6. <id> → letter {letter | digit | _}
-	7. <num> → digit-0 {digit}
+	7. <num> → <integer> | <double> 
+	8. <integer> → digit-0 <int> | 0
+	9. <int> → ε | digit <int>
+	10. <double> → <int> . <int>
 
 	letter → a..z A..Z
 	digit → 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
@@ -28,7 +31,7 @@ C / C++
 ![alt text](scaner.png)  
 
 ### Схема рекурсивного спуска
-![alt text](parser.png) 
+![alt text](parser.png)  
 
 ### Тестовые примеры работы лексера
 

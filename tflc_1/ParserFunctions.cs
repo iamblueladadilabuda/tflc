@@ -5,6 +5,7 @@ namespace tflc_1
 {
     internal class ParserFunctions : ScanerFunctions
     {
+
         /*private readonly List<string> arquments = new List<string>();
 
         private Dictionary<int, (int, string)> errors = new Dictionary<int, (int, string)>();

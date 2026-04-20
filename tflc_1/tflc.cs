@@ -25,10 +25,9 @@ namespace tflc_1
         private List<(string[], string[], int)> files = new List<(string[], string[], int)>();
         private bool closing = false, close_all = false, new_tool = true, escape = false, open_files = false;
         private readonly DataGridView table = new DataGridView();
-        private int width, height, his_idx = 1, file_idx = 0;
+        private int width, height, his_idx = 1, file_idx = 0, language = 1;
         private readonly SplitContainer splitContainer;
         private string buffer = "";
-        private int language = 1;
 
 
         public Compiler()
@@ -60,11 +59,9 @@ namespace tflc_1
                 menuStrip3.Items[0].BackColor = Color.CornflowerBlue;
             }
 
-            table = table_functions.Initialize_Table(1);
+            table = table_functions.Initialize_Table(table, 1, 0);
             panel5.Controls.Add(table);
             table.CellClick += table_CellClick;
-
-            syntax_highlighting.Syntax_Color();
 
             KeyPreview = true;
             KeyDown += new KeyEventHandler(Compiler_KeyDown);
@@ -157,14 +154,14 @@ namespace tflc_1
             Condition_Text("save_how", null);
         }
 
-        private void Start()
+        private void Start(int choice)
         {
             if (string.IsNullOrEmpty(richTextBox.Text)) return;
 
             table_functions.Clear_Table(table);
             table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
 
-            int errors_count = table_functions.Fill_Table(table, richTextBox);
+            int errors_count = table_functions.Fill_Table(choice, table, richTextBox);
             Condition_Text("parser", errors_count.ToString());
         }
 
@@ -218,7 +215,15 @@ namespace tflc_1
 
             DataGridViewRow row = table.Rows[e.RowIndex];
 
-            string line = row.Cells[3].Value.ToString();
+            int i = 0;
+            for (; i < row.Cells.Count; i++)
+            {
+                if (row.Cells[i].Value.ToString().StartsWith("строка")) break;
+                if (row.Cells[i].Value.ToString().StartsWith("line")) break;
+                if (row.Cells[i].Value.ToString().StartsWith("жол")) break;
+            }
+
+            string line = row.Cells[i].Value.ToString();
             if (line != "")
             {
                 int line_number = Convert.ToInt32(line.Split(',')[0].Split(' ')[1]) - 1;
@@ -322,7 +327,10 @@ namespace tflc_1
         private void save1_Click(object sender, EventArgs e) => Save();
         private void saveHow1_Click(object sender, EventArgs e) => Save_How();
         private void save2_Click(object sender, EventArgs e) => Save_How();
-        private void start1_Click(object sender, EventArgs e) => Start();
+        private void scaner_button_Click(object sender, EventArgs e) => Start(1);
+        private void parser_button_Click(object sender, EventArgs e) => Start(2);
+        private void tetrad_button_Click(object sender, EventArgs e) => Start(3);
+        private void polis_button_Click(object sender, EventArgs e) => Start(4);
         private void help1_Click(object sender, EventArgs e) => Help();
         private void help2_Click(object sender, EventArgs e) => Help();
 
@@ -389,14 +397,9 @@ namespace tflc_1
         {
             open_files = true;
 
-            Open("txt/tests/test-1.txt");
-            Open("txt/tests/test-2.txt");
-            Open("txt/tests/test-3.txt");
-            Open("txt/tests/test-4.txt");
-            Open("txt/tests/test-5.txt");
-            Open("txt/tests/test-6.txt");
+            Open("txt/tests/test.txt");
 
-            //syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
+            syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
             new_tool = false;
 
             open_files = false;
@@ -505,7 +508,7 @@ namespace tflc_1
                 numbering.Numbering_Lines(richTextBox, numberBox);
                 his_idx = text_functions.Add_History(files.ElementAt(file_idx).Item2, richTextBox.Text, his_idx);
 
-                //syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
+                syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
                 new_tool = false;
             }
         }
@@ -645,6 +648,10 @@ namespace tflc_1
             confirmation.Text = language[31];
             yes.Text = language[32];
             no.Text = language[33];
+            scaner_button.Text = language[34];
+            parser_button.Text = language[35];
+            tetrad_button.Text = language[36];
+            polis_button.Text = language[37];
         }
 
         private void Condition_Text(string type, string param)

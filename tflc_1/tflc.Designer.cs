@@ -60,6 +60,10 @@
             this.literature1 = new System.Windows.Forms.ToolStripMenuItem();
             this.code1 = new System.Windows.Forms.ToolStripMenuItem();
             this.start1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.scaner_button = new System.Windows.Forms.ToolStripMenuItem();
+            this.parser_button = new System.Windows.Forms.ToolStripMenuItem();
+            this.tetrad_button = new System.Windows.Forms.ToolStripMenuItem();
+            this.polis_button = new System.Windows.Forms.ToolStripMenuItem();
             this.help1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.create2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -124,7 +128,7 @@
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(40, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(760, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(760, 31);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -358,11 +362,43 @@
             // 
             // start1
             // 
+            this.start1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.scaner_button,
+            this.parser_button,
+            this.tetrad_button,
+            this.polis_button});
             this.start1.Image = ((System.Drawing.Image)(resources.GetObject("start1.Image")));
             this.start1.Name = "start1";
             this.start1.Size = new System.Drawing.Size(84, 27);
             this.start1.Text = "Пуск";
-            this.start1.Click += new System.EventHandler(this.start1_Click);
+            // 
+            // scaner_button
+            // 
+            this.scaner_button.Name = "scaner_button";
+            this.scaner_button.Size = new System.Drawing.Size(247, 30);
+            this.scaner_button.Text = "Лексер";
+            this.scaner_button.Click += new System.EventHandler(this.scaner_button_Click);
+            // 
+            // parser_button
+            // 
+            this.parser_button.Name = "parser_button";
+            this.parser_button.Size = new System.Drawing.Size(247, 30);
+            this.parser_button.Text = "Парсер";
+            this.parser_button.Click += new System.EventHandler(this.parser_button_Click);
+            // 
+            // tetrad_button
+            // 
+            this.tetrad_button.Name = "tetrad_button";
+            this.tetrad_button.Size = new System.Drawing.Size(247, 30);
+            this.tetrad_button.Text = "Тетрады";
+            this.tetrad_button.Click += new System.EventHandler(this.tetrad_button_Click);
+            // 
+            // polis_button
+            // 
+            this.polis_button.Name = "polis_button";
+            this.polis_button.Size = new System.Drawing.Size(247, 30);
+            this.polis_button.Text = "ПОЛИЗ";
+            this.polis_button.Click += new System.EventHandler(this.polis_button_Click);
             // 
             // help1
             // 
@@ -389,9 +425,9 @@
             this.delete2,
             this.select2,
             this.help2});
-            this.menuStrip2.Location = new System.Drawing.Point(40, 33);
+            this.menuStrip2.Location = new System.Drawing.Point(40, 31);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(760, 40);
+            this.menuStrip2.Size = new System.Drawing.Size(760, 38);
             this.menuStrip2.TabIndex = 1;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -530,9 +566,9 @@
             // panel2
             // 
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(760, 79);
+            this.panel2.Location = new System.Drawing.Point(760, 73);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 430);
+            this.panel2.Size = new System.Drawing.Size(40, 436);
             this.panel2.TabIndex = 4;
             // 
             // panel7
@@ -669,9 +705,9 @@
             this.menuStrip3.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip3.Location = new System.Drawing.Point(40, 73);
+            this.menuStrip3.Location = new System.Drawing.Point(40, 69);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(760, 6);
+            this.menuStrip3.Size = new System.Drawing.Size(760, 4);
             this.menuStrip3.TabIndex = 5;
             this.menuStrip3.Text = "menuStrip3";
             this.menuStrip3.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip3_ItemClicked);
@@ -737,7 +773,7 @@
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 216);
+            this.panel5.Location = new System.Drawing.Point(0, 222);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(720, 174);
             this.panel5.TabIndex = 8;
@@ -747,9 +783,9 @@
             this.panel6.Controls.Add(this.panel5);
             this.panel6.Controls.Add(this.panel3);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(40, 79);
+            this.panel6.Location = new System.Drawing.Point(40, 73);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(720, 390);
+            this.panel6.Size = new System.Drawing.Size(720, 396);
             this.panel6.TabIndex = 9;
             // 
             // Compiler
@@ -869,6 +905,10 @@
         private System.Windows.Forms.ToolStripMenuItem select2;
         private System.Windows.Forms.ToolStripMenuItem help2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ToolStripMenuItem scaner_button;
+        private System.Windows.Forms.ToolStripMenuItem parser_button;
+        private System.Windows.Forms.ToolStripMenuItem tetrad_button;
+        private System.Windows.Forms.ToolStripMenuItem polis_button;
     }
 }
 

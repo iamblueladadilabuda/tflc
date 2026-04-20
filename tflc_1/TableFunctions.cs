@@ -11,22 +11,29 @@ namespace tflc_1
         private string path;
         private int table_count = 0;
         private int language = 1;
-        private string des;
+        private string unknown_token;
 
-        public DataGridView Initialize_Table(int lang)
+        public DataGridView Initialize_Table(DataGridView table, int lang, int choice)
         {
-            DataGridView table = new DataGridView();
-
             language = lang;
-            string[] columns_text = { "№", "Путь", "Неверный фрагмент", "Позиция", "Описание" };
 
-            foreach (string col_text in columns_text)
+            switch (choice)
             {
-                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
-                column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderText = col_text;
-                table.Columns.Add(column);
+                case 1:
+                    Column_Scaner(table);
+                    break;
+
+                case 2:
+                    Column_Parser(table);
+                    break;
+
+                case 3:
+
+                    break;
+
+                case 4:
+
+                    break;
             }
 
             table.Dock = DockStyle.Fill;
@@ -50,11 +57,55 @@ namespace tflc_1
             table.Rows.Clear();
         }
 
-        public int Fill_Table(DataGridView table, RichTextBox richTextBox)
+        public int Fill_Table(int choice, DataGridView table, RichTextBox richTextBox)
         {
-            Column_Language(table);
+            switch (choice)
+            {
+                case 1:
+                    return Fill_Table_Scaner(table, richTextBox);
 
-            (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
+                case 2:
+                    Fill_Table_Parser(table, richTextBox);
+                    break;
+
+                case 3:
+
+                    break;
+
+                case 4:
+
+                    break;
+            }
+
+            return 0;
+        }
+
+        private int Fill_Table_Scaner(DataGridView table, RichTextBox richTextBox)
+        {
+            table_count = 0;
+            table = Initialize_Table(table, language, 1);
+
+            (int[] codes, string[] tokens, int[] lines, int[] pos) = Find_All_Tokens(richTextBox);
+            int error_count = 0;
+
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                if (codes[i] == -1) error_count++;
+                table.Rows.Add(++table_count, codes[i], codes_value[codes[i]], tokens[i], Get_Line(lines[i], pos[i]));
+            }
+
+            return error_count;
+        }
+
+        private int Fill_Table_Parser(DataGridView table, RichTextBox richTextBox)
+        {
+            table_count = 0;
+            table = Initialize_Table(table, language, 2);
+            return 0;
+
+            //Column_Language(table);
+
+            /*(int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
 
             (string[] tokens, int[] codes, int[] lines, int[] pos) = Space_Clean(tokens_all, codes_all, lines_all, positions);
             Dictionary<int, (int, string)> errors = Parser(tokens, codes, language);
@@ -104,7 +155,17 @@ namespace tflc_1
                 }
             }
 
-            return errors.Count;
+            return errors.Count;*/
+        }
+
+        private int Fill_Table_Tetrad(DataGridView table, RichTextBox richTextBox)
+        {
+            return 0;
+        }
+
+        private int Fill_Table_POLIS(DataGridView table, RichTextBox richTextBox)
+        {
+            return 0;
         }
 
         private string Get_Line(int line, int idx)
@@ -131,7 +192,48 @@ namespace tflc_1
             language = lang;
         }
 
-        private void Column_Language(DataGridView table)
+
+        private void Column_Scaner(DataGridView table)
+        {
+            string[] columns_text = new string[5];
+
+            switch (language)
+            {
+                case 1:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Условный код";
+                    columns_text[2] = "Тип лексемы";
+                    columns_text[3] = "Лексема";
+                    columns_text[4] = "Местоположение";
+
+                    break;
+
+                case 2:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Conditional code";
+                    columns_text[2] = "Type of token";
+                    columns_text[3] = "Token";
+                    columns_text[4] = "Line";
+
+                    break;
+
+                case 3:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Шартты код";
+                    columns_text[2] = "Лексема түрі";
+                    columns_text[3] = "Лексема";
+                    columns_text[4] = "Сызық";
+
+                    break;
+            }
+
+            Create_Column(table, columns_text);
+        }
+
+        private void Column_Parser(DataGridView table)
         {
             string[] columns_text = new string[5];
 
@@ -145,7 +247,7 @@ namespace tflc_1
                     columns_text[3] = "Позиция";
                     columns_text[4] = "Описание";
 
-                    des = "Неизвестный токен";
+                    unknown_token = "Неизвестный токен";
 
                     break;
 
@@ -157,7 +259,7 @@ namespace tflc_1
                     columns_text[3] = "Line";
                     columns_text[4] = "Description";
 
-                    des = "Unknown token";
+                    unknown_token = "Unknown token";
 
                     break;
 
@@ -169,12 +271,18 @@ namespace tflc_1
                     columns_text[3] = "Сызық";
                     columns_text[4] = "Сипаттамасы";
 
-                    des = "Белгісіз белгі";
+                    unknown_token = "Белгісіз белгі";
 
                     break;
             }
 
+            Create_Column(table, columns_text);
+        }
+
+        private void Create_Column(DataGridView table, string[] columns_text)
+        {
             table.Columns.Clear();
+
             foreach (string col_text in columns_text)
             {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
