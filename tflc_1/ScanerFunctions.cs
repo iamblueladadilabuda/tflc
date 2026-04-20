@@ -67,12 +67,6 @@ namespace tflc_1
 
                 switch (token)
                 {
-                    case '#':
-                        token_numbers.Add(1);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break; 
-
                     case char _ when char.IsLetter(token):
 
                         string letter = token.ToString();
@@ -88,18 +82,9 @@ namespace tflc_1
                             }
                         }
 
-                        if (letter == "define")
-                        {
-                            token_numbers.Add(2);
-                            token_all.Add(letter);
-                            token_idx.Add(i - letter.Length + 2);
-                        }
-                        else
-                        {
-                            token_numbers.Add(3);
-                            token_all.Add(letter);
-                            token_idx.Add(i - letter.Length + 2);
-                        }
+                        token_numbers.Add(3);
+                        token_all.Add(letter);
+                        token_idx.Add(i - letter.Length + 2);
 
                         break;
 
@@ -182,12 +167,6 @@ namespace tflc_1
                         token_idx.Add(i + 1);
                         break;
 
-                    case '=':
-                        token_numbers.Add(7);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
                     case '+':
                         token_numbers.Add(8);
                         token_all.Add(token.ToString());
@@ -208,12 +187,6 @@ namespace tflc_1
 
                     case '/':
                         token_numbers.Add(11);
-                        token_all.Add(token.ToString());
-                        token_idx.Add(i + 1);
-                        break;
-
-                    case ',':
-                        token_numbers.Add(12);
                         token_all.Add(token.ToString());
                         token_idx.Add(i + 1);
                         break;

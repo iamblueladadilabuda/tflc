@@ -51,6 +51,10 @@ namespace tflc_1
                 string filename = "", text = "";
                 OpenFileDialog openFileDialog = new OpenFileDialog();
 
+                string base_directory = AppDomain.CurrentDomain.BaseDirectory;
+                openFileDialog.InitialDirectory = Path.Combine(base_directory, "txt", "tests");
+                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+
                 if (openFileDialog.ShowDialog(form) == DialogResult.OK)
                 {
                     text = File.ReadAllText(openFileDialog.FileName);

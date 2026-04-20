@@ -394,8 +394,9 @@ namespace tflc_1
             Open("txt/tests/test-3.txt");
             Open("txt/tests/test-4.txt");
             Open("txt/tests/test-5.txt");
+            Open("txt/tests/test-6.txt");
 
-            syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
+            //syntax_highlighting.Syntax_Highlighting(richTextBox, new_tool);
             new_tool = false;
 
             open_files = false;

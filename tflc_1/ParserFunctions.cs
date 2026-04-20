@@ -1,20 +1,11 @@
-﻿using Microsoft.SqlServer.Server;
-using System;
-using System.CodeDom;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Hosting;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace tflc_1
 {
     internal class ParserFunctions : ScanerFunctions
     {
-        private readonly List<string> arquments = new List<string>();
+        /*private readonly List<string> arquments = new List<string>();
 
         private Dictionary<int, (int, string)> errors = new Dictionary<int, (int, string)>();
         private int count_errors = -1;
@@ -170,6 +161,14 @@ namespace tflc_1
             string[] ends_2 = { id_code.ToString() };
             int[] choices_2 = { 2 };
             i = Airon_Method(tokens, codes, i, "define", ends_2, choices_2);
+
+            if (i + 2 < tokens.Length)
+            {
+                if (tokens[i + 1] != "(")
+                {
+                    if (tokens[i + 2] == "(") i += 1;
+                }
+            }
 
             return i;
         }
@@ -932,6 +931,6 @@ namespace tflc_1
                     errors.Add(++count_errors, (i, $"Жетіспейді \")\""));
                     break;
             }
-        }
+        }*/
     }
 }
