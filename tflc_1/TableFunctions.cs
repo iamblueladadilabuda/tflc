@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace tflc_1
@@ -66,19 +67,17 @@ namespace tflc_1
                     return Fill_Table_Scaner(table, richTextBox);
 
                 case 2:
-                    Fill_Table_Parser(table, richTextBox);
-                    break;
+                    return Fill_Table_Parser(table, richTextBox);
 
                 case 3:
-
-                    break;
+                    return Fill_Table_Tetrad(table, richTextBox);
 
                 case 4:
+                    return Fill_Table_POLIS(table, richTextBox);
 
-                    break;
+                default:
+                    return 0;
             }
-
-            return 0;
         }
 
         private int Fill_Table_Scaner(DataGridView table, RichTextBox richTextBox)
@@ -102,11 +101,8 @@ namespace tflc_1
         {
             table_count = 0;
             table = Initialize_Table(table, language, 2);
-            return 0;
 
-            //Column_Language(table);
-
-            /*(int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
+            (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
 
             (string[] tokens, int[] codes, int[] lines, int[] pos) = Space_Clean(tokens_all, codes_all, lines_all, positions);
             Dictionary<int, (int, string)> errors = Parser(tokens, codes, language);
@@ -134,29 +130,11 @@ namespace tflc_1
             {
                 (int i, string description) = errors[j];
 
-                if (j > 0)
-                {
-                    if (Get_Line(lines[i], pos[i]) == line)
-                    {
-                        continue;
-                    }
-                }
-
                 line = Get_Line(lines[i], pos[i]);
-
-                if (description.StartsWith(des))
-                {
-                    string token = description.Split('"')[1];
-                    table.Rows.Add(++table_count, path, token, line, description);
-                }
-                else
-                {
-                    
-                    table.Rows.Add(++table_count, path, tokens[i], line, description);
-                }
+                table.Rows.Add(++table_count, path, tokens[i], line, description);
             }
 
-            return errors.Count;*/
+            return errors.Count;
         }
 
         private int Fill_Table_Tetrad(DataGridView table, RichTextBox richTextBox)

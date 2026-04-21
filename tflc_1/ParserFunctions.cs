@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 
 namespace tflc_1
 {
     internal class ParserFunctions : ScanerFunctions
     {
-
-
-        /*private readonly List<string> arquments = new List<string>();
-
         private Dictionary<int, (int, string)> errors = new Dictionary<int, (int, string)>();
         private int count_errors = -1;
 
-        private int id_code = 3;
-        private int int_code = 13;
-        private int double_code = 15;
+        private int id_code = 1;
+        private int int_code = 11;
+        private int double_code = 12;
 
         private int language = 1;
-
-        private int balance = 0;
-        private bool is_end = false, can_write_er = true;
 
         protected Dictionary<int, (int, string)> Parser(string[] tokens, int[] codes, int lang)
         {
@@ -34,14 +28,10 @@ namespace tflc_1
 
             while (i < tokens.Length)
             {
-                balance = 0;
-                is_end = false;
-                can_write_er = true;
-                arquments.Clear();
+                i = Expression(tokens, codes, i);
 
-                i = Macros(tokens, codes, i);
-
-                if (Is_End(tokens.Length, i)) return errors;
+                int end = i;
+                if (end >= tokens.Length) end = tokens.Length - 1;
             }
 
             return errors;
@@ -77,331 +67,115 @@ namespace tflc_1
             }
         }
 
-        private int Macros(string[] tokens, int[] codes, int i)
-        {
-            if (tokens[i] == ")")
-            {
-                if (can_write_er)
-                {
-                    Add_Error(tokens[i], "#", i, "token");
-                    balance--;
-                }
-                can_write_er = false;
-                i += 1;
-            }
-
-            i = Start(tokens, codes, i);
-            if (Is_End(tokens.Length, i) || Is_Semicolon_Point(tokens, i) || is_end)
-            {
-                return i + 1;
-            }
-
-            balance = 1000;
-
-            i = Function_Call(tokens, codes, i);
-            if (Is_End(tokens.Length, i) || Is_Semicolon_Point(tokens, i) || is_end)
-            {
-                return i + 1;
-            }
-
-            balance = 0;
-
-            i = Expression(tokens, codes, i);
-
-            if (balance > 0)
-            {
-                if (can_write_er)
-                {
-                    if (i >= tokens.Length) Add_Error(")", ")", tokens.Length - 1, "bracket_end");
-                    else Add_Error(")", ")", i, "bracket_end");
-                }  
-            }
-
-            if (Is_End(tokens.Length, i))
-            {
-                if (can_write_er) Add_Error(";", ";", tokens.Length - 1, "end");
-                return i;
-            }
-
-            i = Error_Token(tokens, codes, i);
-            if (Is_End(tokens.Length, i)) return i;
-
-            if (Is_Correct_Token(tokens, codes, i, ";", false)) return i + 1;
-
-            string err = "";
-            while (tokens[i] != ";")
-            {
-                err += tokens[i];
-                i += 1;
-                if (i >= tokens.Length)
-                {
-                    if (can_write_er) Add_Error(err, ";", tokens.Length - 1, "token");
-                    return i;
-                }
-            }
-
-            if (can_write_er)
-            {
-                if (i >= tokens.Length) Add_Error(err, ";", tokens.Length - 1, "token");
-                else Add_Error(err, ";", i, "token");
-            }   
-
-            return i + 1;
-        }
-
-        private int Start(string[] tokens, int[] codes, int i)
-        {
-            string[] ends_1 = { "define", id_code.ToString() };
-            int[] choices_1 = { 1, 2 };
-            i = Error_Token(tokens, codes, i);
-            int prev_i = i;
-            i = Airon_Method(tokens, codes, i, "#", ends_1, choices_1);
-
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-
-            string[] ends_2 = { id_code.ToString() };
-            int[] choices_2 = { 2 };
-            i = Airon_Method(tokens, codes, i, "define", ends_2, choices_2);
-
-            if (i + 2 < tokens.Length)
-            {
-                if (tokens[i + 1] != "(")
-                {
-                    if (tokens[i + 2] == "(") i += 1;
-                }
-            }
-
-            return i;
-        }
-
-        private int Function_Call(string[] tokens, int[] codes, int i)
-        {
-            string[] ends_1 = { "(", ",", ")" };
-            int[] choices_1 = { 4, 4, 4 };
-            i = Airon_Method(tokens, codes, i, id_code.ToString(), ends_1, choices_1);
-
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-
-            i = List_Param(tokens, codes, i);
-
-            return i;
-        }
-
-        private int List_Param(string[] tokens, int[] codes, int i)
-        {
-            string[] ends_1 = { ")", id_code.ToString(), "," };
-            int[] choices_1 = { 1, 2, 1 };
-            i = Airon_Method(tokens, codes, i, "(", ends_1, choices_1);
-
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-            if (tokens[i] == ")")
-            {
-                Balance_Bracket(tokens[i], i);
-                return i + 1;
-            }
-
-            string[] ends_2 = { ")", "," };
-            int[] choices_2 = { 4, 4 };
-            i = Airon_Method(tokens, codes, i, id_code.ToString(), ends_2, choices_2);
-
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-
-            return Parameters(tokens, codes, i);
-        }
-
-        private int Parameters(string[] tokens, int[] codes, int i)
-        {
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-            if (tokens[i] == ")")
-            {
-                Balance_Bracket(tokens[i], i);
-                return i + 1;
-            }
-
-            string[] ends_1 = { id_code.ToString(), ")" };
-            int[] choices_1 = { 2, 1 };
-            i = Airon_Method(tokens, codes, i, ",", ends_1, choices_1);
-
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-
-            string[] ends_2 = { ")", "," };
-            int[] choices_2 = { 4, 4 };
-            i = Airon_Method(tokens, codes, i, id_code.ToString(), ends_2, choices_2);
-
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-
-            return Parameters(tokens, codes, i);
-        }
-
         private int Expression(string[] tokens, int[] codes, int i)
         {
-            string[] ends_1 = { id_code.ToString(), int_code.ToString(), double_code.ToString(), "(", ")" };
-            int[] choices_1 = { 2, 2, 2, 1, 1 };
-            i = Airon_Method(tokens, codes, i, "(", ends_1, choices_1);
-
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
-
             i = Error_Token(tokens, codes, i);
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end)
+            if (i >= tokens.Length)
             {
-                if (can_write_er) Add_Error(tokens[i], "term", i, "token");
+                Add_Error(tokens[tokens.Length - 1], ";", tokens.Length - 1, "end");
                 return i;
             }
 
-            i = Term(tokens, codes, i);
+            if (tokens[i] == ")")
+            {
+                Add_Error(tokens[i], ")", i, "bracket");
+                i += 1;
+            }
+            if (i >= tokens.Length)
+            {
+                Add_Error(tokens[tokens.Length - 1], ";", tokens.Length - 1, "end");
+                return i;
+            }
+            if (tokens[i] == ";") return i + 1;
 
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (Is_End(tokens.Length, i) || is_end) return i;
+            i = Operand(tokens, codes, i);
+            if (i >= tokens.Length)
+            {
+                Add_Error(tokens[tokens.Length - 1], ";", tokens.Length - 1, "end");
+                return i;
+            }
+            if (tokens[i] == ";") return i + 1;
 
-            i = Expression_Body(tokens, codes, i, true);
-            if (Is_End(tokens.Length, i) || is_end) return i;
+            i = Expression_Body(tokens, codes, i, false);
 
-            string[] ends_2 = { ";" };
-            int[] choices_2 = { 1 };
-            i = Airon_Method(tokens, codes, i, ")", ends_2, choices_2);
+            i = End(tokens, i);
+            if (i >= tokens.Length) return i;
 
             return i;
         }
 
-        private int Expression_Body(string[] tokens, int[] codes, int i, bool equal)
+        private int Expression_Body(string[] tokens, int[] codes, int i, bool bracket)
         {
-            if (Is_End(tokens.Length, i)) return i;
-            i = Error_Token(tokens, codes, i);
-            if (tokens[i] == ")") return i;
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (is_end) return i;
+            if (i >= tokens.Length) return i;
+            if (tokens[i] == ";") return i;
+            if (bracket && tokens[i] == ")") return i;
 
-            i = Operator(tokens, codes, i);
+            i = Operator(tokens, codes, i, bracket);
+            if (i >= tokens.Length) return i;
+            if (tokens[i] == ";") return i;
+            if (bracket && tokens[i] == ")") return i;
 
-            if (Is_End(tokens.Length, i)) return i;
+            i = Operand(tokens, codes, i);
+            if (i >= tokens.Length) return i;
 
-            i = Term(tokens, codes, i);
-
-            return Expression_Body(tokens, codes, i, false);
+            return Expression_Body(tokens, codes, i, bracket);
         }
 
-        private int Operator(string[] tokens, int[] codes, int i)
+        private int Operator(string[] tokens, int[] codes, int i, bool bracket)
         {
-            i = Error_Token(tokens, codes, i);
-            if (Is_End(tokens.Length, i)) return i;
+            if (Is_Operator(tokens[i])) i++;
+            else i = Skipping_Codes(tokens, codes, i, "operator", bracket);
 
-            if (codes_value[codes[i]] == "OPERATOR")
+            if (i >= tokens.Length)
             {
-                can_write_er = true;
-                return i + 1;
+                int end = tokens.Length - 1;
+                if (Is_Operator(tokens[end]))
+                {
+                    Add_Error(tokens[end], tokens[end], end, "operand");
+                }
+                return i;
             }
 
-            if (can_write_er) Add_Error(codes_value[codes[i]], "OPERATOR", i, "code");
-
-            int prev_i = i, prev_balance = balance;
-            for (; i < tokens.Length; i++)
+            if (tokens[i] == ";" || tokens[i] == ")")
             {
-                if (Is_End(tokens.Length, i)) return i;
-                is_end = Is_Semicolon_Point(tokens, i);
-                if (is_end)
+                if (Is_Operator(tokens[i]))
                 {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return i;
+                    Add_Error(tokens[i], tokens[i], i, "operand");
                 }
 
-                if (codes[i] == id_code)
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return i;
-                }
-
-                if (codes[i] == int_code)
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return i;
-                }
-
-                if (codes[i] == double_code)
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return i;
-                }
-
-                if (tokens[i] == "(")
-                {
-                    can_write_er = true;
-                    return i;
-                }
-
-                if (tokens[i] == ")")
-                {
-                    can_write_er = true;
-                    return i;
-                }
+                if (tokens[i] == ")") return i + 1;
+                return i;
             }
 
-            balance = prev_balance;
-            Balance_Bracket(tokens[prev_i], i);
-            can_write_er = false;
-
-            return prev_i + 1;
+            return i;
         }
 
-        private int Term(string[] tokens, int[] codes, int i)
+        private int Operand(string[] tokens, int[] codes, int i)
         {
-            i = Error_Token(tokens, codes, i);
-            if (Is_End(tokens.Length, i)) return i;
+            if (Is_Operand(codes[i])) return i + 1;
+            else if (tokens[i] == "(") return Expression_In_Bracket(tokens, codes, i);
+            else i = Skipping_Codes(tokens, codes, i, "operand", false);
 
-            if (tokens[i] == "(")
-            {
-                can_write_er = true;
-                return Expression(tokens, codes, i);
-            }
-
-            if (codes[i] == id_code)
-            {
-                can_write_er = true;
-
-                if (tokens[i + 1] == "(")
-                {
-                    return List_Param(tokens, codes, ++i);
-                }
-
-                return i + 1;
-            }
+            if (tokens[i] == "(") return Expression_In_Bracket(tokens, codes, i);
 
             if (codes[i] == int_code)
             {
-                can_write_er = true;
-
                 string digit = tokens[i];
 
                 if (digit.Length > 1 && digit.StartsWith("0") && char.IsDigit(digit[1]))
                 {
-                    if (can_write_er) Add_Error(null, null, i, "int");
+                    Add_Error(null, null, i, "int");
                 }
-
-                return i + 1;
             }
 
             if (codes[i] == double_code)
             {
-                can_write_er = true;
-
                 string digit = tokens[i];
 
                 int j = digit.IndexOf('.');
                 if ((j + 1) >= digit.Length)
                 {
-                    if (can_write_er) Add_Error(null, null, i, "double");
+                    Add_Error(null, null, i, "double");
                 }
 
                 for (; j < digit.Length; j++)
@@ -410,385 +184,141 @@ namespace tflc_1
 
                     if (!char.IsDigit(digit[j + 1]))
                     {
-                        if (can_write_er) Add_Error(null, null, i, "double");
+                        Add_Error(null, null, i, "double");
                         break;
                     }
                 }
-
-                return i + 1;
             }
-
-            if (can_write_er) Add_Error(tokens[i], "term", i, "token");
-
-            int prev_i = i, prev_balance = balance;
-            for (; i < tokens.Length; i++)
-            {
-                if (tokens[i] == "(") balance++;
-                if (tokens[i] == ")") balance--;
-
-                if (Is_End(tokens.Length, i)) break;
-                is_end = Is_Semicolon_Point(tokens, i);
-                if (is_end)
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return i;
-                }
-
-                if (codes_value[codes[i]] == "OPERATOR")
-                {
-                    Balance_Bracket(tokens[i], i);
-                    can_write_er = true;
-                    return i;
-                }
-
-                if (tokens[i] == ")")
-                {
-                    can_write_er = true;
-                    return i;
-                }
-            }
-
-            balance = prev_balance;
-            can_write_er = false;
-
-            return prev_i + 1;
-        }
-
-
-
-        // 1) token -> token
-        // 2) token -> code
-        // 3) code -> code
-        // 4) code -> token
-        private int Airon_Method(string[] tokens, int[] codes, int i, string token_need, string[] token_end, int[] choice)
-        {
-            bool is_code = false;
-            for (int j = 0; j < choice.Length; j++)
-            {
-                if (choice[j] == 3 || choice[j] == 4)
-                {
-                    is_code = true;
-                    break;
-                }
-            }
-
-            i = Error_Token(tokens, codes, i);
-            if (Is_End(tokens.Length, i)) return i;
-
-            if (Is_Correct_Token(tokens, codes, i, token_need, is_code))
-            {
-                if (token_need == "(" || token_need == ")")
-                {
-                    Balance_Bracket(token_need, i);
-                }
-
-                can_write_er = true;
-                return i + 1;
-            }
-
-            string err = "";
-            int a = codes[i];
-            List<int> res_i = new List<int>();
-            int prev_i = i;
-            for (int j = 0; j < token_end.Length; j++, i = prev_i)
-            {
-                switch (choice[j])
-                {
-                    case 1:
-
-                        if (Is_Semicolon_Point(tokens, i))
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        if (tokens[i] == token_end[j])
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        while (tokens[i] != token_end[j])
-                        {
-                            i = Skipping_Tokens(tokens, i);
-
-                            if (is_end)
-                            {
-                                is_end = false;
-                                res_i.Add(i);
-                                break;
-                            }
-                        }
-
-                        if (i >= codes.Length) break;
-
-                        if (tokens[i] == token_end[j])
-                        {
-                            res_i.Add(i);
-                        }
-
-                        break;
-
-                    case 2:
-
-                        if (Is_Semicolon_Point(tokens, i))
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        if (codes[i].ToString() == token_end[j])
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        while (codes[i].ToString() != token_end[j])
-                        {
-                            i = Skipping_Tokens(tokens, i);
-
-                            if (is_end)
-                            {
-                                is_end = false;
-                                res_i.Add(i);
-                                break;
-                            }
-                        }
-
-                        if (i >= codes.Length) break;
-
-                        if (codes[i].ToString() == token_end[j])
-                        {
-                            res_i.Add(i);
-                        }
-
-                        break;
-
-                    case 3:
-
-                        if (Is_Semicolon_Point(tokens, i))
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        if (codes[i].ToString() == token_end[j])
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        while (codes[i].ToString() != token_end[j])
-                        {
-                            i = Skipping_Tokens(tokens, i);
-
-                            if (is_end)
-                            {
-                                is_end = false;
-                                res_i.Add(i);
-                                break;
-                            }
-                        }
-
-                        if (i >= codes.Length) break;
-
-                        if (codes[i].ToString() == token_end[j])
-                        {
-                            res_i.Add(i);
-                        }
-
-                        break;
-
-                    case 4:
-
-                        if (Is_Semicolon_Point(tokens, i))
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        if (tokens[i] == token_end[j])
-                        {
-                            res_i.Add(i);
-                            break;
-                        }
-
-                        while (tokens[i] != token_end[j])
-                        {
-                            i = Skipping_Tokens(tokens, i);
-
-                            if (is_end)
-                            {
-                                is_end = false;
-                                res_i.Add(i);
-                                break;
-                            }
-                        }
-
-                        if (i >= codes.Length) break;
-
-                        if (tokens[i] == token_end[j])
-                        {
-                            res_i.Add(i);
-                        }
-
-                        break;
-                }
-            }
-
-            if (res_i != null)
-            {
-                res_i.Sort();
-
-                foreach (int res in res_i)
-                {
-                    if (res < prev_i)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        int b = prev_i;
-                        for (; prev_i < res; prev_i++)
-                        {
-                            if (tokens[prev_i] == "(" || tokens[prev_i] == ")")
-                            {
-                                Balance_Bracket(tokens[prev_i], prev_i);
-                            }
-
-                            err += tokens[prev_i];
-                        }
-
-                        if (err == "") err = tokens[b];
-
-                        if (can_write_er)
-                        {
-                            int c = res;
-                            if (res >= tokens.Length) c = tokens.Length - 1;
-
-                            if (!is_code)
-                            {
-                                if (can_write_er) Add_Error(err, token_need, c, "token");
-                            }
-                            else
-                            {
-                                int code = Convert.ToInt32(token_need);
-                                if (can_write_er) Add_Error(codes_value[a], codes_value[code], c, "code");
-                            }
-                        }
-
-                        can_write_er = true;
-                        return res;
-                    }
-                }
-            }
-
-            if (err == "") err = tokens[prev_i];
-
-            if (!is_code)
-            {
-                if (can_write_er) Add_Error(err, token_need, prev_i, "token");
-            }
-            else
-            {
-                int code = Convert.ToInt32(token_need);
-                if (can_write_er) Add_Error(codes_value[a], codes_value[code], prev_i, "code");
-            }
-
-            can_write_er = false;
-            return prev_i + 1;
-        }
-
-        private bool Is_Correct_Token(string[] tokens, int[] codes, int i, string token, bool is_code)
-        {
-            is_end = Is_Semicolon_Point(tokens, i);
-
-            if (token != ";" && is_end && can_write_er)
-            {
-                if (!is_code)
-                {
-                    Add_Error(tokens[i], token, i, "token");
-                    return false;
-                }
-                else
-                {
-                    int code = Convert.ToInt32(token);
-                    Add_Error(codes_value[codes[i]], codes_value[code], i, "code");
-                    return false;
-                }
-            }
-
-            if (token == ";" && is_end) return true;
-
-            if (!is_code)
-            {
-                if (tokens[i] != token)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-            else
-            {
-                int code = Convert.ToInt32(token);
-
-                if (codes[i] != code)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        }
-
-        private void Balance_Bracket(string bracket, int i)
-        {
-            if (bracket == "(") balance++;
-            if (bracket == ")") balance--;
-
-            if (balance < 0)
-            {
-                if (can_write_er) Add_Error(")", ")", i, "bracket");
-            }
-        }
-
-        private int Skipping_Tokens(string[] tokens, int i)
-        {
-            i += 1;
-
-            if (Is_End(tokens.Length, i)) return i;
-            is_end = Is_Semicolon_Point(tokens, i);
-            if (is_end) return i;
 
             return i;
         }
 
-        private bool Is_End(int length, int i)
+        private int Expression_In_Bracket(string[] tokens, int[] codes, int i)
         {
-            if (i >= length)
+            i = Operand(tokens, codes, i + 1);
+            if (tokens[i] == ";")
             {
-                is_end = true;
-                return true;
+                Add_Error(tokens[i], ")", i, "bracket_end");
+                return i;
             }
-            return false;
+            if (i >= tokens.Length) return i;
+
+            i = Expression_Body(tokens, codes, i, true);
+
+            if (i >= tokens.Length)
+            {
+                int end = tokens.Length - 1;
+                Add_Error(tokens[end], ")", end, "bracket_end");
+                return i;
+            }
+
+            i = Skipping_Token(tokens, codes, ")", i);
+
+            return i;
         }
 
-        private bool Is_Semicolon_Point(string[] tokens, int i)
+        private int End(string[] tokens, int i)
         {
-            if (Is_End(tokens.Length, i)) return true;
-            if (tokens[i] == ";") return true;
-            else return false;
+            if (i >= tokens.Length)
+            {
+                int end = tokens.Length - 1;
+                Add_Error(tokens[end], ";", end, "end");
+                return i;
+            }
+
+            if (tokens[i] == ";") return i + 1;
+
+            while (tokens[i] != ";" && i < tokens.Length) i++;
+            if (i < tokens.Length) Add_Error("", ";", i, "end");
+            else Add_Error("", ";", tokens.Length - 1, "end");
+
+            return i + 1;
+        }
+
+
+        private int Skipping_Token(string[] tokens, int[] codes, string token_need, int i)
+        {
+            if (tokens[i] == token_need) return i + 1;
+
+            int prev_i = i;
+            string err = tokens[i];
+
+            while (tokens[i] != token_need && i < tokens.Length)
+            {
+                int i_clone;
+                if (i != prev_i) i_clone = i;
+                else i_clone = i + 1;
+
+                i = Error_Token(tokens, codes, i);
+                if (i >= tokens.Length)
+                {
+                    for (; i_clone < tokens.Length; i_clone++) err += tokens[i_clone];
+                    break;
+                }
+
+                if (tokens[i] == ";") break;
+                if (tokens[i] == "(") break;
+                if (Is_Operand(codes[i])) break;
+                if (Is_Operator(tokens[i])) break;
+
+                if (i != prev_i) err += tokens[i];
+                i++;
+            }
+
+            Add_Error(err, token_need, prev_i, "token");
+
+            if (i < tokens.Length)
+            {
+                if (tokens[i] == token_need) return i + 1;
+            }
+
+            return i;
+        }
+
+        private int Skipping_Codes(string[] tokens, int[] codes, int i, string type, bool bracket)
+        {
+            int prev_i = i;
+            string err = tokens[i];
+
+            while (i < tokens.Length)
+            {
+                int i_clone;
+                if (i != prev_i) i_clone = i;
+                else i_clone = i + 1;
+
+                i = Error_Token(tokens, codes, i);
+                if (i >= tokens.Length)
+                {
+                    for (; i_clone < tokens.Length; i_clone++) err += tokens[i_clone];
+                    break;
+                }
+
+                if (tokens[i] == ";") break;
+                if (tokens[i] == "(") break;
+                if (tokens[i] == ")" && bracket) break;
+                if (Is_Operand(codes[i])) break;
+                if (Is_Operator(tokens[i])) break;
+
+                if (i != prev_i) err += tokens[i];
+                i++;
+            }
+
+            Add_Error(err, "", prev_i, type);
+
+            if (i < tokens.Length)
+            {
+                if (type == "operand" && Is_Operand(codes[i])) return i + 1;
+                if (type == "operator" && Is_Operator(tokens[i])) return i + 1;
+            }
+
+            return i;
         }
 
         private int Error_Token(string[] tokens, int[] codes, int i)
         {
-            if (Is_End(tokens.Length, i)) return i;
-
             if (codes[i] != -1) return i;
 
-            int pos = i;
+            int prev_i = i;
             string error_token = "";
 
             while (i < codes.Length)
@@ -797,11 +327,20 @@ namespace tflc_1
                 else break;
             }
 
-            Add_Error(error_token, null, pos, "unknown_token");
+            Add_Error(error_token, null, prev_i, "unknown_token");
 
             return i;
         }
 
+        private bool Is_Operand(int op)
+        {
+            return op == id_code || op == int_code || op == double_code;
+        }
+
+        private bool Is_Operator(string op)
+        {
+            return op == "+" || op == "-" || op == "*" || op == "/" || op == "%";
+        }
 
         private void Add_Error(string error, string correct, int i, string type)
         {
@@ -856,6 +395,14 @@ namespace tflc_1
                 case "bracket_end":
                     errors.Add(++count_errors, (i, $"Не хватает \")\""));
                     break;
+
+                case "operand":
+                    errors.Add(++count_errors, (i, $"Ожидался операнд, но вместо него получен \"{error}\""));
+                    break;
+
+                case "operator":
+                    errors.Add(++count_errors, (i, $"Ожидался оператор, но вместо него получен \"{error}\""));
+                    break;
             }
         }
 
@@ -893,6 +440,14 @@ namespace tflc_1
 
                 case "bracket_end":
                     errors.Add(++count_errors, (i, $"Missing \")\""));
+                    break;
+
+                case "operand":
+                    errors.Add(++count_errors, (i, $"The operand was expected, but \"{error}\" was received instead"));
+                    break;
+
+                case "operator":
+                    errors.Add(++count_errors, (i, $"The operator was expected, but \"{error}\" was received instead"));
                     break;
             }
         }
@@ -932,7 +487,15 @@ namespace tflc_1
                 case "bracket_end":
                     errors.Add(++count_errors, (i, $"Жетіспейді \")\""));
                     break;
+
+                case "operand":
+                    errors.Add(++count_errors, (i, $"Операнд күтілді, бірақ оның орнына \"{error}\" алынды"));
+                    break;
+
+                case "operator":
+                    errors.Add(++count_errors, (i, $"Оператор күтілді, бірақ оның орнына \"{error}\" алынды"));
+                    break;
             }
-        }*/
+        }
     }
 }
