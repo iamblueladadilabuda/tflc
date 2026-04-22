@@ -52,3 +52,10 @@ C / C++
 ![alt text](image-4.png)  
 
 ## ПОЛИЗ
+### Строка "1 + 2 * 3;"
+![alt text](image-5.png)  
+![alt text](image-6.png)  
+
+### Строка "25 / 5 - 5;"
+![alt text](image-7.png)  
+![alt text](image-8.png)  

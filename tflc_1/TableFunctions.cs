@@ -34,7 +34,7 @@ namespace tflc_1
                     break;
 
                 case 4:
-
+                    Column_Polis(table);
                     break;
             }
 
@@ -181,6 +181,64 @@ namespace tflc_1
 
         private int Fill_Table_POLIS(DataGridView table, RichTextBox richTextBox)
         {
+            table_count = 0;
+            table = Initialize_Table(table, language, 4);
+
+            (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
+
+            foreach(int code in codes_all)
+            {
+                if (code == 1 || code == 12)
+                {
+                    switch (language)
+                    {
+                        case 1:
+                            MessageBox.Show("Выражение должно состоять исключительно из целых чисел");
+                            return 1;
+
+                        case 2:
+                            MessageBox.Show("The expression must consist only of integers");
+                            return 1;
+
+                        case 3:
+                            MessageBox.Show("Өрнек тек бүтін сандардан тұруы керек");
+                            return 1;
+                    }
+                }
+            }
+
+            (string[] tokens, int[] codes, int[] lines, int[] pos) = Space_Clean(tokens_all, codes_all, lines_all, positions);
+            Dictionary<int, (int, string)> errors = Parser(tokens, codes, language);
+
+            if (errors.Count != 0)
+            {
+                switch (language)
+                {
+                    case 1:
+                        MessageBox.Show("Перед разбором необходимо избавиться от ошибок в строке");
+                        return errors.Count;
+
+                    case 2:
+                        MessageBox.Show("Before parsing, it is necessary to get rid of errors in the line");
+                        return errors.Count;
+
+                    case 3:
+                        MessageBox.Show("Талдау алдында жолдағы қателіктерден арылу керек");
+                        return errors.Count;
+                }
+            }
+
+            TetradsFunctions tetrad = new TetradsFunctions();
+            List<string[]> tetrads = tetrad.Tetrads(tokens);
+
+            PolisFunctions pol = new PolisFunctions();
+            string[] polis = pol.Polis(tetrads, language);
+
+            for (int i = 0; i < polis.Length; i += 4)
+            {
+                table.Rows.Add(++table_count, polis[i], polis[i + 1], polis[i + 2], polis[i + 3]);
+            }
+
             return 0;
         }
 
@@ -332,6 +390,46 @@ namespace tflc_1
                     columns_text[1] = "Оператор";
                     columns_text[2] = "Операнд 1";
                     columns_text[3] = "Операнд 2";
+                    columns_text[4] = "Нәтижесі";
+
+                    break;
+            }
+
+            Create_Column(table, columns_text);
+        }
+
+        private void Column_Polis(DataGridView table)
+        {
+            string[] columns_text = new string[5];
+
+            switch (language)
+            {
+                case 1:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Операнд 1";
+                    columns_text[2] = "Операнд 2";
+                    columns_text[3] = "Оператор";
+                    columns_text[4] = "Результат";
+
+                    break;
+
+                case 2:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Operand 1"; 
+                    columns_text[2] = "Operand 2";
+                    columns_text[3] = "Operator";
+                    columns_text[4] = "Result";
+
+                    break;
+
+                case 3:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Операнд 1"; 
+                    columns_text[2] = "Операнд 2";
+                    columns_text[3] = "Оператор";
                     columns_text[4] = "Нәтижесі";
 
                     break;
