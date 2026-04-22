@@ -226,6 +226,8 @@ namespace tflc_1
                 if (row.Cells[i].Value.ToString().StartsWith("жол")) break;
             }
 
+            if (i >= row.Cells.Count) return;
+
             string line = row.Cells[i].Value.ToString();
             if (line != "")
             {

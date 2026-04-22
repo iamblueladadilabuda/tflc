@@ -85,6 +85,7 @@
     <Compile Include="SplitContainerFunctions.cs" />
     <Compile Include="SyntaxHighlighting.cs" />
     <Compile Include="TableFunctions.cs" />
+    <Compile Include="TetradsFunctions.cs" />
     <Compile Include="TextFunctions.cs" />
     <Compile Include="tflc.cs">
       <SubType>Form</SubType>

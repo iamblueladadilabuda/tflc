@@ -30,7 +30,7 @@ namespace tflc_1
                     break;
 
                 case 3:
-
+                    Column_Tetrads(table);
                     break;
 
                 case 4:
@@ -139,6 +139,43 @@ namespace tflc_1
 
         private int Fill_Table_Tetrad(DataGridView table, RichTextBox richTextBox)
         {
+            table_count = 0;
+            table = Initialize_Table(table, language, 3);
+
+            (int[] codes_all, string[] tokens_all, int[] lines_all, int[] positions) = Find_All_Tokens(richTextBox);
+
+            (string[] tokens, int[] codes, int[] lines, int[] pos) = Space_Clean(tokens_all, codes_all, lines_all, positions);
+            Dictionary<int, (int, string)> errors = Parser(tokens, codes, language);
+
+            if (errors.Count != 0)
+            {
+                switch (language)
+                {
+                    case 1:
+                        MessageBox.Show("Перед разбором необходимо избавиться от ошибок в строке");
+                        return errors.Count;
+
+                    case 2:
+                        MessageBox.Show("Before parsing, it is necessary to get rid of errors in the line");
+                        return errors.Count;
+
+                    case 3:
+                        MessageBox.Show("Талдау алдында жолдағы қателіктерден арылу керек");
+                        return errors.Count;
+                }
+            }
+
+            TetradsFunctions tetrad = new TetradsFunctions();
+            List<string[]> tetrads = tetrad.Tetrads(tokens);
+
+            for (int i = 0; i < tetrads.Count; i++)
+            {
+                for (int j = 0; j < tetrads[i].Length; j += 4)
+                {
+                    table.Rows.Add(++table_count, tetrads[i][j], tetrads[i][j + 1], tetrads[i][j + 2], tetrads[i][j + 3]);
+                }
+            }
+
             return 0;
         }
 
@@ -256,6 +293,46 @@ namespace tflc_1
                     columns_text[4] = "Сипаттамасы";
 
                     unknown_token = "Белгісіз белгі";
+
+                    break;
+            }
+
+            Create_Column(table, columns_text);
+        }
+
+        private void Column_Tetrads(DataGridView table)
+        {
+            string[] columns_text = new string[5];
+
+            switch (language)
+            {
+                case 1:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Оператор";
+                    columns_text[2] = "Операнд 1";
+                    columns_text[3] = "Операнд 2";
+                    columns_text[4] = "Результат";
+
+                    break;
+
+                case 2:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Operator";
+                    columns_text[2] = "Operand 1";
+                    columns_text[3] = "Operand 2";
+                    columns_text[4] = "Result";
+
+                    break;
+
+                case 3:
+
+                    columns_text[0] = "№";
+                    columns_text[1] = "Оператор";
+                    columns_text[2] = "Операнд 1";
+                    columns_text[3] = "Операнд 2";
+                    columns_text[4] = "Нәтижесі";
 
                     break;
             }
