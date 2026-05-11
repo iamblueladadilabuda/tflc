@@ -61,6 +61,7 @@
             this.code1 = new System.Windows.Forms.ToolStripMenuItem();
             this.start1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ast = new System.Windows.Forms.ToolStripMenuItem();
+            this.TAC = new System.Windows.Forms.ToolStripMenuItem();
             this.help1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.create2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,6 +94,8 @@
             this.exit = new System.Windows.Forms.Button();
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.ast_panel = new System.Windows.Forms.Panel();
+            this.ast_text = new System.Windows.Forms.RichTextBox();
             this.panel13 = new System.Windows.Forms.Panel();
             this.numberBox = new System.Windows.Forms.RichTextBox();
             this.number = new System.Windows.Forms.Label();
@@ -100,8 +103,7 @@
             this.condition = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.ast_panel = new System.Windows.Forms.Panel();
-            this.ast_text = new System.Windows.Forms.RichTextBox();
+            this.TAC_text = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -110,10 +112,11 @@
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.ast_panel.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
-            this.ast_panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -126,6 +129,7 @@
             this.text1,
             this.start1,
             this.ast,
+            this.TAC,
             this.help1});
             this.menuStrip1.Location = new System.Drawing.Point(40, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -375,6 +379,13 @@
             this.ast.Size = new System.Drawing.Size(132, 27);
             this.ast.Text = "Показать AST";
             this.ast.Click += new System.EventHandler(this.ast_Click);
+            // 
+            // TAC
+            // 
+            this.TAC.Name = "TAC";
+            this.TAC.Size = new System.Drawing.Size(35, 27);
+            this.TAC.Text = "7";
+            this.TAC.Click += new System.EventHandler(this.TAC_Click);
             // 
             // help1
             // 
@@ -699,6 +710,24 @@
             this.panel3.Size = new System.Drawing.Size(720, 208);
             this.panel3.TabIndex = 6;
             // 
+            // ast_panel
+            // 
+            this.ast_panel.Controls.Add(this.ast_text);
+            this.ast_panel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.ast_panel.Location = new System.Drawing.Point(343, 0);
+            this.ast_panel.Name = "ast_panel";
+            this.ast_panel.Size = new System.Drawing.Size(377, 208);
+            this.ast_panel.TabIndex = 4;
+            // 
+            // ast_text
+            // 
+            this.ast_text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ast_text.Location = new System.Drawing.Point(0, 0);
+            this.ast_text.Name = "ast_text";
+            this.ast_text.Size = new System.Drawing.Size(377, 208);
+            this.ast_text.TabIndex = 0;
+            this.ast_text.Text = "";
+            // 
             // panel13
             // 
             this.panel13.Controls.Add(this.numberBox);
@@ -749,6 +778,7 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
+            this.panel5.Controls.Add(this.TAC_text);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel5.Location = new System.Drawing.Point(0, 216);
             this.panel5.Name = "panel5";
@@ -765,23 +795,14 @@
             this.panel6.Size = new System.Drawing.Size(720, 390);
             this.panel6.TabIndex = 9;
             // 
-            // ast_panel
+            // TAC_text
             // 
-            this.ast_panel.Controls.Add(this.ast_text);
-            this.ast_panel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ast_panel.Location = new System.Drawing.Point(343, 0);
-            this.ast_panel.Name = "ast_panel";
-            this.ast_panel.Size = new System.Drawing.Size(377, 208);
-            this.ast_panel.TabIndex = 4;
-            // 
-            // ast_text
-            // 
-            this.ast_text.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ast_text.Location = new System.Drawing.Point(0, 0);
-            this.ast_text.Name = "ast_text";
-            this.ast_text.Size = new System.Drawing.Size(377, 208);
-            this.ast_text.TabIndex = 0;
-            this.ast_text.Text = "";
+            this.TAC_text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TAC_text.Location = new System.Drawing.Point(0, 0);
+            this.TAC_text.Name = "TAC_text";
+            this.TAC_text.Size = new System.Drawing.Size(720, 174);
+            this.TAC_text.TabIndex = 0;
+            this.TAC_text.Text = "";
             // 
             // Compiler
             // 
@@ -819,12 +840,13 @@
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
             this.panel3.ResumeLayout(false);
+            this.ast_panel.ResumeLayout(false);
             this.panel13.ResumeLayout(false);
             this.panel13.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.panel5.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
-            this.ast_panel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -904,6 +926,8 @@
         private System.Windows.Forms.ToolStripMenuItem ast;
         private System.Windows.Forms.Panel ast_panel;
         private System.Windows.Forms.RichTextBox ast_text;
+        private System.Windows.Forms.ToolStripMenuItem TAC;
+        private System.Windows.Forms.RichTextBox TAC_text;
     }
 }
 
