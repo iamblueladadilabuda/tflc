@@ -163,6 +163,9 @@ namespace tflc_1
         {
             if (string.IsNullOrEmpty(richTextBox.Text)) return;
 
+            table.Visible = true;
+            TAC_text.Visible = false;
+
             table_functions.Clear_Table(table);
             table_functions.Set_Path(files.ElementAt(file_idx).Item1[1]);
 
@@ -201,6 +204,20 @@ namespace tflc_1
 
             ast_panel.Visible = true;
             ast.AST_Print(ast_text);
+
+            table.Visible = true;
+            TAC_text.Visible = false;
+        }
+
+        private void TAC_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(richTextBox.Text)) return;
+
+            TACFunctions tacFunctions = new TACFunctions();
+            tacFunctions.TAC(TAC_text, richTextBox.Text);
+
+            table.Visible = false;
+            TAC_text.Visible = true;
         }
 
         private void Help()
